@@ -7,6 +7,7 @@ else
 endif
 
 run:
+	cd ./docker && docker-compose up -d
 	$(SET_ENVIRONMENT)$(PYTHONPATH):$(CURDIR)/app && $(PY_CALL) app/main.py
 
 install:
