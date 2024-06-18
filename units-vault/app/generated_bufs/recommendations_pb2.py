@@ -14,7 +14,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x15recommendations.proto\"\r\n\x0bPingRequest\"\x1f\n\x0cPingResponse\x12\x0f\n\x07message\x18\x01 \x01(\t22\n\x0bPingService\x12#\n\x04Ping\x12\x0c.PingRequest\x1a\r.PingResponseb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x15recommendations.proto\"\r\n\x0bPingRequest\"\x1f\n\x0cPingResponse\x12\x0f\n\x07message\x18\x01 \x01(\t24\n\x0bPingService\x12%\n\x04Ping\x12\x0c.PingRequest\x1a\r.PingResponse\"\x00\x62\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -26,5 +26,5 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_PINGRESPONSE']._serialized_start=40
   _globals['_PINGRESPONSE']._serialized_end=71
   _globals['_PINGSERVICE']._serialized_start=73
-  _globals['_PINGSERVICE']._serialized_end=123
+  _globals['_PINGSERVICE']._serialized_end=125
 # @@protoc_insertion_point(module_scope)

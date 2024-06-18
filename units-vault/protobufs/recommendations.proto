@@ -1,7 +1,7 @@
 syntax = "proto3";
 
 service PingService {
-    rpc Ping (PingRequest) returns (PingResponse);
+    rpc Ping (PingRequest) returns (PingResponse) {};
 }
 
 message PingRequest {

@@ -13,14 +13,18 @@ sys.path.insert(
 # flake8: noqa
 from generated_bufs.recommendations_pb2_grpc import (
     PingService,
-    add_PingServiceServicer_to_server
+    add_PingServiceServicer_to_server,
+    PingServiceServicer
 )
 
 
 class UnitsService:
     def __init__(self):
         self.server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
-        add_PingServiceServicer_to_server(PingService(), self.server)
+        add_PingServiceServicer_to_server(
+            server=self.server,
+            servicer=PingService
+        )
         self.server.add_insecure_port(f'[::]:{gRPC_PORT}')
 
     def start(self):
