@@ -1,3 +1,5 @@
+# TO DO: add virtualenv support
+
 ifeq ($(OS), Windows_NT)
 	PY_CALL = python
 	SET_ENVIRONMENT = set PYTHONPATH=
@@ -7,19 +9,13 @@ else
 endif
 
 DOCKER_COMPOSE_DOWN = cd ./docker && docker-compose down
+PY_VERSION = 3.12.3
 
 dev:
 	cd ./docker && docker-compose up -d
 	$(SET_ENVIRONMENT)$(PYTHONPATH):$(CURDIR)/app && $(PY_CALL) app/main.py
 
-install-linux:
-	$(PY_CALL) -m virtualenv vault-env
-	source ./vault-env/bin/activate
-	$(PY_CALL) -m pip install -r ./requirements/base.txt
-
-install-win:
-	$(PY_CALL) -m virtualenv vault-env
-	.\vault-env\Scripts\activate.bat
+install:
 	$(PY_CALL) -m pip install -r ./requirements/base.txt
 
 #build:
