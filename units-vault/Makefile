@@ -13,12 +13,12 @@ dev:
 	$(SET_ENVIRONMENT)$(PYTHONPATH):$(CURDIR)/app && $(PY_CALL) app/main.py
 
 install-linux:
-	$(PY_CALL) -m venv vault-env
-	./vault-env/Scripts/activate
+	$(PY_CALL) -m virtualenv vault-env
+	source ./vault-env/bin/activate
 	$(PY_CALL) -m pip install -r ./requirements/base.txt
 
 install-win:
-	$(PY_CALL) -m venv vault-env
+	$(PY_CALL) -m virtualenv vault-env
 	.\vault-env\Scripts\activate.bat
 	$(PY_CALL) -m pip install -r ./requirements/base.txt
 
