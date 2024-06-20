@@ -4,11 +4,14 @@ from constants import gRPC_PORT
 from concurrent import futures
 import grpc
 
-sys.path.insert(
-    0, os.path.abspath(
-        os.path.join(os.path.dirname(__file__), 'generated_bufs')
+paths_to_add = ['generated_bufs', 'documents']
+
+for path_name in paths_to_add:
+    sys.path.insert(
+        0, os.path.abspath(
+            os.path.join(os.path.dirname(__file__), path_name)
+        )
     )
-)
 
 # flake8: noqa
 from generated_bufs.recommendations_pb2_grpc import (
