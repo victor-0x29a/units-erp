@@ -27,16 +27,14 @@ class Product(Document):
     @staticmethod
     def generate_unique_barcode():
         while True:
-            timestamp = int(time.time())
+            timestamp = str(time.time())[:12]
 
-            timestamp_str = str(timestamp)[:12]
+            if len(timestamp) < 12:
+                timestamp = timestamp.ljust(12, '0')
 
-            if len(timestamp_str) < 12:
-                timestamp_str = timestamp_str.ljust(12, '0')
+            ean = barcode.get('ean13', timestamp, writer=ImageWriter())
 
-            ean = barcode.get('ean13', timestamp_str, writer=ImageWriter())
+            barcode_number = str(ean.get_fullcode())
 
-            barcode_number = ean.get_fullcode()
-
-            if not Product.objects(barcode=str(barcode_number)):
-                return str(barcode_number)
+            if not Product.objects(barcode=barcode_number):
+                return barcode_number
