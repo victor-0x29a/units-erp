@@ -9,7 +9,7 @@ services:
     ports:
       - 27017:27017
     volumes:
-      - ./data:/data/db
+      - ./docker/data:/data/db
 
   rabbitmq:
     image: rabbitmq:3-management

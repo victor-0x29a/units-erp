@@ -12,7 +12,7 @@ DOCKER_COMPOSE_DOWN = cd ./docker && docker-compose down
 PY_VERSION = 3.12.3
 
 dev:
-	cd ./docker && docker-compose up -d
+	docker-compose up -d
 	$(SET_ENVIRONMENT)$(PYTHONPATH):$(CURDIR)/app && $(PY_CALL) app/main.py
 
 install:
