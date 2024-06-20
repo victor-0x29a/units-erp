@@ -13,10 +13,11 @@ PY_VERSION = 3.12.3
 
 dev:
 	docker-compose up -d
-	$(SET_ENVIRONMENT)$(PYTHONPATH):$(CURDIR)/app && $(PY_CALL) app/main.py
+	$(SET_ENVIRONMENT)$(PYTHONPATH):$(CURDIR)/app && pymon app/main.py
 
 install:
 	$(PY_CALL) -m pip install -r ./requirements/base.txt
+	$(PY_CALL) -m pip install -r ./requirements/dev.txt
 
 #build:
 #	$(PY_CALL) -m grpc_tools.protoc -I ./protobufs --python_out=./app/generated_bufs \
