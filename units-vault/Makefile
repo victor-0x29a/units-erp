@@ -15,9 +15,6 @@ dev:
 	docker-compose up -d
 	$(SET_ENVIRONMENT)$(PYTHONPATH):$(CURDIR)/app && pymon app/main.py
 
-test:
-	$(SET_ENVIRONMENT)$(PYTHONPATH):$(CURDIR)/app && $(PY_CALL) -m pytest -v
-
 install:
 	$(PY_CALL) -m pip install -r ./requirements/base.txt
 	$(PY_CALL) -m pip install -r ./requirements/dev.txt

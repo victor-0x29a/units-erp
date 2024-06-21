@@ -2,7 +2,6 @@ import sys
 import os
 from constants import gRPC_PORT
 from concurrent import futures
-import connection # noqa
 import grpc
 
 paths_to_add = ['generated_bufs', 'documents']
@@ -14,10 +13,11 @@ for path_name in paths_to_add:
         )
     )
 
-
+# flake8: noqa
 from generated_bufs.recommendations_pb2_grpc import (
     PingService,
-    add_PingServiceServicer_to_server
+    add_PingServiceServicer_to_server,
+    PingServiceServicer
 )
 
 
