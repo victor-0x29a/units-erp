@@ -11,7 +11,9 @@ class CreateProduct:
         self._validate()
 
     def _fill_data(self):
-        if "class 'str'" in str(type(self.data.get('batch'))):
+        batch_field_is_string = "class 'str'" in str(type(self.data.get('batch')))
+
+        if batch_field_is_string:
             batch = self.batch_document.objects.get(id=self.data.get('batch'))
             self.data['batch'] = batch.id
 

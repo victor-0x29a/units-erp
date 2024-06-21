@@ -1,21 +1,9 @@
-import sys
-import os
 from constants import gRPC_PORT
 from concurrent import futures
 import connection # noqa
 import grpc
 
-paths_to_add = ['gRPC_services', 'documents']
-
-for path_name in paths_to_add:
-    sys.path.insert(
-        0, os.path.abspath(
-            os.path.join(os.path.dirname(__file__), path_name)
-        )
-    )
-
-
-from gRPC_services.init_pb2_grpc import (
+from gRPC_services import (
     PingService,
     add_PingServiceServicer_to_server
 )

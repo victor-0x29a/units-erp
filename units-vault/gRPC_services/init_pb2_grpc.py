@@ -3,7 +3,7 @@
 import grpc
 import warnings
 
-import init_pb2 as init__pb2
+import gRPC_services.init_pb2 as init__pb2
 
 GRPC_GENERATED_VERSION = '1.64.1'
 GRPC_VERSION = grpc.__version__
