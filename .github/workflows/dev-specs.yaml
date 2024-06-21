@@ -16,7 +16,7 @@ jobs:
       run: cd units-vault && ls
 
     - name: Install make
-      run: sudo apt-get install -y make
+      run: sudo apt-get install -y make && ls
 
     - name: Install dependencies
       run: make install
