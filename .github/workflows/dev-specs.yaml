@@ -13,7 +13,7 @@ jobs:
         python-version: '3.10'
 
     - name: Install make
-      run: sudo apt-get install -y make && ls
+      run: sudo apt-get install -y make
 
     - name: Install dependencies
       run: cd units-vault && make install
