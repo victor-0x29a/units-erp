@@ -1,2 +1,2 @@
-from batch import Batch
-from products import Product
+from .batch import Batch
+from .products import Product

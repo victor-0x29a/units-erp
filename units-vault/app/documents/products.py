@@ -1,5 +1,5 @@
 from mongoengine import Document, StringField, FloatField, IntField, ReferenceField
-from batch import Batch
+from .batch import Batch
 from constants import PRODUCT_DATA_TYPES
 import time
 import barcode
@@ -7,7 +7,7 @@ from barcode.writer import ImageWriter
 
 
 class Product(Document):
-    name = StringField(required=True)
+    name = StringField(required=True, max_length=35)
     barcode = StringField(required=True, unique=True, min_length=13, max_length=13, regex='^[0-9]*$')
     price = FloatField(required=True)
     stock = IntField(required=True)
