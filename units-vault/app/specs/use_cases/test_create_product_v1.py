@@ -1,10 +1,11 @@
 from use_cases import CreateProductV1
+from .helpers.generate_object_id import generate_object_id
 
 
 class TestCreateProductUseCaseV1:
     def test_create_product(self, mocker):
         data = {
-            'batch': '123',
+            'batch': generate_object_id(),
             'price': 10,
             'discount_value': 1
         }
@@ -20,11 +21,13 @@ class TestCreateProductUseCaseV1:
             product_data=data
         ).start()
 
-        assert product
+        assert product[0]
+
+        assert product[1] == data
 
     def test_should_fail_when_discount_is_greater(self, mocker):
         data = {
-            'batch': '123',
+            'batch': generate_object_id(),
             'price': 10,
             'discount_value': 11
         }
@@ -45,7 +48,7 @@ class TestCreateProductUseCaseV1:
 
     def test_should_fail_when_have_with_same_batch(self, mocker):
         data = {
-            'batch': '123',
+            'batch': generate_object_id(),
             'price': 10,
             'discount_value': 1
         }
@@ -63,3 +66,28 @@ class TestCreateProductUseCaseV1:
             ).start()
         except Exception as e:
             assert 'batch' in str(e)
+
+    def test_should_find_a_batch_when_batch_is_string(self, mocker):
+        data = {
+            'batch': '123123',
+            'price': 10,
+            'discount_value': 1
+        }
+
+        obj_id = generate_object_id()
+
+        mock_product_cls = mocker.MagicMock()
+
+        mock_batch_cls = mocker.MagicMock()
+
+        mock_batch_cls.objects.get.return_value.id = obj_id
+
+        mock_product_cls.objects.return_value = None
+
+        product = CreateProductV1(
+            product_document=mock_product_cls,
+            batch_document=mock_batch_cls,
+            product_data=data
+        ).start()
+
+        assert product[1].get('batch') == obj_id
