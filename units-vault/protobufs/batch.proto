@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+service PingService {
+    rpc Ping (PingRequest) returns (PingResponse) {};
+}
+
+service ProductService {
+    rpc Create (CreateProductRequest) returns (CreateProductResponse) {};
+}
+
+message CreateProductRequest {
+    string name = 1;
+    string barcode = 2;
+    number price = 3;
+    number stock = 4;
+    string batchRef = 5;
+    number discount = 6;
+    string type = 7;
+    string for = 8;
+}
+
+message PingRequest {
+}
+
+message PingResponse {
+    string message = 1;
+}

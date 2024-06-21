@@ -5,7 +5,7 @@ from concurrent import futures
 import connection # noqa
 import grpc
 
-paths_to_add = ['generated_bufs', 'documents']
+paths_to_add = ['gRPC_services', 'documents']
 
 for path_name in paths_to_add:
     sys.path.insert(
@@ -15,7 +15,7 @@ for path_name in paths_to_add:
     )
 
 
-from generated_bufs.recommendations_pb2_grpc import (
+from gRPC_services.init_pb2_grpc import (
     PingService,
     add_PingServiceServicer_to_server
 )

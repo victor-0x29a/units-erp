@@ -3,7 +3,7 @@
 import grpc
 import warnings
 
-import recommendations_pb2 as recommendations__pb2
+import init_pb2 as init__pb2
 
 GRPC_GENERATED_VERSION = '1.64.1'
 GRPC_VERSION = grpc.__version__
@@ -20,7 +20,7 @@ except ImportError:
 if _version_not_supported:
     warnings.warn(
         f'The grpc package installed is at version {GRPC_VERSION},'
-        + ' but the generated code in recommendations_pb2_grpc.py depends on'
+        + ' but the generated code in init_pb2_grpc.py depends on'
         + f' grpcio>={GRPC_GENERATED_VERSION}.'
         + f' Please upgrade your grpc module to grpcio>={GRPC_GENERATED_VERSION}'
         + f' or downgrade your generated code using grpcio-tools<={GRPC_VERSION}.'
@@ -41,8 +41,8 @@ class PingServiceStub(object):
         """
         self.Ping = channel.unary_unary(
             '/PingService/Ping',
-            request_serializer=recommendations__pb2.PingRequest.SerializeToString,
-            response_deserializer=recommendations__pb2.PingResponse.FromString,
+            request_serializer=init__pb2.PingRequest.SerializeToString,
+            response_deserializer=init__pb2.PingResponse.FromString,
             _registered_method=True)
 
 
@@ -60,8 +60,8 @@ def add_PingServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
         'Ping': grpc.unary_unary_rpc_method_handler(
             servicer.Ping,
-            request_deserializer=recommendations__pb2.PingRequest.FromString,
-            response_serializer=recommendations__pb2.PingResponse.SerializeToString,
+            request_deserializer=init__pb2.PingRequest.FromString,
+            response_serializer=init__pb2.PingResponse.SerializeToString,
         ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -85,4 +85,4 @@ class PingService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return recommendations__pb2.PingResponse(message='pong')
+        return init__pb2.PingResponse(message='pong')

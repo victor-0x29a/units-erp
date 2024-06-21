@@ -24,7 +24,7 @@ install:
 
 build:
 	$(PY_CALL) -m grpc_tools.protoc -I ./protobufs --python_out=./app/generated_bufs \
-         --grpc_python_out=./app/generated_bufs ./protobufs/recommendations.proto
+         --grpc_python_out=./app/generated_bufs ./protobufs/init.proto
 
 docker-stop:
 	$(DOCKER_COMPOSE_DOWN)
