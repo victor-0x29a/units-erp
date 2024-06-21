@@ -3,3 +3,4 @@ __pycache__
 **/__pycache__
 docker/data
 vault-env
+.pytest_cache
