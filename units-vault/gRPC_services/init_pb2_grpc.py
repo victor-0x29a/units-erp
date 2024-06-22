@@ -2,6 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 import warnings
+from grpc.experimental import unary_unary
 
 import gRPC_services.init_pb2 as init__pb2
 
@@ -51,9 +52,10 @@ class PingServiceServicer(object):
 
     def Ping(self, request, context):
         """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        # context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        # context.set_details('Method not implemented!')
+        # raise NotImplementedError('Method not implemented!')
+        return init__pb2.PingResponse(message='pong')
 
 
 def add_PingServiceServicer_to_server(servicer, server):
@@ -85,4 +87,18 @@ class PingService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return init__pb2.PingResponse(message='pong')
+        return unary_unary(
+            request,
+            target,
+            '/PingService/Ping',
+            init__pb2.PingRequest.SerializeToString,
+            init__pb2.PingResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)

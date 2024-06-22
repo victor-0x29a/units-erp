@@ -18,7 +18,7 @@
             "module": "pytest",
             "args": [
                 "-v",
-                "app//specs//use_cases//test_create_product_v1.py::TestCreateProductUseCaseV1::test_should_find_a_batch_when_is_string"
+                "specs//gRPC//test_init.py::test_some"
             ],
             "env": {
                 "FASTAPI_ENV": "test"
