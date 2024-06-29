@@ -85,4 +85,18 @@ class PingService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return init__pb2.PingResponse(message='pong')
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/PingService/Ping',
+            init__pb2.PingRequest.SerializeToString,
+            init__pb2.PingResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
