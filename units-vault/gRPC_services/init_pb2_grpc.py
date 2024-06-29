@@ -51,9 +51,10 @@ class PingServiceServicer(object):
 
     def Ping(self, request, context):
         """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        # context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        # context.set_details('Method not implemented!')
+        # raise NotImplementedError('Method not implemented!')
+        return init__pb2.PingResponse(message='pong')
 
 
 def add_PingServiceServicer_to_server(servicer, server):
