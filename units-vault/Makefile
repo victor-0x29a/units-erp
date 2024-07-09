@@ -13,7 +13,7 @@ PY_VERSION = 3.12.3
 
 dev:
 	docker-compose up -d
-	pymon main.py
+	flask --app main run --debug
 
 test:
 	$(PY_CALL) -m pytest -v
@@ -21,10 +21,6 @@ test:
 install:
 	$(PY_CALL) -m pip install -r ./requirements/base.txt
 	$(PY_CALL) -m pip install -r ./requirements/dev.txt
-
-build:
-	$(PY_CALL) -m grpc_tools.protoc -I ./protobufs --python_out=./generated_bufs \
-         --grpc_python_out=./generated_bufs ./protobufs/init.proto
 
 docker-stop:
 	$(DOCKER_COMPOSE_DOWN)
