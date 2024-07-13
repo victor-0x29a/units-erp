@@ -1,12 +1,11 @@
-from flask import Flask
+from fastapi import FastAPI
+from controllers.product_controller import router as user_router
 
-app = Flask(__name__)
+app = FastAPI()
 
-
-@app.route('/')
-def hello():
-    return 'Vault say hello!', 200
+app.include_router(user_router)
 
 
-if __name__ == '__main__':
-    app.run()
+@app.get("/hello_world")
+def hello_world():
+    return {"Hello": "World"}
