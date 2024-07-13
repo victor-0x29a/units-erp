@@ -13,7 +13,7 @@ PY_VERSION = 3.12.3
 
 dev:
 	docker-compose up -d
-	flask --app main run --debug
+	fastapi dev main.py
 
 test:
 	$(PY_CALL) -m pytest -v
