@@ -20,3 +20,14 @@ PRODUCT_DATA_TYPES = {
     'for_internal_use': 'for_internal_use',
     'for_supplier_collect': 'for_supplier_collect',
 }
+
+TAGS_META_DATA = [
+    {
+        'name': 'batch',
+        'description': 'Um lote funciona como um indentificador de um grupo de produtos que foram adquiridos ou produzidos em um mesmo momento.'
+    },
+    {
+        'name': 'product',
+        'description': 'Um produto é uma mercadoria ou serviço que é oferecido para venda.'
+    }
+]
