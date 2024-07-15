@@ -1,12 +1,21 @@
-from documents import Product
+from documents import Product, Batch
 from exceptions import GreaterThanPrice, HasWithSameBatch
 
 
 class CreateProduct:
-    def __init__(self, product_document: Product, product_data: dict):
+    def __init__(self, product_document: Product, product_data: dict, batch_document: Batch = None):
         self.product_document = product_document
+        self.batch_document = batch_document
         self.data = product_data
+        self._fill_data()
         self._validate()
+
+    def _fill_data(self):
+        batch_field_is_string = "class 'str'" in str(type(self.data.get('batch')))
+
+        if batch_field_is_string:
+            batch = self.batch_document.objects.get(id=self.data.get('batch'))
+            self.data['batch'] = batch.id
 
     def _validate(self):
         batch = self.data.get('batch')
@@ -25,4 +34,4 @@ class CreateProduct:
         product = self.product_document(**self.data)
         product.save()
 
-        return product
+        return [product, self.data]

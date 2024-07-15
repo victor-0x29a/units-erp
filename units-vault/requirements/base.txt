@@ -1,5 +1,4 @@
-grpcio-tools==1.64.1
-grpcio==1.64.1
+fastapi==0.111.0
 python-dotenv==1.0.1
 pymongo==4.7.3
 mongoengine==0.28.2

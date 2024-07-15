@@ -1,0 +1,1 @@
+from .v1 import create_product
