@@ -22,5 +22,8 @@ install:
 	$(PY_CALL) -m pip install -r ./requirements/base.txt
 	$(PY_CALL) -m pip install -r ./requirements/dev.txt
 
+lint:
+	$(PY_CALL) -m flake8 .
+
 docker-stop:
 	$(DOCKER_COMPOSE_DOWN)
