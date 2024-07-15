@@ -6,7 +6,8 @@ from .interfaces import CreateProductV1
 router = APIRouter(prefix="/product")
 
 
-@router.post("/")
+@router.post("/", status_code=204)
 def create_product(payload: CreateProductV1):
-    print(payload)
-    return ProductService().create(payload)
+    service = ProductService()
+
+    service.create(payload)
