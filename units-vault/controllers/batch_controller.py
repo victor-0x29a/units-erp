@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 from .interfaces import CreateBatchV1
-from .services.batch_service import BatchService
+from services.batch_service import BatchService
 
 
 router = APIRouter(prefix="/batch")

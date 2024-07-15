@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from .services.product_service import ProductService
+from services.product_service import ProductService
 from .interfaces import CreateProductV1
 
 
