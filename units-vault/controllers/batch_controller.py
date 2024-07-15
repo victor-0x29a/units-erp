@@ -3,10 +3,10 @@ from .interfaces import CreateBatchV1
 from services.batch_service import BatchService
 
 
-router = APIRouter(prefix="/batch")
+router = APIRouter(prefix='/batch')
 
 
-@router.post("/", status_code=204)
+@router.post('/', status_code=204, tags=['batch'])
 def create_batch(payload: CreateBatchV1):
     service = BatchService()
 
