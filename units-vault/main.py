@@ -1,7 +1,7 @@
 import connection # noqa
 from fastapi import FastAPI
 from constants import TAGS_META_DATA
-from controllers.product_controller import router as user_router
+from controllers.product_controller import router as product_router
 from controllers.batch_controller import router as batch_router
 
 
@@ -12,7 +12,7 @@ app = FastAPI(
     docs_url='/9c86ffd5-b84e-4fd9-bb48-37c5f6912020'
 )
 
-app.include_router(user_router)
+app.include_router(product_router)
 app.include_router(batch_router)
 
 
