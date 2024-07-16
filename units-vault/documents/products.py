@@ -1,6 +1,6 @@
 from mongoengine import Document, StringField, FloatField, IntField, ReferenceField
 from .batch import Batch
-from constants import PRODUCT_DATA_TYPES
+from docs_constants import PRODUCT_DATA_TYPES
 import time
 import barcode
 from barcode.writer import ImageWriter
