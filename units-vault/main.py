@@ -8,7 +8,7 @@ from controllers.batch_controller import router as batch_router
 app = FastAPI(
     swagger_ui_parameters={'syntaxHighlight.theme': 'obsidian'},
     openapi_tags=TAGS_META_DATA,
-    # If you are viewing this, change the docs_url to otheer uuid4 with 50 characters
+    # If you are viewing this, change the docs_url to other uuid4 with 50 characters
     docs_url='/9c86ffd5-b84e-4fd9-bb48-37c5f6912020'
 )
 
