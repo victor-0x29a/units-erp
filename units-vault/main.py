@@ -1,7 +1,7 @@
 import connection # noqa
 from fastapi import FastAPI
-from controllers.product_controller import router as user_router
-from controllers.batch_controller import router as batch_router
+from controllers.v1.product_controller import router as user_router
+from controllers.v1.batch_controller import router as batch_router
 
 
 app = FastAPI()
