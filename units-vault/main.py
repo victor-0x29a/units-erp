@@ -1,8 +1,8 @@
 import connection # noqa
 from fastapi import FastAPI
 from constants import TAGS_META_DATA
-from controllers.product_controller import router as product_router
-from controllers.batch_controller import router as batch_router
+from controllers.v1.product_controller import router as product_router
+from controllers.v1.batch_controller import router as batch_router
 
 
 app = FastAPI(

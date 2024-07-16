@@ -22,3 +22,6 @@
 O **usuário** vai a qualquer unidade da loja e após escolher um produto, deve ter como consultar o valor através de um scanner ou chamando um funcionário (casa haja dúvidas), caso não tenha em estoque na unidade onde o usuário se encontra, deve ser possível buscar o mesmo produto em outras unidades da loja e possibilitando a compra e escolhendo se vai retirar no local ou entrega.
 
 A **empresa** deve ter a possibilidade de cadastrar produtos, efetuar vendas, estornos, gerenciamento de funcionários e visualização de auditoria.
+
+
+[GitMind](https://gitmind.com/app/docs/m9rif1t2)
