@@ -10,17 +10,6 @@ MONGO_DATABASE = os.getenv("MONGODB_DATABASE")
 MONGO_PORT = os.getenv("MONGODB_PORT")
 MONGO_URI = f"mongodb://{MONGO_USER}:{MONGO_PASS}@{MONGO_HOST}:{MONGO_PORT}"
 
-# App context
-
-PRODUCT_DATA_TYPES = {
-    'for_sale': 'for_sale',
-    'for_remove_sale': 'for_remove_sale',
-    'for_disposal': 'for_disposal',
-    'for_donation': 'for_donation',
-    'for_internal_use': 'for_internal_use',
-    'for_supplier_collect': 'for_supplier_collect',
-}
-
 TAGS_META_DATA = [
     {
         'name': 'batch',
