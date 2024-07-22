@@ -1,6 +1,6 @@
-from datetime import datetime
 from documents import Batch
 from use_cases import CreateBatchV1
+from utils import dates
 
 
 class BatchService:
@@ -8,8 +8,8 @@ class BatchService:
         data = data.dict()
 
         create_payload = {
-            "expiry_date": datetime.strptime(data.get("expiry_date"), "%d/%m/%Y"),
-            "inserction_datetime": datetime.now(),
+            "expiry_date": dates.parse_date(data.get("expiry_date")),
+            "inserction_datetime": dates.get_now(),
             "supplier_document": data.get("cnpj"),
             "reference": data.get("ref")
         }
