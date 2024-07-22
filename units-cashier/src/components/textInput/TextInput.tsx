@@ -1,7 +1,7 @@
-'use client'
+'use client';
 
-import { ITextInputProps } from './TextInput.types'
-import styles from './TextInput.module.scss'
+import { ITextInputProps } from './TextInput.types';
+import styles from './TextInput.module.scss';
 
 export const TextInput = ({
     label,
@@ -19,4 +19,4 @@ export const TextInput = ({
             />
         </div>
     );
-}
+};

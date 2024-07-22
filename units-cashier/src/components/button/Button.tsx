@@ -1,4 +1,4 @@
-import styles from './Button.module.scss'
+import styles from './Button.module.scss';
 import { IButtonProps } from './Button.types';
 
 export const Button = ({
@@ -18,4 +18,4 @@ export const Button = ({
             {isLoading ? loadingLabel : label}
         </button>
     );
-}
+};
