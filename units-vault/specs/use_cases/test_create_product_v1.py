@@ -91,3 +91,48 @@ class TestCreateProductUseCaseV1:
         ).start()
 
         assert product[1].get('batch') == obj_id
+
+    def test_should_create_with_bar_code(self, mocker):
+        data = {
+            'batch': generate_object_id(),
+            'price': 10,
+            'discount_value': 1,
+            'bar_code': '123456789012'
+        }
+
+        mock_product = mocker.patch('documents.Product')
+
+        mocker.patch.object(mock_product, 'objects', return_value=None)
+
+        mocker.patch.object(mock_product, 'save', return_value=True)
+
+        product = CreateProductV1(
+            product_document=mock_product,
+            product_data=data
+        ).start()
+
+        assert product[0]
+
+        assert product[1] == data
+
+    def test_should_create_without_bar_code(self, mocker):
+        data = {
+            'batch': generate_object_id(),
+            'price': 10,
+            'discount_value': 1
+        }
+
+        mock_product = mocker.patch('documents.Product')
+
+        mocker.patch.object(mock_product, 'objects', return_value=None)
+
+        mocker.patch.object(mock_product, 'save', return_value=True)
+
+        product = CreateProductV1(
+            product_document=mock_product,
+            product_data=data
+        ).start()
+
+        assert product[0]
+
+        assert product[1] == data
