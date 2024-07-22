@@ -1,6 +1,6 @@
-from datetime import datetime
 from documents import Batch
 from exceptions import AlreadyExists, LessThanCurrentDate
+from utils.dates import get_now
 
 
 class CreateBatch:
@@ -18,7 +18,7 @@ class CreateBatch:
         if batch:
             raise AlreadyExists(message="Batch already exists by reference.")
 
-        current_date = datetime.now()
+        current_date = get_now()
 
         expiry_date = self.batch.get('expiry_date', None)
 
