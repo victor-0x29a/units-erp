@@ -10,13 +10,13 @@ MONGO_DATABASE = os.getenv("MONGODB_DATABASE")
 MONGO_PORT = os.getenv("MONGODB_PORT")
 MONGO_URI = f"mongodb://{MONGO_USER}:{MONGO_PASS}@{MONGO_HOST}:{MONGO_PORT}"
 
-# App context
-
-PRODUCT_DATA_TYPES = {
-    'for_sale': 'for_sale',
-    'for_remove_sale': 'for_remove_sale',
-    'for_disposal': 'for_disposal',
-    'for_donation': 'for_donation',
-    'for_internal_use': 'for_internal_use',
-    'for_supplier_collect': 'for_supplier_collect',
-}
+TAGS_META_DATA = [
+    {
+        'name': 'batch',
+        'description': 'Um lote funciona como um indentificador de um grupo de produtos que foram adquiridos ou produzidos em um mesmo momento.'
+    },
+    {
+        'name': 'product',
+        'description': 'Um produto é uma mercadoria ou serviço que é oferecido para venda.'
+    }
+]

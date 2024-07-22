@@ -10,3 +10,7 @@ If is a fix, feat or some thing... And objective high level (without technical t
 # Something out of scope?
 
 Yes, lorem...
+
+# How do test it?
+
+Lorem...
