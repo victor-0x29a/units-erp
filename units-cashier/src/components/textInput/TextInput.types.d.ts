@@ -1,4 +1,4 @@
-import { identity } from "../components"
+import { identity } from '../components'
 
 export interface ITextInputProps {
     onChange: identity;

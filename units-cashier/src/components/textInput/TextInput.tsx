@@ -1,4 +1,4 @@
-"use client"
+'use client'
 
 import { ITextInputProps } from './TextInput.types'
 import styles from './TextInput.module.scss'

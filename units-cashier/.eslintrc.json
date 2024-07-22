@@ -2,5 +2,17 @@
   "extends": [
     "next/core-web-vitals",
     "plugin:storybook/recommended"
+  ],
+  "rules": {
+    "quotes": [
+      "error",
+      "single"
+    ]
+  },
+  "ignorePatterns": [
+    "node_modules/",
+    "out/",
+    ".next/",
+    "src/stories/Page.tsx"
   ]
 }

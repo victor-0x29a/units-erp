@@ -1,13 +1,13 @@
-import styles from "./Button.module.scss"
-import { IButtonProps } from "./Button.types";
+import styles from './Button.module.scss'
+import { IButtonProps } from './Button.types';
 
 export const Button = ({
     label,
     disabled,
     isLoading,
     onClick,
-    type = "default",
-    loadingLabel = "Carregando..."
+    type = 'default',
+    loadingLabel = 'Carregando...'
 }: IButtonProps) => {
     return (
         <button
