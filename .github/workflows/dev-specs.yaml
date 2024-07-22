@@ -3,7 +3,7 @@ name: CI-Specs
 on: [push]
 
 jobs:
-  specs-dev:
+  specs-units-vault:
     runs-on: ubuntu-latest
 
     steps:
@@ -20,3 +20,18 @@ jobs:
 
     - name: Run specs
       run: cd units-vault && make test
+
+  lint-units-cashier:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: cd units-cashier && npm install
+
+      - name: Run lint
+        run: cd units-cashier && npm run lint
