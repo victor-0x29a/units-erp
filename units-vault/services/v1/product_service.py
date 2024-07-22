@@ -9,11 +9,9 @@ class ProductService:
             **data,
             "item_type": data.get("type"),
             "data_type": data.get("for_use"),
-            "stock": data.get("base_stock"),
-            "barcode": data.get("bar_code")
+            "stock": data.get("base_stock")
         }
 
-        create_payload.pop("bar_code")
         create_payload.pop("type")
         create_payload.pop("for_use")
         create_payload.pop("base_stock")

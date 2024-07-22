@@ -23,6 +23,18 @@
             "env": {
                 "FASTAPI_ENV": "test"
             }
+        },
+        {
+            "name": "Python FASTAPI: Uvicorn",
+            "type": "python",
+            "request": "launch",
+            "module": "uvicorn",
+            "args": [
+                "main:app",
+                "--reload",
+                "--host",
+                "localhost"
+            ]
         }
     ]
 }
