@@ -1,16 +1,16 @@
-"use client"
+'use client';
 
-import { useFormik } from "formik";
-import { Button } from "@/components";
-import { LoginSchema, LoginInitialValues } from "@/schemas/auth/login";
-import styles from "./page.module.scss";
+import { useFormik } from 'formik';
+import { Button } from '@/components';
+import { LoginSchema, LoginInitialValues } from '@/schemas/auth/login';
+import styles from './page.module.scss';
 
 export default function Home() {
   const formik = useFormik({
     initialValues: LoginInitialValues,
     validationSchema: LoginSchema,
     onSubmit: () => {}
-  })
+  });
 
   return (
     <main>
