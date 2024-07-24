@@ -1,3 +1,23 @@
 {
-  "extends": "next/core-web-vitals"
+  "extends": [
+    "next/core-web-vitals",
+    "plugin:storybook/recommended"
+  ],
+  "rules": {
+    "quotes": [
+      "error",
+      "single"
+    ],
+    "no-unused-vars": "error",
+    "semi": [
+      "error"
+    ]
+  },
+  "ignorePatterns": [
+    "node_modules/",
+    "out/",
+    ".next/",
+    "src/stories/Page.tsx",
+    "*.d.ts"
+  ]
 }
