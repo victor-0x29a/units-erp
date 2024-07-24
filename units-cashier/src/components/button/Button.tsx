@@ -2,7 +2,7 @@ import styles from "./Button.module.scss"
 import { IButtonProps } from "./Button.types";
 
 export const Button = ({
-    label,
+    children,
     disabled,
     isLoading,
     onClick,
@@ -15,7 +15,7 @@ export const Button = ({
             disabled={disabled || isLoading}
             className={[styles.btn, styles[type]].join(' ')}
         >
-            {isLoading ? loadingLabel : label}
+            {isLoading ? loadingLabel : children}
         </button>
     );
 }
