@@ -5,4 +5,5 @@ export interface ITextInputProps {
     onBlur: identity;
     value: string;
     label: string;
+    type?: 'text' | 'password';
 }
