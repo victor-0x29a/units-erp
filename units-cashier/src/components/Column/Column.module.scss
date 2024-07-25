@@ -1,0 +1,9 @@
+.column {
+    display: flex;
+    flex-direction: column;
+    [class*="error-label"] {
+        margin-top: 0.5rem;
+        color: var(--danger-bg);
+        font-size: 0.85rem;
+    }
+}

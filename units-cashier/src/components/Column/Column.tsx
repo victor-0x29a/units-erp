@@ -1,18 +1,19 @@
-import React, { useMemo } from 'react'
-import { IColumnProps } from "./Column.types"
+import React, { useMemo } from 'react';
+import styles from './Column.module.scss';
+import { IColumnProps } from './Column.types';
 
 export const Column = ({
     children,
-    className,
+    className = '',
     error,
     hasError,
     isDisabled,
     isTouched
 }: IColumnProps) => {
-    const canShowError = useMemo(() => hasError && isTouched && error, [hasError, isTouched, error]);
+    const canShowError = useMemo(() => hasError && isTouched && error && !isDisabled, [hasError, isTouched, error, isDisabled]);
 
-    return <div>
+    return <div className={[styles.column, className].join(' ')}>
         {children}
-        {canShowError && <p className='error-label'>{error}</p>}
-    </div>
-}
+        {canShowError && (<p className='error-label'>{error}</p>)}
+    </div>;
+};
