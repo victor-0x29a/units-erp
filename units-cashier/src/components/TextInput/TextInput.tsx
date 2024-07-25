@@ -8,16 +8,18 @@ export const TextInput = ({
     onBlur,
     onChange,
     value,
-    type = 'text'
+    type = 'text',
+    ...others
 }: ITextInputProps) => {
     return (
         <div className={styles['input-container']}>
             <label>{label}</label>
             <input
                 value={value}
-                onChange={(event) => onChange(event.target.value)}
+                onChange={onChange}
                 onBlur={onBlur}
                 type={type}
+                {...others}
             />
         </div>
     );
