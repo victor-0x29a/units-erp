@@ -1,0 +1,15 @@
+.column {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    [class*="error-label"] {
+        position: absolute;
+        bottom: -0.65rem;
+        left: 0.30rem;
+        margin-top: 0.5rem;
+        color: var(--danger-bg);
+        font-size: 0.85rem;
+    }
+}
