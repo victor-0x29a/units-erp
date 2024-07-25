@@ -12,3 +12,7 @@ export const UNITS_VAULT_URL: string = process.env.UNITS_VAULT;
 
 export const UNITS_VAULT_USER_AGENT: string =
   process.env.UNITS_VAULT_USER_AGENT;
+
+export const UNITS_VAULT_MAX_RETRIES = Number(
+  process.env.UNITS_VAULT_MAX_RETRIES
+);
