@@ -2,21 +2,16 @@ import Fastify, { FastifyInstance } from "fastify";
 import { Home } from "./controllers";
 
 class Server {
-  constructor(
-    private readonly port: number,
-    private readonly canLog: boolean = true
-  ) {}
+  constructor(private readonly canLog: boolean = true) {}
 
   private readonly fastify = Fastify({
     logger: this.canLog,
   }) as FastifyInstance;
 
-  public start = (): void => {
+  public start = (): FastifyInstance => {
     new Home(this.fastify);
 
-    this.fastify.listen({
-      port: this.port,
-    });
+    return this.fastify;
   };
 }
 
