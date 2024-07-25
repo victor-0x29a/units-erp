@@ -1,4 +1,4 @@
-import Axios, { AxiosInstance, AxiosResponse } from "axios";
+import Axios, { AxiosError, AxiosInstance, AxiosResponse } from "axios";
 import axiosRetry from "axios-retry";
 import { IBackendModuleResponse } from "./backend.module.d";
 import {
@@ -27,6 +27,20 @@ class BackendModule {
     };
   };
 
+  /* c8 ignore start */
+  private extractData = (response: AxiosResponse) => {
+    return Promise.resolve({
+      statusCode: response.status,
+      data: response.data,
+      headers: response.headers,
+    }) as unknown as Promise<AxiosResponse>;
+  };
+
+  /* c8 ignore start */
+  private extractError = (error: AxiosError) => {
+    return Promise.reject(error);
+  };
+
   constructor(
     axios: typeof Axios,
     path: string,
@@ -49,7 +63,10 @@ class BackendModule {
     }
     this.requestHeaders = requestHeaders;
 
-    this.axiosInstance.interceptors.response.use(this.extractData);
+    this.axiosInstance.interceptors.response.use(
+      this.extractData,
+      this.extractError
+    );
   }
 
   private createInstance = () => {
@@ -84,15 +101,6 @@ class BackendModule {
       }
       return acc;
     }, "?");
-  };
-
-  /* c8 ignore start */
-  private extractData = (response: AxiosResponse) => {
-    return Promise.resolve({
-      statusCode: response.status,
-      data: response.data,
-      headers: response.headers,
-    }) as unknown as Promise<AxiosResponse>;
   };
 
   public get = async (): Promise<IBackendModuleResponse> => {
