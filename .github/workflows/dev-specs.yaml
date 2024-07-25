@@ -21,7 +21,7 @@ jobs:
     - name: Run specs
       run: cd units-vault && make test
 
-  lint-units-cashier:
+  lint-units-cashier-and-bff:
     runs-on: ubuntu-latest
 
     steps:
@@ -30,23 +30,17 @@ jobs:
         with:
           node-version: 22
 
-      - name: Install dependencies
+      - name: Install dependencies from units-cashier
         run: cd units-cashier && npm install
 
-      - name: Run lint
+      - name: Run lint from units-cashier
         run: cd units-cashier && npm run lint
 
-  lint-units-bff:
-    runs-on: ubuntu-latest
+      - name: Install dependencies from units-bff
+        run: cd units-bff && npm install
 
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-
-      - name: Install dependencies
-        run: cd units-bff && yarn
-
-      - name: Run lint
+      - name: Run lint from units-bff
         run: cd units-bff && npm run lint
+
+      - name: Run specs from units-bff
+        run: cd units-bff && npm run test
