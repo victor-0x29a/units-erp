@@ -1,6 +1,11 @@
 import Axios, { AxiosInstance, AxiosResponse } from "axios";
+import axiosRetry from "axios-retry";
 import { IBackendModuleResponse } from "./backend.module.d";
-import { UNITS_VAULT_URL, UNITS_VAULT_USER_AGENT } from "../constants";
+import {
+  UNITS_VAULT_URL,
+  UNITS_VAULT_USER_AGENT,
+  UNITS_VAULT_MAX_RETRIES,
+} from "../constants";
 
 class BackendModule {
   private axios: typeof Axios;
@@ -50,6 +55,10 @@ class BackendModule {
   private createInstance = () => {
     this.axiosInstance = this.axios.create({
       baseURL: UNITS_VAULT_URL,
+    });
+    axiosRetry(this.axiosInstance, {
+      retries: UNITS_VAULT_MAX_RETRIES,
+      retryDelay: axiosRetry.exponentialDelay,
     });
   };
 
