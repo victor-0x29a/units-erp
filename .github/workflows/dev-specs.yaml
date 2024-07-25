@@ -49,3 +49,4 @@ jobs:
         run: cd units-bff && npm install
 
       - name: Run lint
+        run: cd units-bff && npm run lint
