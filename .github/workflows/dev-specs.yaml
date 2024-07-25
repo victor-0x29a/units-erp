@@ -46,7 +46,7 @@ jobs:
           node-version: 22
 
       - name: Install dependencies
-        run: cd units-bff && npm install
+        run: cd units-bff && yarn
 
       - name: Run lint
         run: cd units-bff && npm run lint
