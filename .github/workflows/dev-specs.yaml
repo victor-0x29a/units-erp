@@ -37,10 +37,10 @@ jobs:
         run: cd units-cashier && npm run lint
 
       - name: Install dependencies from units-bff
-        run: cd units-bff && npm install
+        run: cd units-bff && yarn
 
       - name: Run lint from units-bff
-        run: cd units-bff && npm run lint
+        run: cd units-bff && yarn lint
 
       - name: Run specs from units-bff
-        run: cd units-bff && npm run test
+        run: cd units-bff && yarn test
