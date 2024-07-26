@@ -1,12 +1,12 @@
-import { FastifyInstance } from "fastify";
-import type { FastifyHandler } from "./controllers";
+import { FastifyInstance, RouteShorthandOptionsWithHandler } from "fastify";
 
 class Builder {
   constructor(private readonly fastify: FastifyInstance) {}
 
   public createRoute =
-    (method: string) => (path: string, handler: FastifyHandler) => {
-      return this.fastify[method](path, handler);
+    (method: string) =>
+    (path: string, options: RouteShorthandOptionsWithHandler) => {
+      return this.fastify[method](path, options);
     };
 }
 
