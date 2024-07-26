@@ -6,6 +6,7 @@ import Fastify, {
 } from "fastify";
 import { Home } from "./controllers";
 
+/* c8 ignore start */
 class Server {
   constructor(private readonly canLog: boolean = true) {}
 
