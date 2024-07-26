@@ -1,0 +1,10 @@
+{
+    "compilerOptions": {
+        "esModuleInterop": true
+    },
+    "include": [
+        "src/*.ts",
+        "src/**/*.*.spec.ts",
+        "src/controllers/Builder.ts"
+    ],
+}

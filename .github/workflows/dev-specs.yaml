@@ -1,4 +1,4 @@
-name: CI-Specs
+name: CI-Specs and Lint
 
 on: [push]
 
@@ -21,7 +21,7 @@ jobs:
     - name: Run specs
       run: cd units-vault && make test
 
-  lint-units-cashier:
+  lint-units-cashier-and-bff:
     runs-on: ubuntu-latest
 
     steps:
@@ -30,8 +30,17 @@ jobs:
         with:
           node-version: 22
 
-      - name: Install dependencies
+      - name: Install dependencies from units-cashier
         run: cd units-cashier && npm install
 
-      - name: Run lint
+      - name: Run lint from units-cashier
         run: cd units-cashier && npm run lint
+
+      - name: Install dependencies from units-bff
+        run: cd units-bff && yarn
+
+      - name: Run lint from units-bff
+        run: cd units-bff && yarn lint
+
+      - name: Run specs from units-bff
+        run: cd units-bff && yarn test
