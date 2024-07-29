@@ -4,7 +4,7 @@ from use_cases import CreateProductV1
 
 class ProductService:
     def create(self, data={}):
-        data = data.dict()
+        data = data.model_dump()
         create_payload = {
             **data,
             "item_type": data.get("type"),

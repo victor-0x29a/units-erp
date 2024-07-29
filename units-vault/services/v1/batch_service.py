@@ -5,7 +5,7 @@ from utils import dates
 
 class BatchService:
     def create(self, data={}):
-        data = data.dict()
+        data = data.model_dump()
 
         create_payload = {
             "expiry_date": dates.parse_date(data.get("expiry_date")),
