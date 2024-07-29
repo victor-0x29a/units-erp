@@ -9,7 +9,7 @@ from utils.dates import get_now
 client = TestClient(app)
 
 
-class TestCreateBatchE2EV1():
+class TestCreateBatchIntegrationV1():
     def test_should_create(self, mocker):
         next_year = datetime.now().year + 1
 

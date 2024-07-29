@@ -8,7 +8,7 @@ from documents import Product, Batch
 client = TestClient(app)
 
 
-class TestCreateProductE2EV1():
+class TestCreateProductIntegrationV1():
     def test_should_create(self, mocker):
         magic_batch = MagicMock()
 
