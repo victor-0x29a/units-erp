@@ -7,10 +7,10 @@ class CreateProduct:
         self.product_document = product_document
         self.batch_document = batch_document
         self.data = product_data
-        self._fill_data()
-        self._validate()
+        self.__fill_data()
+        self.__validate()
 
-    def _fill_data(self):
+    def __fill_data(self):
         batch_id_stringified = self.data.get('batch', None)
 
         batch_field_is_string = "class 'str'" in str(type(batch_id_stringified))
@@ -19,7 +19,7 @@ class CreateProduct:
             batch = self.batch_document.objects.get(reference=batch_id_stringified)
             self.data['batch'] = batch.id
 
-    def _validate(self):
+    def __validate(self):
         batch = self.data.get('batch')
         product = self.product_document.objects(batch=batch)
 
