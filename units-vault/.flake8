@@ -1,4 +1,4 @@
 [flake8]
-exclude = __init__.py
+exclude = __init__.py, constants.py
 max-line-length = 105
 ignore = E128, W503, E402
