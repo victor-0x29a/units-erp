@@ -6,4 +6,4 @@ def get_now():
 
 
 def parse_date(date: str, format: str = "%d/%m/%Y"):
-    return datetime.strptime(date, format)
+    return datetime.strptime(date, format).replace(tzinfo=timezone.utc)
