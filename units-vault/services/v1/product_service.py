@@ -16,8 +16,6 @@ class ProductService:
         create_payload.pop("for_use")
         create_payload.pop("base_stock")
 
-        # TO DO: Wait implementation of Batch
-
         CreateProductV1(
             batch_document=Batch,
             product_document=Product,

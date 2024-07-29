@@ -11,10 +11,12 @@ class CreateProduct:
         self._validate()
 
     def _fill_data(self):
-        batch_field_is_string = "class 'str'" in str(type(self.data.get('batch')))
+        batch_id_stringified = self.data.get('batch', None)
+
+        batch_field_is_string = "class 'str'" in str(type(batch_id_stringified))
 
         if batch_field_is_string:
-            batch = self.batch_document.objects.get(id=self.data.get('batch'))
+            batch = self.batch_document.objects.get(reference=batch_id_stringified)
             self.data['batch'] = batch.id
 
     def _validate(self):
@@ -22,6 +24,9 @@ class CreateProduct:
         product = self.product_document.objects(batch=batch)
 
         if product:
+            """
+            If have with same batch, doesn't allow to create, use the route to add more quantity instead.
+            """
             raise HasWithSameBatch()
 
         product_price = self.data.get('price')
