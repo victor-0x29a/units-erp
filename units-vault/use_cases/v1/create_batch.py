@@ -4,16 +4,15 @@ from utils.dates import get_now
 
 
 class CreateBatch:
-    def __init__(self, data={}, batch_document: Batch = None):
+    def __init__(self, data={}):
         self.batch = data
-        self.document = batch_document
 
         self.__validate()
 
     def __validate(self):
         # TO DO: VALIDATE THE CNPJ
 
-        batch = self.document.objects(reference=self.batch.get('reference', None))
+        batch = Batch.objects(reference=self.batch.get('reference', None))
 
         if batch:
             raise AlreadyExists(message="Batch already exists by reference.")
@@ -26,7 +25,7 @@ class CreateBatch:
             raise LessThanCurrentDate()
 
     def start(self) -> Batch:
-        created_batch = self.document(**self.batch)
+        created_batch = Batch(**self.batch)
 
         created_batch.save()
 
