@@ -14,6 +14,9 @@ class CreateProduct:
         batch_field_is_string = "class 'str'" in str(type(batch_id_stringified))
 
         if batch_field_is_string:
+            """
+            IF BATCH IS STRING, FIND THE BATCH BY REFERENCE
+            """
             batch = Batch.objects.get(reference=batch_id_stringified)
             self.data['batch'] = batch.id
 
@@ -30,7 +33,7 @@ class CreateProduct:
         product_price = self.data.get('price')
         product_discount = self.data.get('discount_value')
 
-        if (product_price, product_discount) and (product_discount > product_price):
+        if (product_price and product_discount) and (product_discount > product_price):
             raise GreaterThanPrice()
 
     def start(self):
