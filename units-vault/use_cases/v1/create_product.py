@@ -3,9 +3,7 @@ from exceptions import GreaterThanPrice, HasWithSameBatch
 
 
 class CreateProduct:
-    def __init__(self, product_document: Product, product_data: dict, batch_document: Batch = None):
-        self.product_document = product_document
-        self.batch_document = batch_document
+    def __init__(self, product_data: dict):
         self.data = product_data
         self.__fill_data()
         self.__validate()
@@ -16,12 +14,12 @@ class CreateProduct:
         batch_field_is_string = "class 'str'" in str(type(batch_id_stringified))
 
         if batch_field_is_string:
-            batch = self.batch_document.objects.get(reference=batch_id_stringified)
+            batch = Batch.objects.get(reference=batch_id_stringified)
             self.data['batch'] = batch.id
 
     def __validate(self):
         batch = self.data.get('batch')
-        product = self.product_document.objects(batch=batch)
+        product = Product.objects(batch=batch)
 
         if product:
             """
@@ -36,7 +34,7 @@ class CreateProduct:
             raise GreaterThanPrice()
 
     def start(self):
-        product = self.product_document(**self.data)
+        product = Product(**self.data)
         product.save()
 
-        return [product, self.data]
+        return product
