@@ -1,7 +1,9 @@
 import datetime
 import pytest
 from use_cases import CreateBatchV1
+from documents import Batch
 from utils.dates import get_now
+from ..fixture import mongo_connection # noqa: F401, E261
 
 
 class TestCreateBatchUseCaseV1:
@@ -13,14 +15,12 @@ class TestCreateBatchUseCaseV1:
             'reference': "123123"
         }
 
-        mock_batch = mocker.patch('documents.Batch')
+        mocker.patch.object(Batch, 'objects', return_value=None)
 
-        mocker.patch.object(mock_batch, 'objects', return_value=None)
-
-        mocker.patch.object(mock_batch, 'save', return_value=True)
+        mocker.patch.object(Batch, 'save', return_value=True)
 
         batch = CreateBatchV1(
-            batch_document=mock_batch,
+            batch_document=Batch,
             data=data
         ).start()
 
