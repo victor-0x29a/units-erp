@@ -5,6 +5,11 @@ from exceptions import GreaterThanPrice, HasWithSameBatch
 class CreateProduct:
     def __init__(self, product_data: dict):
         self.data = product_data
+
+        self.product_obj = Product(**self.data)
+
+        self.product_obj.validate()
+
         self.__fill_data()
         self.__validate()
 
@@ -37,7 +42,6 @@ class CreateProduct:
             raise GreaterThanPrice()
 
     def start(self):
-        product = Product(**self.data)
-        product.save()
+        self.product_obj.save()
 
-        return product
+        return self.product_obj
