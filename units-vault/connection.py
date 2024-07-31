@@ -9,5 +9,6 @@ connect(
     host=MONGO_HOST,
     username=MONGO_USER,
     password=MONGO_PASS,
-    authentication_source='admin'
+    authentication_source='admin',
+    uuidRepresentation='standard'
 )
