@@ -1,10 +1,10 @@
 import pytest
-from datetime import datetime
+from datetime import datetime, timedelta
 from fastapi.testclient import TestClient
 from main import app
 from documents import Batch
 from exceptions import LessThanCurrentDate, AlreadyExists
-from utils.dates import get_now, parse_date
+from utils.dates import get_now, from_date_to_str
 from ...fixture import mongo_connection # noqa: F401, E261
 
 client = TestClient(app)
@@ -47,7 +47,7 @@ class TestCreateBatchIntegrationV1():
             client.post("/v1/batch", json={
                 "cnpj": "any",
                 "ref": "something",
-                "expiry_date": parse_date(get_now() - datetime.timedelta(days=1))
+                "expiry_date": from_date_to_str(get_now() - timedelta(days=1))
             })
 
         assert exception.value.message == "Expiry date must be greater than current date."
