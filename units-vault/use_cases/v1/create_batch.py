@@ -14,8 +14,6 @@ class CreateBatch:
         self.__validate()
 
     def __validate(self):
-        # TO DO: VALIDATE THE CNPJ
-
         batch = Batch.objects(reference=self.batch.get('reference', None))
 
         if batch:
