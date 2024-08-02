@@ -6,5 +6,10 @@ def mongo_connection():
     import mongomock
     from mongoengine import connect, disconnect
     disconnect()
-    connect('mongoenginetest', host='mongodb://localhost', mongo_client_class=mongomock.MongoClient)
+    connect(
+        'mongoenginetest',
+        host='mongodb://localhost',
+        mongo_client_class=mongomock.MongoClient,
+        uuidRepresentation='standard'
+    )
     yield
