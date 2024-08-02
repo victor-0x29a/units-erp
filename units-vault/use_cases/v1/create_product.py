@@ -27,14 +27,10 @@ class CreateProduct:
             """
             batch = Batch.objects.get(reference=batch)
             self.product_obj.batch = batch.id
+            self.data['batch'] = batch.id
 
     def __validate(self):
         batch = self.data.get('batch')
-
-        batch_is_string = self.__is_string(batch)
-
-        if batch_is_string:
-            batch = Batch.objects.get(reference=batch)
 
         product = Product.objects(batch=batch)
 
