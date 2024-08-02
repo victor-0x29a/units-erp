@@ -7,5 +7,8 @@ exceptions_code = {
     },
     1002: {
         "http": 409
+    },
+    1009: {
+        "http": 406
     }
 }
