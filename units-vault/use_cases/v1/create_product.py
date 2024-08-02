@@ -1,5 +1,5 @@
 from documents import Product, Batch
-from exceptions import GreaterThanPrice, HasWithSameBatch
+from exceptions import GreaterThanPrice, HasWithSameBatch, MissingDoc
 
 
 class CreateProduct:
@@ -31,6 +31,9 @@ class CreateProduct:
 
     def __validate(self):
         batch = self.data.get('batch')
+
+        if not batch:
+            raise MissingDoc(message="Missing batch.")
 
         product = Product.objects(batch=batch)
 

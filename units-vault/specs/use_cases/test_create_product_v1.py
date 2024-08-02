@@ -1,3 +1,4 @@
+import pytest
 from datetime import timedelta
 from use_cases import CreateProductV1
 from documents import Product, Batch
@@ -143,3 +144,19 @@ class TestCreateProductUseCaseV1:
         ).start()
 
         assert product
+
+    def test_should_fail_when_havent_batch(self, mocker):
+        data = {
+            'price': 10,
+            'discount_value': 1,
+            'name': 'foo name',
+            'stock': 10,
+            'item_type': 'foo type'
+        }
+
+        with pytest.raises(Exception) as error:
+            CreateProductV1(
+                product_data=data
+            ).start()
+
+        assert "Missing batch." == error.value.message
