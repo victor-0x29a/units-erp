@@ -7,10 +7,10 @@ import barcode
 
 class Product(Document):
     name = StringField(required=True, max_length=35)
-    bar_code = StringField(required=True, unique=True, min_length=13, max_length=13, regex='^[0-9]*$')
+    bar_code = StringField(required=False, unique=True, min_length=13, max_length=13, regex='^[0-9]*$')
     price = FloatField(required=True)
     stock = IntField(required=True)
-    batch = ReferenceField(Batch, required=True)
+    batch = ReferenceField(Batch, required=False)
     discount_value = FloatField(default=0.0)
     item_type = StringField(required=True)
     data_type = StringField(required=True,

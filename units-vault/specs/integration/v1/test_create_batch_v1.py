@@ -1,10 +1,11 @@
-from main import app
 import pytest
+from datetime import datetime, timedelta
 from fastapi.testclient import TestClient
+from main import app
 from documents import Batch
 from exceptions import LessThanCurrentDate, AlreadyExists
-from datetime import datetime
-from utils.dates import get_now
+from utils.dates import get_now, from_date_to_str
+from ...fixture import mongo_connection # noqa: F401, E261
 
 client = TestClient(app)
 
@@ -40,18 +41,13 @@ class TestCreateBatchIntegrationV1():
         assert exception.value.message == "Batch already exists by reference."
 
     def test_should_reject_when_expiry_date_is_less_than_current_date(self, mocker):
-        now = get_now()
-        current_year = now.year
-        current_month = now.month
-        last_day = now.day - 1
-
         mocker.patch.object(Batch, 'objects', return_value=False)
 
         with pytest.raises(LessThanCurrentDate) as exception:
             client.post("/v1/batch", json={
                 "cnpj": "any",
                 "ref": "something",
-                "expiry_date": f"{last_day}/{current_month}/{current_year}"
+                "expiry_date": from_date_to_str(get_now() - timedelta(days=1))
             })
 
         assert exception.value.message == "Expiry date must be greater than current date."

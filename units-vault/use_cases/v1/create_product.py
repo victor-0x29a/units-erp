@@ -1,27 +1,41 @@
 from documents import Product, Batch
-from exceptions import GreaterThanPrice, HasWithSameBatch
+from exceptions import GreaterThanPrice, HasWithSameBatch, MissingDoc
 
 
 class CreateProduct:
-    def __init__(self, product_document: Product, product_data: dict, batch_document: Batch = None):
-        self.product_document = product_document
-        self.batch_document = batch_document
+    def __init__(self, product_data: dict):
         self.data = product_data
+
+        self.product_obj = Product(**product_data)
+
+        self.product_obj.validate()
+
         self.__fill_data()
         self.__validate()
 
-    def __fill_data(self):
-        batch_id_stringified = self.data.get('batch', None)
+    def __is_string(self, data):
+        return "class 'str'" in str(type(data))
 
-        batch_field_is_string = "class 'str'" in str(type(batch_id_stringified))
+    def __fill_data(self):
+        batch = self.data.get('batch', None)
+
+        batch_field_is_string = self.__is_string(batch)
 
         if batch_field_is_string:
-            batch = self.batch_document.objects.get(reference=batch_id_stringified)
+            """
+            IF BATCH IS STRING, FIND THE BATCH BY REFERENCE
+            """
+            batch = Batch.objects.get(reference=batch)
+            self.product_obj.batch = batch.id
             self.data['batch'] = batch.id
 
     def __validate(self):
         batch = self.data.get('batch')
-        product = self.product_document.objects(batch=batch)
+
+        if not batch:
+            raise MissingDoc(message="Missing batch.")
+
+        product = Product.objects(batch=batch)
 
         if product:
             """
@@ -32,11 +46,10 @@ class CreateProduct:
         product_price = self.data.get('price')
         product_discount = self.data.get('discount_value')
 
-        if (product_price, product_discount) and (product_discount > product_price):
+        if (product_price and product_discount) and (product_discount > product_price):
             raise GreaterThanPrice()
 
     def start(self):
-        product = self.product_document(**self.data)
-        product.save()
+        self.product_obj.save()
 
-        return [product, self.data]
+        return self.product_obj

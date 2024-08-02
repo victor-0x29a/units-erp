@@ -16,9 +16,10 @@
             "type": "python",
             "request": "launch",
             "module": "pytest",
+            "justMyCode": false,
             "args": [
                 "-v",
-                "specs//gRPC//test_init.py::test_some"
+                "specs/integration/v1/test_create_product_v1.py::TestCreateProductIntegrationV1::test_should_fail_when_havent_batch"
             ],
             "env": {
                 "FASTAPI_ENV": "test"
