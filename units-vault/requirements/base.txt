@@ -3,3 +3,5 @@ python-dotenv==1.0.1
 pymongo==4.8.0
 mongoengine==0.28.2
 python-barcode==0.15.1
+pillow==10.4.0
+setuptools==66.1.1
