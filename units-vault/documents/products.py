@@ -3,6 +3,7 @@ from .batch import Batch
 from docs_constants import PRODUCT_DATA_TYPES
 import time
 import barcode
+import random
 
 
 class Product(Document):
@@ -26,14 +27,19 @@ class Product(Document):
     @staticmethod
     def generate_unique_bar_code():
         while True:
-            timestamp = str(int(float(str(time.time())[:12])))
+            barcode_number = str(int(
+                time.time()
+            ))
 
-            if len(timestamp) < 12:
-                timestamp = timestamp.ljust(12, '0')
+            random_digit = random.randint(25, 100 ** 5)
 
-            ean = barcode.get('ean13', timestamp)
+            barcode_number = str(int(barcode_number) + random_digit)
 
-            barcode_number = str(ean.get_fullcode())
+            barcode_number = barcode_number.ljust(13, '0')
+
+            barcode_number = barcode.get('ean13', barcode_number)
+
+            barcode_number = barcode_number.get_fullcode()
 
             if not Product.objects(bar_code=barcode_number):
                 return barcode_number
