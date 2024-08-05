@@ -64,7 +64,7 @@ def mount_template_response(
     return JSONResponse({
         "code": code,
         "message": message,
-        "errors": []
+        "errors": errors
     }, status_code=status_code)
 
 
