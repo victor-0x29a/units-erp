@@ -3,3 +3,4 @@ python-dotenv==1.0.1
 pymongo==4.8.0
 mongoengine==0.28.2
 python-barcode==0.15.1
+pycpfcnpj==1.8
