@@ -51,3 +51,15 @@ class TestCreateBatchIntegrationV1():
             })
 
         assert exception.value.message == "Expiry date must be greater than current date."
+
+    def test_should_reject_when_supplier_document_is_invalid(self, mocker):
+        mocker.patch.object(Batch, 'objects', return_value=False)
+
+        with pytest.raises(Exception) as error:
+            client.post("/v1/batch", json={
+                "cnpj": "123456789",
+                "ref": "something",
+                "expiry_date": from_date_to_str(get_now() + timedelta(days=1))
+            })
+
+        assert error.value.errors.get('supplier_document').message == "The company doc should be valid."
