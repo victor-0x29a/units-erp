@@ -6,3 +6,7 @@ PRODUCT_DATA_TYPES = {
     'for_internal_use': 'for_internal_use',
     'for_supplier_collect': 'for_supplier_collect',
 }
+
+DOCS_DTO = {
+    'supplier_document': 'cnpj'
+}
