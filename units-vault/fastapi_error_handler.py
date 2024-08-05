@@ -40,7 +40,12 @@ def can_show_internal_error(exc: Exception):
     return False
 
 
-def mount_template_response(code=0, message="Internal Server Error", errors=[], status_code=500):
+def mount_template_response(
+    code=0,
+    message="Internal Server Error",
+    errors=[],
+    status_code=500
+):
     if status_code == 500:
         return Response(status_code=500)
 
@@ -83,4 +88,8 @@ async def unhandled_exceptions(request: Request, exc: Exception):
 
     status_code = exceptions_code.get(code, {}).get("http", 500)
 
-    return mount_template_response(code=code, message=message, status_code=status_code)
+    return mount_template_response(
+        code=code,
+        message=message,
+        status_code=status_code
+    )
