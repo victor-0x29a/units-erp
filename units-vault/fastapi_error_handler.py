@@ -6,13 +6,25 @@ from documents import Batch
 from docs_constants import DOCS_DTO
 
 
-def parse_errors(errors):
+def parse_errors(exc, is_fastapi_validation_error=False):
     parsed_errors = []
+
+    if is_fastapi_validation_error:
+        errors = exc._errors
+
+        for error in errors:
+            parsed_errors.append({
+                "field": error.get('loc')[1],
+                "message": error.get('msg')
+            })
+
+        return parsed_errors
+
     batch_fields = Batch._fields
 
     supplier_field = batch_fields.get('supplier_document').name
 
-    for key, value in errors.items():
+    for key, value in exc.items():
         if key == supplier_field:
             key = DOCS_DTO.get(supplier_field)
 
@@ -92,4 +104,19 @@ async def unhandled_exceptions(request: Request, exc: Exception):
         code=code,
         message=message,
         status_code=status_code
+    )
+
+
+async def http_exceptions(request: Request, exc: Exception):
+    exception_details = exceptions_code.get(VALIDATION_ERROR_CODE)
+    parsed_errors = parse_errors(
+        exc,
+        is_fastapi_validation_error=True
+    )
+
+    return mount_template_response(
+        code=VALIDATION_ERROR_CODE,
+        errors=parsed_errors,
+        message=exception_details.get('message'),
+        status_code=exception_details.get('http')
     )
