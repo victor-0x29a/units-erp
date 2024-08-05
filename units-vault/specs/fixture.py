@@ -1,10 +1,10 @@
 import pytest
+import mongomock
+from mongoengine import connect, disconnect
 
 
 @pytest.fixture(autouse=True)
 def mongo_connection():
-    import mongomock
-    from mongoengine import connect, disconnect
     disconnect()
     connect(
         'mongoenginetest',
