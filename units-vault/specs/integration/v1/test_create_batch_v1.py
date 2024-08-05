@@ -19,7 +19,7 @@ class TestCreateBatchIntegrationV1():
         mocker.patch.object(Batch, 'save', return_value=True)
 
         response = client.post("/v1/batch", json={
-            "cnpj": "any",
+            "cnpj": "04.954.588/0001-73",
             "ref": "something",
             "expiry_date": f"12/09/{next_year}"
         })
@@ -33,7 +33,7 @@ class TestCreateBatchIntegrationV1():
 
         with pytest.raises(AlreadyExists) as exception:
             client.post("/v1/batch", json={
-                "cnpj": "any",
+                "cnpj": "04.954.588/0001-73",
                 "ref": "something",
                 "expiry_date": f"12/09/{next_year}"
             })
@@ -45,7 +45,7 @@ class TestCreateBatchIntegrationV1():
 
         with pytest.raises(LessThanCurrentDate) as exception:
             client.post("/v1/batch", json={
-                "cnpj": "any",
+                "cnpj": "04.954.588/0001-73",
                 "ref": "something",
                 "expiry_date": from_date_to_str(get_now() - timedelta(days=1))
             })
