@@ -74,4 +74,4 @@ class TestCreateBatchUseCaseV1:
                 data=data
             ).start()
 
-        assert 'The company doc should be valid.' == error.value.errors.get('supplier_document').message
+        assert error.value.errors.get('supplier_document').message == 'The company doc should be valid.'

@@ -159,4 +159,4 @@ class TestCreateProductUseCaseV1:
                 product_data=data
             ).start()
 
-        assert "Missing batch." == error.value.message
+        assert error.value.message == "Missing batch."

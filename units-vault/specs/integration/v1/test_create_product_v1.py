@@ -52,7 +52,7 @@ class TestCreateProductIntegrationV1():
                 "for_use": "for_sale"
             })
 
-        assert "Already has product with the same batch." == exception.value.message
+        assert exception.value.message == "Already has product with the same batch."
 
     def test_should_reject_when_discount_is_greater_than_price(eslf, mocker):
         magic_batch = MagicMock()
@@ -76,4 +76,4 @@ class TestCreateProductIntegrationV1():
                 "for_use": "for_sale"
             })
 
-        assert "The discount is greater than the price of the product." == exception.value.message
+        assert exception.value.message == "The discount is greater than the price of the product."
