@@ -51,12 +51,12 @@ class TestCreateProductUseCaseV1:
 
         mocker.patch.object(Product, 'save', return_value=True)
 
-        try:
+        with pytest.raises(Exception) as error:
             CreateProductV1(
                 product_data=data
             ).start()
-        except Exception as e:
-            assert 'discount' in str(e)
+
+        assert 'discount' in str(error)
 
     def test_should_fail_when_have_with_same_batch(self, mocker):
         data = {
@@ -72,12 +72,12 @@ class TestCreateProductUseCaseV1:
 
         mocker.patch.object(Product, 'save', return_value=True)
 
-        try:
+        with pytest.raises(Exception) as error:
             CreateProductV1(
                 product_data=data
             ).start()
-        except Exception as e:
-            assert 'batch' in str(e)
+
+        assert 'batch' in str(error)
 
     def test_should_find_a_batch_when_batch_is_string(self, mocker):
         batch_reference = "ref123"
