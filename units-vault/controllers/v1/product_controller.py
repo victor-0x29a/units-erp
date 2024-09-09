@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 from services.v1.product_service import ProductService
-from ..interfaces import CreateProductV1
+from ..dto import CreateProductV1
 
 
 router = APIRouter(prefix="/v1/product")

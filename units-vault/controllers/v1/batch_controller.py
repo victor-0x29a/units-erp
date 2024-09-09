@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from ..interfaces import CreateBatchV1
+from ..dto import CreateBatchV1
 from services.v1.batch_service import BatchService
 from utils.dates import from_str_to_date, get_now
 
