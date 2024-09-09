@@ -13,7 +13,7 @@ class TestCreateProductUseCaseV1:
 
         Batch(
             reference=batch_reference,
-            supplier_document=batch_reference,
+            supplier_document='04.954.588/0001-73',
             inserction_datetime=get_now(),
             expiry_date=get_now() + timedelta(days=1)
         ).save().id
@@ -83,7 +83,7 @@ class TestCreateProductUseCaseV1:
         batch_reference = "ref123"
 
         created_batch_id = Batch(
-            supplier_document="123123",
+            supplier_document="76.099.428/0001-03",
             reference=batch_reference,
             expiry_date=get_now() + timedelta(days=1),
             inserction_datetime=get_now()
@@ -159,4 +159,4 @@ class TestCreateProductUseCaseV1:
                 product_data=data
             ).start()
 
-        assert "Missing batch." == error.value.message
+        assert error.value.message == "Missing batch."

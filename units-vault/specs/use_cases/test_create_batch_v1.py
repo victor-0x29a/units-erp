@@ -58,3 +58,20 @@ class TestCreateBatchUseCaseV1:
             ).start()
 
         assert 'LessThanCurrentDate' in str(error)
+
+    def test_should_fail_when_supplier_document_is_invalid(self, mocker):
+        data = {
+            'expiry_date': get_now() + datetime.timedelta(days=1),
+            'inserction_datetime': get_now(),
+            'supplier_document': "923148328",
+            'reference': "123123"
+        }
+
+        mocker.patch.object(Batch, 'objects', return_value=None)
+
+        with pytest.raises(Exception) as error:
+            CreateBatchV1(
+                data=data
+            ).start()
+
+        assert error.value.errors.get('supplier_document').message == 'The company doc should be valid.'

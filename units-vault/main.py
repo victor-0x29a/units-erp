@@ -1,5 +1,6 @@
 import connection # noqa
 from fastapi import FastAPI
+from fastapi.exceptions import RequestValidationError
 import fastapi_error_handler
 from constants import TAGS_META_DATA
 from controllers.v1.product_controller import router as product_router
@@ -13,6 +14,7 @@ app = FastAPI(
     docs_url='/9c86ffd5-b84e-4fd9-bb48-37c5f6912020'
 )
 
+app.add_exception_handler(RequestValidationError, fastapi_error_handler.http_exceptions)
 app.add_exception_handler(Exception, fastapi_error_handler.unhandled_exceptions)
 
 app.include_router(product_router)
