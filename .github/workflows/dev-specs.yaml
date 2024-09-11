@@ -16,10 +16,11 @@ jobs:
       run: sudo apt-get install -y make
 
     - name: Install dependencies
-      run: cd units-vault && make install
+      run: python3 -m pip install -r ./units-vault/requirements/base.txt
+      run: python3 -m pip install -r ./units-vault/requirements/dev.txt
 
     - name: Run specs
-      run: cd units-vault && make test
+      run: cd units-vault && python3 -m pytest -v
 
   lint-units-cashier-and-bff:
     runs-on: ubuntu-latest
