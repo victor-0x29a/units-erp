@@ -19,7 +19,7 @@
             "justMyCode": false,
             "args": [
                 "-v",
-                "specs/integration/v1/test_create_product_v1.py::TestCreateProductIntegrationV1::test_should_fail_when_havent_batch"
+                "specs/integration/v1/test_create_batch_v1.py::TestCreateBatchIntegrationV1::test_should_reject_double_key_in_unique_key_field"
             ],
             "env": {
                 "FASTAPI_ENV": "test"

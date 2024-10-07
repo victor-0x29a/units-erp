@@ -1,4 +1,5 @@
 import connection # noqa
+from mongoengine.errors import ValidationError, NotUniqueError, OperationError
 from fastapi import FastAPI
 from fastapi.exceptions import RequestValidationError
 import fastapi_error_handler
@@ -15,7 +16,11 @@ app = FastAPI(
 )
 
 app.add_exception_handler(RequestValidationError, fastapi_error_handler.http_exceptions)
-app.add_exception_handler(Exception, fastapi_error_handler.unhandled_exceptions)
+
+exception_list = [ValidationError, NotUniqueError, OperationError, Exception]
+
+for exception in exception_list:
+    app.add_exception_handler(exception, fastapi_error_handler.unhandled_exceptions)
 
 app.include_router(product_router)
 app.include_router(batch_router)

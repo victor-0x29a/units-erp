@@ -1,7 +1,7 @@
 from fastapi import Request
 from fastapi.responses import JSONResponse, Response
-from exceptions import exceptions_code, VALIDATION_ERROR_CODE
-from mongoengine import ValidationError
+from exceptions import exceptions_code, VALIDATION_ERROR_CODE, UNIQUE_KEY_ERROR_CODE
+from mongoengine import ValidationError, NotUniqueError
 from documents import Batch
 from docs_constants import DOCS_DTO
 
@@ -80,9 +80,20 @@ ERRORS: ANY[]
 
 async def unhandled_exceptions(request: Request, exc: Exception):
     is_validation_error = isinstance(exc, ValidationError)
+    is_unique_key_error = isinstance(exc, NotUniqueError)
 
     if is_validation_error:
         exception_details = exceptions_code.get(VALIDATION_ERROR_CODE)
+
+        return mount_template_response(
+            message=exception_details.get("message"),
+            status_code=exception_details.get("http"),
+            code=VALIDATION_ERROR_CODE,
+            errors=parse_errors(exc.errors)
+        )
+
+    if is_unique_key_error:
+        exception_details = exceptions_code.get(UNIQUE_KEY_ERROR_CODE)
 
         return mount_template_response(
             message=exception_details.get("message"),

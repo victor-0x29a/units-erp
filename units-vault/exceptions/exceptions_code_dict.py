@@ -1,4 +1,5 @@
 VALIDATION_ERROR_CODE = 999
+UNIQUE_KEY_ERROR_CODE = 1000
 
 exceptions_code = {
     1003: {
@@ -16,5 +17,9 @@ exceptions_code = {
     VALIDATION_ERROR_CODE: {
         "http": 422,
         "message": "Validation error"
+    },
+    UNIQUE_KEY_ERROR_CODE: {
+        "http": 409,
+        "message": "Unique key error"
     }
 }

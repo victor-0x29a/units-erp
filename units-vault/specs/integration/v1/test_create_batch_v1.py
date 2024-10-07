@@ -63,3 +63,21 @@ class TestCreateBatchIntegrationV1():
             })
 
         assert error.value.errors.get('supplier_document').message == "The company doc should be valid."
+
+    def test_should_reject_double_key_in_unique_key_field(self, mocker):
+        mocker.patch.object(Batch, 'objects', return_value=False)
+
+        client.post("/v1/batch", json={
+            "cnpj": "98772328000120",
+            "ref": "something",
+            "expiry_date": from_date_to_str(get_now() + timedelta(days=1))
+        })
+
+        # with pytest.raises(Exception) as error:
+        res = client.post("/v1/batch", json={
+            "cnpj": "98772328000120",
+            "ref": "something",
+            "expiry_date": from_date_to_str(get_now() + timedelta(days=1))
+        })
+
+        assert res.json()
