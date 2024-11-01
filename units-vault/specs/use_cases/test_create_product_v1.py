@@ -1,7 +1,10 @@
 import pytest
 from datetime import timedelta
+from bson import ObjectId
+from mongoengine.queryset import QuerySet
 from use_cases import CreateProductV1
 from documents import Product, Batch
+from exceptions import MissingDoc
 from ..fixture import mongo_connection # noqa: F401, E261
 from .helpers.generate_object_id import generate_object_id
 from utils.dates import get_now
@@ -160,3 +163,22 @@ class TestCreateProductUseCaseV1:
             ).start()
 
         assert error.value.message == "Missing batch."
+
+    def test_should_fail_when_doesnt_find_batch(self, mocker):
+        data = {
+            'batch': str(ObjectId()),
+            'price': 10,
+            'discount_value': 1,
+            'name': 'foo name',
+            'stock': 10,
+            'item_type': 'foo type'
+        }
+
+        mocker.patch.object(QuerySet, 'get', side_effect=MissingDoc('Batch not found.'))
+
+        with pytest.raises(Exception) as error:
+            CreateProductV1(
+                product_data=data
+            ).start()
+
+        assert error.value.message == "Batch not found."

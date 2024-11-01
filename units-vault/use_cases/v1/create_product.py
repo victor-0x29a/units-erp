@@ -25,7 +25,11 @@ class CreateProduct:
             """
             IF BATCH IS STRING, FIND THE BATCH BY REFERENCE
             """
-            batch = Batch.objects.get(reference=batch)
+            try:
+                batch = Batch.objects.get(reference=batch)
+            except Batch.DoesNotExist:
+                raise MissingDoc(message="Batch not found.")
+
             self.product_obj.batch = batch.id
             self.data['batch'] = batch.id
 
