@@ -2,7 +2,7 @@ VALIDATION_ERROR_CODE = 999
 
 exceptions_code = {
     1003: {
-        "http": 409
+        "http": 404
     },
     1001: {
         "http": 400
