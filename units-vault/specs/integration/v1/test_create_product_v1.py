@@ -1,8 +1,9 @@
 from main import app
 import pytest
+from bson import ObjectId
 from fastapi.testclient import TestClient
 from unittest.mock import MagicMock
-from exceptions import HasWithSameBatch, GreaterThanPrice
+from exceptions import HasWithSameBatch, GreaterThanPrice, MissingDoc
 from documents import Product, Batch
 
 client = TestClient(app)
@@ -54,7 +55,7 @@ class TestCreateProductIntegrationV1():
 
         assert exception.value.message == "Already has product with the same batch."
 
-    def test_should_reject_when_discount_is_greater_than_price(eslf, mocker):
+    def test_should_reject_when_discount_is_greater_than_price(self, mocker):
         magic_batch = MagicMock()
 
         magic_batch.id = "batch00001"
@@ -77,3 +78,20 @@ class TestCreateProductIntegrationV1():
             })
 
         assert exception.value.message == "The discount is greater than the price of the product."
+
+    def test_should_reject_when_batch_unexists(self, mocker):
+        mocker.patch.object(Batch.objects, 'get', side_effect=MissingDoc('Batch not found.'))
+
+        with pytest.raises(MissingDoc) as exception:
+            client.post("/v1/product", json={
+                "name": "Foo",
+                "price": 3.45,
+                "discount_value": 4.0,
+                "base_stock": 310,
+                "batch": str(ObjectId()),
+                "type": "construction",
+                "for_use": "for_sale"
+            })
+
+        assert exception.value.message == "Batch not found."
+        assert exception.value.code == 1003
