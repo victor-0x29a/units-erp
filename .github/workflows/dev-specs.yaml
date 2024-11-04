@@ -1,6 +1,4 @@
-name: CI-Specs and Lint
-
-on: [push]
+name: CI-CD Units ERP
 
 on:
   push:
