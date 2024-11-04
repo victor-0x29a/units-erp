@@ -6,3 +6,4 @@ from .exceptions_code_dict import exceptions_code, VALIDATION_ERROR_CODE
 from .missing_doc import MissingDoc
 from .internal_error import InternalError
 from .unique_key import UniqueKey
+from .missing_param import MissingParam
