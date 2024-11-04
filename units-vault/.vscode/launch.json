@@ -19,7 +19,7 @@
             "justMyCode": false,
             "args": [
                 "-v",
-                "specs/use_cases/test_create_product_v1.py::TestCreateProductUseCaseV1::test_should_fail_when_doesnt_find_batch"
+                "specs/services/v1/test_store_service_v1.py::TestGetV1::test_should_fail_when_unexists_store"
             ],
             "env": {
                 "FASTAPI_ENV": "test"
