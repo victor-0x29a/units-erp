@@ -1,10 +1,12 @@
 from main import app
 import pytest
-from bson import ObjectId
+from bson import ObjectId, uuid
+from datetime import timedelta
 from fastapi.testclient import TestClient
-from unittest.mock import MagicMock
-from exceptions import HasWithSameBatch, GreaterThanPrice, MissingDoc
 from documents import Product, Batch
+from unittest.mock import MagicMock
+from utils.dates import get_now, from_date_to_str
+from exceptions import HasWithSameBatch, GreaterThanPrice, MissingDoc, UniqueKey
 
 client = TestClient(app)
 
@@ -95,3 +97,36 @@ class TestCreateProductIntegrationV1():
 
         assert exception.value.message == "Batch not found."
         assert exception.value.code == 1003
+
+    def test_should_reject_when_already_exists_by_bar_code(self, mocker):
+        batch_data = {
+            "cnpj": "59968706000194",
+            "ref": uuid.uuid4().hex,
+            "expiry_date": from_date_to_str(get_now() + timedelta(days=2))
+        }
+
+        data = {
+            "name": "Foo",
+            "price": 3.45,
+            "discount_value": 2.0,
+            "base_stock": 310,
+            "batch": batch_data['ref'],
+            "type": "construction",
+            "for_use": "for_sale",
+            "bar_code": "1234567891021"
+        }
+
+        client.post("/v1/batch", json=batch_data)
+
+        client.post("/v1/product", json=data)
+
+        batch_data["ref"] = uuid.uuid4().hex
+
+        client.post("/v1/batch", json=batch_data)
+
+        data['batch'] = batch_data['ref']
+
+        with pytest.raises(UniqueKey) as error:
+            client.post("/v1/product", json=data)
+
+        assert error.value.message == 'Product with same bar code already exists.'
