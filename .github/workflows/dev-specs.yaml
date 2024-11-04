@@ -18,19 +18,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-python@v5
-      with:
-        python-version: '3.10'
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
 
-    - name: Install make
-      run: sudo apt-get install -y make
+      - name: Install make
+        run: sudo apt-get install -y make
 
-    - name: Install dependencies
-      run: python3 -m pip install -r units-vault/requirements/base.txt && python3 -m pip install -r units-vault/requirements/dev.txt
+      - name: Install dependencies
+        run: python3 -m pip install -r units-vault/requirements/base.txt && python3 -m pip install -r units-vault/requirements/dev.txt
 
-    - name: Run specs
-      run: cd units-vault && python3 -m pytest -v
+      - name: Run specs
+        run: cd units-vault && python3 -m pytest -v
 
   specs-lint-units-bff:
     runs-on: ubuntu-latest
