@@ -3,8 +3,9 @@ from fastapi import FastAPI
 from fastapi.exceptions import RequestValidationError
 import fastapi_error_handler
 from constants import TAGS_META_DATA
-from controllers.v1.product_controller import router as product_router
-from controllers.v1.batch_controller import router as batch_router
+from controllers.v1.product_controller import router as product_router_v1
+from controllers.v1.batch_controller import router as batch_router_v1
+from controllers.v1.store_controller import router as store_router_v1
 
 
 app = FastAPI(
@@ -17,8 +18,9 @@ app = FastAPI(
 app.add_exception_handler(RequestValidationError, fastapi_error_handler.http_exceptions)
 app.add_exception_handler(Exception, fastapi_error_handler.unhandled_exceptions)
 
-app.include_router(product_router)
-app.include_router(batch_router)
+app.include_router(product_router_v1)
+app.include_router(batch_router_v1)
+app.include_router(store_router_v1)
 
 
 @app.get("/hello_world")
