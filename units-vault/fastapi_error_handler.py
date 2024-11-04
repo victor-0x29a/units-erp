@@ -13,8 +13,10 @@ def parse_errors(exc, is_fastapi_validation_error=False):
         errors = exc._errors
 
         for error in errors:
+            loc = error.get('loc', [])
+
             parsed_errors.append({
-                "field": error.get('loc')[1],
+                "field": loc[1] if len(loc) > 1 else 'N/A',
                 "message": error.get('msg')
             })
 
