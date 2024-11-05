@@ -30,7 +30,11 @@ def get_store(unit: int):
 
     store = service.get(filter={"unit": int(unit)})
 
-    return store
+    parsed_store = store._data
+
+    parsed_store.pop("id")
+
+    return parsed_store
 
 
 @router.put("/{unit}", status_code=204, tags=['store'])

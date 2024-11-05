@@ -18,9 +18,13 @@ class TestGetStoreIntegrationV1():
             "unit": 88
         }
 
+        magic_object = MagicMock()
+
+        magic_object._data = creation_data
+
         magic_objects = MagicMock()
 
-        magic_objects.first.return_value = creation_data
+        magic_objects.first.return_value = magic_object
 
         mocker.patch.object(Store, 'objects', return_value=magic_objects)
 
@@ -28,7 +32,6 @@ class TestGetStoreIntegrationV1():
 
         assert store["name"] == creation_data["name"]
         assert store["unit"] == creation_data["unit"]
-        assert store["id"] == creation_data["id"]
 
     def test_should_fail_when_unexists_store(self, mocker):
         magic_objects = MagicMock()
