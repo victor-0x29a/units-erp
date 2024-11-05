@@ -9,15 +9,6 @@ on:
 
 jobs:
   specs-units-vault:
-    - uses: dorny/paths-filter@v3
-    id: vault
-    with:
-      filters: |
-        units-vault:
-          - 'units-vault/**'
-
-   if: steps.vault.outputs.units-vault == 'true'
-
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -26,8 +17,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
-        with:
-          python-version: '3.10'
+      - uses: dorny/paths-filter@v3
+      id: vault
+      with:
+        python-version: '3.10'
+        filters: |
+          units-vault:
+            - 'units-vault/**'
+
+      if: steps.vault.outputs.units-vault == 'true'
 
       - name: Install make
         run: sudo apt-get install -y make
@@ -41,15 +39,6 @@ jobs:
         run: python3 -m pytest -v
 
   specs-lint-units-bff:
-    - uses: dorny/paths-filter@v3
-    id: bff
-    with:
-      filters: |
-        units-bff:
-          - 'units-bff/**'
-
-    if: steps.bff.outputs.units-bff == 'true'
-
     runs-on: ubuntu-latest
 
     defaults:
@@ -59,8 +48,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-        with:
-          node-version: 22
+      - uses: dorny/paths-filter@v3
+      id: bff
+      with:
+        node-version: 22
+        filters: |
+          units-bff:
+            - 'units-bff/**'
 
       - name: Install dependencies from units-bff
         run: yarn
@@ -72,15 +66,6 @@ jobs:
         run: yarn test
 
   lint-units-cashier:
-    - uses: dorny/paths-filter@v3
-    id: cashier
-    with:
-      filters: |
-        units-cashier:
-          - 'units-cashier/**'
-
-    if: steps.cashier.outputs.units-cashier == 'true'
-
     runs-on: ubuntu-latest
 
     defaults:
@@ -90,8 +75,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-        with:
-          node-version: 22
+      - uses: dorny/paths-filter@v3
+      id: cashier
+      with:
+        node-version: 22
+        filters: |
+          units-cashier:
+            - 'units-cashier/**'
+
+      if: steps.cashier.outputs.units-cashier == 'true'
 
       - name: Install dependencies from units-cashier
         run: npm install
