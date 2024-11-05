@@ -17,14 +17,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
-      with:
-        python-version: '3.10'
+        with:
+          python-version: '3.10'
       - uses: dorny/paths-filter@v3
-      id: vault
-      with:
-        filters: |
-          units-vault:
-            - 'units-vault/**'
+        id: vault
+        with:
+          filters: |
+            units-vault:
+              - 'units-vault/**'
 
       - name: Install make
         if: steps.vault.outputs.units-vault == 'true'
@@ -50,14 +50,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-      with:
-        node-version: 22
+        with:
+          node-version: 22
       - uses: dorny/paths-filter@v3
-      id: bff
-      with:
-        filters: |
-          units-bff:
-            - 'units-bff/**'
+        id: bff
+        with:
+          filters: |
+            units-bff:
+              - 'units-bff/**'
 
       - name: Install dependencies from units-bff
         if: steps.bff.outputs.units-bff == 'true'
@@ -81,14 +81,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-      with:
-        node-version: 22
+        with:
+          node-version: 22
       - uses: dorny/paths-filter@v3
-      id: cashier
-      with:
-        filters: |
-          units-cashier:
-            - 'units-cashier/**'
+        id: cashier
+        with:
+          filters: |
+            units-cashier:
+              - 'units-cashier/**'
 
       - name: Install dependencies from units-cashier
         if: steps.cashier.outputs.units-cashier == 'true'
