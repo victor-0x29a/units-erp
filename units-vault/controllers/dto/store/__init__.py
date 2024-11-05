@@ -1,1 +1,1 @@
-from .v1 import create_store
+from .v1 import create_store, update_store

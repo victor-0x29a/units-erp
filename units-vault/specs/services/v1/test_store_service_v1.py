@@ -113,3 +113,71 @@ class TestGetV1:
             service.get(filter={"unit": 999})
 
         assert error
+
+
+class TestUpdateV1:
+    def test_should_update(self, mocker):
+        creation_data = {
+            'name': 'Store 65',
+            'unit': 65
+        }
+
+        service = StoreServiceV1()
+
+        service.instance(data=creation_data)
+
+        service.create()
+
+        update_data = {
+            'name': '0x'
+        }
+
+        updated_store = service.update(creation_data['unit'], update_data)
+
+        assert updated_store['name'] == update_data['name']
+
+    def test_should_fail_when_unexists(self, mocker):
+        service = StoreServiceV1()
+
+        update_data = {
+            'name': '0x'
+        }
+
+        with pytest.raises(MissingDoc) as error:
+            service.update(unit=999, data_for_update=update_data)
+
+        assert error.value.message == 'Store not found.'
+
+    def test_should_fail_when_already_exists_by_unit(self, mocker):
+        creation_datas = [
+            {
+                'name': 'Store 65',
+                'unit': 65
+            },
+            {
+                'name': 'Store 66',
+                'unit': 66
+            }
+        ]
+
+        service = StoreServiceV1()
+
+        service.instance(data=creation_datas[0])
+
+        service.create()
+
+        service.instance(data=creation_datas[1])
+
+        service.create()
+
+        update_data = {
+            'unit': 65
+        }
+
+        with pytest.raises(UniqueKey) as error:
+            service.update(
+                unit=creation_datas[1]['unit'],
+                data_for_update=update_data
+            )
+
+        assert error

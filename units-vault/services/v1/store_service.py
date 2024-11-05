@@ -43,7 +43,30 @@ class StoreService:
 
         store = Store.objects(**filter).first()
 
-        if not store or not bool(len(store)):
+        if not store:
             raise MissingDoc("Store not found.")
 
         return store
+
+    def update(self, unit: int, data_for_update: dict):
+        store = self.get({'unit': unit})
+
+        update_fields = data_for_update.keys()
+
+        parsed_keys = [f'set__{field}' for field in update_fields]
+
+        update_payload = {}
+
+        for key in parsed_keys:
+            update_payload[key] = data_for_update[key.split('__')[1]]
+
+        try:
+            store.update(**update_payload)
+        except NotUniqueError:
+            raise UniqueKey("Already exist a store with the same unit.")
+
+        store.reload()
+
+        store.save()
+
+        return store._data
