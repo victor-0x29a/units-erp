@@ -4,7 +4,7 @@ from bson import ObjectId
 from mongoengine.queryset import QuerySet
 from use_cases import CreateProductV1
 from documents import Product, Batch
-from exceptions import MissingDoc
+from exceptions import MissingDoc, UniqueKey
 from ..fixture import mongo_connection # noqa: F401, E261
 from .helpers.generate_object_id import generate_object_id
 from utils.dates import get_now
@@ -182,3 +182,35 @@ class TestCreateProductUseCaseV1:
             ).start()
 
         assert error.value.message == "Batch not found."
+
+    def test_should_fail_when_already_exists_other_by_bar_code(self, mocker):
+        data = {
+            'batch': generate_object_id(),
+            'price': 10,
+            'discount_value': 1,
+            'name': 'foo name',
+            'stock': 10,
+            'item_type': 'foo type',
+            'bar_code': '1234567891012'
+        }
+
+        CreateProductV1(
+            product_data=data
+        ).start()
+
+        data = {
+            'batch': generate_object_id(),
+            'price': 10,
+            'discount_value': 1,
+            'name': 'foo name',
+            'stock': 10,
+            'item_type': 'foo type',
+            'bar_code': '1234567891012'
+        }
+
+        with pytest.raises(UniqueKey) as error:
+            CreateProductV1(
+                product_data=data
+            ).start()
+
+        assert error.value.message == 'Product with same bar code already exists.'

@@ -1,5 +1,6 @@
 from documents import Product, Batch
-from exceptions import GreaterThanPrice, HasWithSameBatch, MissingDoc
+from mongoengine.errors import NotUniqueError
+from exceptions import GreaterThanPrice, HasWithSameBatch, MissingDoc, UniqueKey
 
 
 class CreateProduct:
@@ -54,6 +55,9 @@ class CreateProduct:
             raise GreaterThanPrice()
 
     def start(self):
-        self.product_obj.save()
+        try:
+            self.product_obj.save()
+        except NotUniqueError:
+            raise UniqueKey("Product with same bar code already exists.")
 
         return self.product_obj

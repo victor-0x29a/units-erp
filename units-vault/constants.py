@@ -20,5 +20,9 @@ TAGS_META_DATA = [
     {
         'name': 'product',
         'description': 'Um produto é uma mercadoria ou serviço que é oferecido para venda.'
+    },
+    {
+        'name': 'store',
+        'description': 'Uma loja é responsável pelos funcionários e produtos.'
     }
 ]
