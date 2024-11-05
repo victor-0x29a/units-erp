@@ -9,8 +9,10 @@ on:
 
 jobs:
   specs-units-vault:
-    if: contains(github.event.head_commit.message, 'units-vault/') || contains(github.event.head_commit.message, 'units-vault/**')
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: units-vault/
 
     steps:
       - uses: actions/checkout@v4
