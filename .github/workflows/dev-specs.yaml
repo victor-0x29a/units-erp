@@ -25,15 +25,18 @@ jobs:
 
       - name: Install dependencies
         run: |
-          python3 -m pip install -r units-vault/requirements/base.txt
-          python3 -m pip install -r units-vault/requirements/dev.txt
+          python3 -m pip install -r requirements/base.txt
+          python3 -m pip install -r requirements/dev.txt
 
       - name: Run specs
-        run: cd units-vault && python3 -m pytest -v
+        run: python3 -m pytest -v
 
   specs-lint-units-bff:
-    if: contains(github.event.head_commit.message, 'units-cashier/') || contains(github.event.head_commit.message, 'units-cashier/**')
     runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: units-bff/
 
     steps:
       - uses: actions/checkout@v4
@@ -42,17 +45,20 @@ jobs:
           node-version: 22
 
       - name: Install dependencies from units-bff
-        run: cd units-bff && yarn
+        run: yarn
 
       - name: Run lint from units-bff
-        run: cd units-bff && yarn lint
+        run: yarn lint
 
       - name: Run specs from units-bff
-        run: cd units-bff && yarn test
+        run: yarn test
 
   lint-units-cashier:
-    if: contains(github.event.head_commit.message, 'units-bff/') || contains(github.event.head_commit.message, 'units-bff/**')
     runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: units-cashier/
 
     steps:
       - uses: actions/checkout@v4
@@ -61,7 +67,7 @@ jobs:
           node-version: 22
 
       - name: Install dependencies from units-cashier
-        run: cd units-cashier && npm install
+        run: npm install
 
       - name: Run lint from units-cashier
-        run: cd units-cashier && npm run lint
+        run: npm run lint
