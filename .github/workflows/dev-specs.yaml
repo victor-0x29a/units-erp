@@ -64,11 +64,11 @@ jobs:
         run: yarn
 
       - name: Run lint from units-bff
-        if: steps.bff.outputs.units-bff == 'true
+        if: steps.bff.outputs.units-bff == 'true'
         run: yarn lint
 
       - name: Run specs from units-bff
-        if: steps.bff.outputs.units-bff == 'true
+        if: steps.bff.outputs.units-bff == 'true'
         run: yarn test
 
   lint-units-cashier:
