@@ -8,31 +8,16 @@ on:
       - 'units-bff/**'
 
 jobs:
-  check-paths:
-    runs-on: ubuntu-latest
-    outputs:
-      vault_changed: ${{ steps.filter.outputs.vault }}
-      cashier_changed: ${{ steps.filter.outputs.cashier }}
-      bff_changed: ${{ steps.filter.outputs.bff }}
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Filter paths
-        id: filter
-        uses: dorny/paths-filter@v2
-        with:
-          filters: |
-            vault:
-              - 'units-vault/**'
-            cashier:
-              - 'units-cashier/**'
-            bff:
-              - 'units-bff/**'
-
-
   specs-units-vault:
-    if: needs.check-paths.outputs.vault_changed == 'true'
+    - uses: dorny/paths-filter@v3
+    id: vault
+    with:
+      filters: |
+        units-vault:
+          - 'units-vault/**'
+
+   if: steps.vault.outputs.units-vault == 'true'
+
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -56,7 +41,15 @@ jobs:
         run: python3 -m pytest -v
 
   specs-lint-units-bff:
-    if: needs.check-paths.outputs.bff_changed == 'true'
+    - uses: dorny/paths-filter@v3
+    id: bff
+    with:
+      filters: |
+        units-bff:
+          - 'units-bff/**'
+
+    if: steps.bff.outputs.units-bff == 'true'
+
     runs-on: ubuntu-latest
 
     defaults:
@@ -79,7 +72,15 @@ jobs:
         run: yarn test
 
   lint-units-cashier:
-     if: needs.check-paths.outputs.cashier_changed == 'true'
+    - uses: dorny/paths-filter@v3
+    id: cashier
+    with:
+      filters: |
+        units-cashier:
+          - 'units-cashier/**'
+
+    if: steps.cashier.outputs.units-cashier == 'true'
+
     runs-on: ubuntu-latest
 
     defaults:
