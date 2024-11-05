@@ -70,7 +70,7 @@ class TestUpdateStoreIntegrationV1():
         )
 
         with pytest.raises(UniqueKey) as error:
-            client.put("/v1/store/19", json={
+            client.put("/v1/store/1", json={
                 "name": "victor-0x29a"
             })
 
