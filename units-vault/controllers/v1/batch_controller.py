@@ -15,7 +15,8 @@ def create_batch(payload: CreateBatchV1):
         "expiry_date": from_str_to_date(data.get("expiry_date")),
         "inserction_datetime": get_now(),
         "supplier_document": data.get("cnpj"),
-        "reference": data.get("ref")
+        "reference": data.get("ref"),
+        "store_unit": data.get("store_unit")
     }
 
     service = BatchService()
