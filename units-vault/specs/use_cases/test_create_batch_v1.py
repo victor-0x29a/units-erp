@@ -5,6 +5,7 @@ from bson import ObjectId
 from use_cases import CreateBatchV1
 from documents import Batch, Store
 from utils.dates import get_now
+from exceptions import MissingParam, MissingDoc
 from ..fixture import mongo_connection # noqa: F401, E261
 
 
@@ -89,3 +90,46 @@ class TestCreateBatchUseCaseV1:
             ).start()
 
         assert error.value.errors.get('supplier_document').message == 'The company doc should be valid.'
+
+    def test_should_fail_when_havent_store(self, mocker):
+        data = {
+            'expiry_date': get_now() + datetime.timedelta(days=1),
+            'inserction_datetime': get_now(),
+            'supplier_document': "29662565000116",
+            'reference': "123123"
+        }
+
+        mocker.patch.object(Batch, 'objects', return_value=None)
+
+        mocker.patch.object(Store, 'objects', return_value=None)
+
+        with pytest.raises(MissingParam) as error:
+            CreateBatchV1(
+                data=data
+            ).start()
+
+        assert error.value.message == 'Store is required for create a batch.'
+
+    def test_should_fail_when_unexists_store(self, mocker):
+        data = {
+            'expiry_date': get_now() + datetime.timedelta(days=1),
+            'inserction_datetime': get_now(),
+            'supplier_document': "29662565000116",
+            'reference': "123123",
+            'store_unit': 1
+        }
+
+        mocker.patch.object(Batch, 'objects', return_value=None)
+
+        magic_objects = MagicMock()
+
+        magic_objects.first.return_value = None
+
+        mocker.patch.object(Store, 'objects', return_value=magic_objects)
+
+        with pytest.raises(MissingDoc) as error:
+            CreateBatchV1(
+                data=data
+            ).start()
+
+        assert error.value.message == 'Store not found.'

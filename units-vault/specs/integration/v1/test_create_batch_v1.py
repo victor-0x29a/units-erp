@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 from fastapi.testclient import TestClient
 from main import app
 from documents import Batch, Store
-from exceptions import LessThanCurrentDate, AlreadyExists
+from exceptions import LessThanCurrentDate, AlreadyExists, MissingDoc
 from utils.dates import get_now, from_date_to_str
 from ...fixture import mongo_connection # noqa: F401, E261
 
@@ -79,3 +79,25 @@ class TestCreateBatchIntegrationV1():
             })
 
         assert error.value.errors.get('supplier_document').message == "The company doc should be valid."
+
+    def test_should_reject_when_store_unexists(self, mocker):
+        next_year = datetime.now().year + 1
+
+        mocker.patch.object(Batch, 'objects', return_value=None)
+
+        mocker.patch.object(Batch, 'save', return_value=True)
+
+        magic_store = MagicMock()
+        magic_store.first.return_value = None
+
+        mocker.patch.object(Store, 'objects', return_value=magic_store)
+
+        with pytest.raises(MissingDoc) as error:
+            client.post("/v1/batch", json={
+                "cnpj": "04.954.588/0001-73",
+                "ref": "something",
+                "expiry_date": f"12/09/{next_year}",
+                "store_unit": 1
+            })
+
+        assert error.value.message == "Store not found."
