@@ -9,6 +9,7 @@ on:
 
 jobs:
   specs-units-vault:
+    if: contains(github.event.commits.*.modified, 'units-vault/')
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -32,6 +33,7 @@ jobs:
         run: python3 -m pytest -v
 
   specs-lint-units-bff:
+    if: contains(github.event.commits.*.modified, 'units-cashier/')
     runs-on: ubuntu-latest
 
     defaults:
@@ -54,6 +56,7 @@ jobs:
         run: yarn test
 
   lint-units-cashier:
+    if: contains(github.event.commits.*.modified, 'units-bff/')
     runs-on: ubuntu-latest
 
     defaults:
