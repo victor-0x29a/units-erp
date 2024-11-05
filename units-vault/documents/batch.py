@@ -1,4 +1,5 @@
-from mongoengine import Document, StringField, DateTimeField, DateField, ValidationError
+from .store import Store
+from mongoengine import Document, StringField, DateTimeField, DateField, ValidationError, ReferenceField
 from pycpfcnpj import cpfcnpj
 
 
@@ -14,3 +15,4 @@ class Batch(Document):
     reference = StringField(required=True, unique=True)
     inserction_datetime = DateTimeField(required=True)
     expiry_date = DateField(required=True)
+    store = ReferenceField(Store, required=True)
