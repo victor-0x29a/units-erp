@@ -18,7 +18,8 @@ class TestCreateProductUseCaseV1:
             reference=batch_reference,
             supplier_document='04.954.588/0001-73',
             inserction_datetime=get_now(),
-            expiry_date=get_now() + timedelta(days=1)
+            expiry_date=get_now() + timedelta(days=1),
+            store=ObjectId()
         ).save().id
 
         data = {
@@ -89,7 +90,8 @@ class TestCreateProductUseCaseV1:
             supplier_document="76.099.428/0001-03",
             reference=batch_reference,
             expiry_date=get_now() + timedelta(days=1),
-            inserction_datetime=get_now()
+            inserction_datetime=get_now(),
+            store=ObjectId()
         ).save().id
 
         data = {

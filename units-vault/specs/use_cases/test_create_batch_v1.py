@@ -1,18 +1,26 @@
 import datetime
 import pytest
+from unittest.mock import MagicMock
+from bson import ObjectId
 from use_cases import CreateBatchV1
-from documents import Batch
+from documents import Batch, Store
 from utils.dates import get_now
 from ..fixture import mongo_connection # noqa: F401, E261
 
 
 class TestCreateBatchUseCaseV1:
     def test_create_batch(self, mocker):
+        magic_store = MagicMock()
+        magic_store.id = ObjectId()
+
+        mocker.patch.object(Store, 'objects', return_value=magic_store)
+
         data = {
             'expiry_date': get_now() + datetime.timedelta(days=1),
             'inserction_datetime': get_now(),
             'supplier_document': "29662565000116",
-            'reference': "123123"
+            'reference': "123123",
+            "store_unit": 1
         }
 
         mocker.patch.object(Batch, 'objects', return_value=None)
@@ -60,11 +68,17 @@ class TestCreateBatchUseCaseV1:
         assert 'LessThanCurrentDate' in str(error)
 
     def test_should_fail_when_supplier_document_is_invalid(self, mocker):
+        magic_store = MagicMock()
+        magic_store.id = ObjectId()
+
+        mocker.patch.object(Store, 'objects', return_value=magic_store)
+
         data = {
             'expiry_date': get_now() + datetime.timedelta(days=1),
             'inserction_datetime': get_now(),
             'supplier_document': "923148328",
-            'reference': "123123"
+            'reference': "123123",
+            'store_unit': 1
         }
 
         mocker.patch.object(Batch, 'objects', return_value=None)
