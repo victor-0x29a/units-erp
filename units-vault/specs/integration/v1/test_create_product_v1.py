@@ -3,7 +3,7 @@ import pytest
 from bson import ObjectId, uuid
 from datetime import timedelta
 from fastapi.testclient import TestClient
-from documents import Product, Batch
+from documents import Product, Batch, Store
 from unittest.mock import MagicMock
 from utils.dates import get_now, from_date_to_str
 from exceptions import HasWithSameBatch, GreaterThanPrice, MissingDoc, UniqueKey
@@ -99,10 +99,27 @@ class TestCreateProductIntegrationV1():
         assert exception.value.code == 1003
 
     def test_should_reject_when_already_exists_by_bar_code(self, mocker):
+        magic_property = MagicMock()
+
+        magic_property.id = ObjectId()
+
+        magic_first = MagicMock()
+
+        magic_first.first.return_value = magic_property
+
+        mocker.patch.object(
+            Store,
+            'objects',
+            return_value=magic_first
+        )
+
+        mocker.patch.object(Store, 'objects', return_value=magic_first)
+
         batch_data = {
             "cnpj": "59968706000194",
             "ref": uuid.uuid4().hex,
-            "expiry_date": from_date_to_str(get_now() + timedelta(days=2))
+            "expiry_date": from_date_to_str(get_now() + timedelta(days=2)),
+            "store_unit": 1
         }
 
         data = {
