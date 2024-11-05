@@ -18,6 +18,7 @@ def parse_errors(exc, is_fastapi_validation_error=False):
             loc_error = loc[1] if len(loc) > 1 else 'N/A'
 
             if loc_error == 'N/A':
+                # TO DO: identify the reason for this case (try send a request with a wrong JSON payload)
                 print(error)
 
             parsed_errors.append({
