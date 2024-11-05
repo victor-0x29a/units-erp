@@ -33,14 +33,6 @@ class TestGetStoreIntegrationV1():
         assert store["id"] == creation_data["id"]
 
     def test_should_fail_when_unexists_store(self, mocker):
-        creation_data = {
-            "id": str(ObjectId()),
-            "name": "Store 88",
-            "unit": 88,
-            "latitude": 0.0,
-            "longitude": 0.0
-        }
-
         magic_objects = MagicMock()
 
         magic_objects.first.return_value = None
@@ -48,6 +40,6 @@ class TestGetStoreIntegrationV1():
         mocker.patch.object(Store, 'objects', return_value=magic_objects)
 
         with pytest.raises(MissingDoc) as error:
-            client.get(f"/v1/store/{creation_data['unit']}")
+            client.get("/v1/store/15")
 
         assert error.value.message == "Store not found."
