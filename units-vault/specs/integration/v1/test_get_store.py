@@ -15,9 +15,7 @@ class TestGetStoreIntegrationV1():
         creation_data = {
             "id": str(ObjectId()),
             "name": "Store 88",
-            "unit": 88,
-            "latitude": 0.0,
-            "longitude": 0.0
+            "unit": 88
         }
 
         magic_objects = MagicMock()
