@@ -1,13 +1,11 @@
 'use client';
 
 import { useFormik } from 'formik';
-import { Button } from '@/components/ui/button';
-import { Field } from '@/components/ui/field';
 import { Input, Link, Stack } from '@chakra-ui/react';
+import { Field, Button, Prose } from '@/components';
 import { LoginSchema, LoginInitialValues } from '@/schemas/auth/login';
-import styles from './page.module.scss';
-import { Prose } from '@/components/ui/prose';
 import Image from 'next/image';
+import styles from './page.module.scss';
 
 export default function Home() {
   const formik = useFormik({
