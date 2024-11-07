@@ -97,3 +97,7 @@ jobs:
       - name: Run lint from units-cashier
         if: steps.cashier.outputs.units-cashier == 'true'
         run: npm run lint
+
+      - name: Run build from units-cashier
+        if: steps.cashier.outputs.units-cashier == 'true'
+        run: npm run build

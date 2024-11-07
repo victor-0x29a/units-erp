@@ -45,11 +45,12 @@
             box-shadow: 0 0 2em black;
         }
     }
+
     &:last-of-type  {
         display: flex;
         flex-direction: column;
         align-items: center;
-        place-content: end;
+        place-content: flex-end;
         background-color: white;
     }
 }
