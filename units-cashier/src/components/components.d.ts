@@ -1,1 +1,0 @@
-export type identity = (x: any) => any;
