@@ -14,24 +14,24 @@ import './globals.scss';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Caixa',
-  description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+    title: 'Caixa',
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
 };
 
 export default function RootLayout({
-  children,
+    children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return (
-    <html lang="pt-br" suppressHydrationWarning>
-      <body className={inter.className}>
-        <Provider>
-        <AuthProvider>
-        {children}
-        </AuthProvider>
-        </Provider>
-      </body>
-    </html>
-  );
+    return (
+        <html lang="pt-br" suppressHydrationWarning>
+            <body className={inter.className}>
+                <Provider>
+                    <AuthProvider>
+                        {children}
+                    </AuthProvider>
+                </Provider>
+            </body>
+        </html>
+    );
 }
