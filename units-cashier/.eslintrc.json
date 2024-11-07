@@ -18,6 +18,7 @@
     "out/",
     ".next/",
     "src/stories/Page.tsx",
-    "*.d.ts"
+    "*.d.ts",
+    "src/components/ui/"
   ]
 }
