@@ -49,12 +49,8 @@ class EmployeeService:
 
         return store.id
 
-    @staticmethod
-    def delete(employee_document: str) -> None:
-        employee = Employee.objects(document=employee_document)
-
-        if not employee:
-            raise MissingDoc('Employee not found.')
+    def delete(self, employee_document: str) -> None:
+        employee = self.get_by_document(document=employee_document)
 
         employee.delete()
 
