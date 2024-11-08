@@ -1,13 +1,13 @@
 import Axios, { AxiosError, AxiosInstance, AxiosResponse } from "axios";
 import axiosRetry from "axios-retry";
-import { IBackendModuleResponse } from "./backend.module.d";
+import type { ICoreModuleResponse } from "./core.module.d";
 import {
   UNITS_VAULT_URL,
   UNITS_VAULT_USER_AGENT,
   UNITS_VAULT_MAX_RETRIES,
-} from "../constants";
+} from "@constants";
 
-class BackendModule {
+class CoreModule {
   private axios: typeof Axios;
   private requestHeaders: Record<string, string> = {};
   private requestURI: string = UNITS_VAULT_URL;
@@ -48,8 +48,8 @@ class BackendModule {
       string | number,
       string | object | number | null
     >,
-    paramsData: Record<string, string> = undefined,
-    queryData: Record<string, string> = undefined,
+    paramsData: Record<string, string> | undefined = undefined,
+    queryData: Record<string, string> | undefined = undefined,
     requestHeaders: Record<string, string> = {}
   ) {
     this.axios = axios;
@@ -103,11 +103,11 @@ class BackendModule {
     }, "?");
   };
 
-  public get = async (): Promise<IBackendModuleResponse> => {
+  public get = async (): Promise<ICoreModuleResponse> => {
     return await this.axiosInstance.get(this.requestURI, this.generateConfig());
   };
 
-  public post = async (): Promise<IBackendModuleResponse> => {
+  public post = async (): Promise<ICoreModuleResponse> => {
     return await this.axiosInstance.post(
       this.requestURI,
       this.payload,
@@ -115,7 +115,7 @@ class BackendModule {
     );
   };
 
-  public put = async (): Promise<IBackendModuleResponse> => {
+  public put = async (): Promise<ICoreModuleResponse> => {
     return await this.axiosInstance.put(
       this.requestURI,
       this.payload,
@@ -123,7 +123,7 @@ class BackendModule {
     );
   };
 
-  public patch = async (): Promise<IBackendModuleResponse> => {
+  public patch = async (): Promise<ICoreModuleResponse> => {
     return await this.axiosInstance.patch(
       this.requestURI,
       this.payload,
@@ -131,7 +131,7 @@ class BackendModule {
     );
   };
 
-  public delete = async (): Promise<IBackendModuleResponse> => {
+  public delete = async (): Promise<ICoreModuleResponse> => {
     return await this.axiosInstance.delete(
       this.requestURI,
       this.generateConfig()
@@ -139,4 +139,4 @@ class BackendModule {
   };
 }
 
-export { BackendModule };
+export { CoreModule };

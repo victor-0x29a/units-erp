@@ -1,15 +1,15 @@
-import { mockedAxios } from "./__mocks__/axios.mock";
-import { BackendModule } from "./backend.module";
+import { mockedAxios } from "../__mocks__/axios.mock";
+import { CoreModule } from "./core.module";
 
 const mockedPath = "foo";
 
-describe("BackendModule", () => {
+describe("CoreModule", () => {
   it("should be defined", () => {
-    expect(new BackendModule(mockedAxios, mockedPath)).toBeDefined();
+    expect(new CoreModule(mockedAxios, mockedPath)).toBeDefined();
   });
 
   it("should call get", async () => {
-    const module = new BackendModule(mockedAxios, mockedPath);
+    const module = new CoreModule(mockedAxios, mockedPath);
 
     const getSpy = jest.spyOn(module, "get");
 
@@ -23,7 +23,7 @@ describe("BackendModule", () => {
   });
 
   it("should call post", async () => {
-    const module = new BackendModule(mockedAxios, mockedPath, {
+    const module = new CoreModule(mockedAxios, mockedPath, {
       foo: "bar",
     });
 
@@ -47,7 +47,7 @@ describe("BackendModule", () => {
   });
 
   it("should call put", async () => {
-    const module = new BackendModule(mockedAxios, mockedPath, {
+    const module = new CoreModule(mockedAxios, mockedPath, {
       foo: "bar",
     });
 
@@ -71,7 +71,7 @@ describe("BackendModule", () => {
   });
 
   it("should call patch", async () => {
-    const module = new BackendModule(mockedAxios, mockedPath, {
+    const module = new CoreModule(mockedAxios, mockedPath, {
       foo: "bar",
     });
 
@@ -95,7 +95,7 @@ describe("BackendModule", () => {
   });
 
   it("should call delete", async () => {
-    const module = new BackendModule(mockedAxios, mockedPath);
+    const module = new CoreModule(mockedAxios, mockedPath);
 
     const deleteSpy = jest.spyOn(module, "delete");
 
@@ -116,9 +116,9 @@ describe("BackendModule", () => {
   });
 });
 
-describe("BackendModule with params", () => {
+describe("CoreModule with params", () => {
   test("should transform params object to query string", async () => {
-    const module = new BackendModule(mockedAxios, mockedPath, undefined, {
+    const module = new CoreModule(mockedAxios, mockedPath, undefined, {
       foo2: "bar",
       baz: "qux",
     });
@@ -141,7 +141,7 @@ describe("BackendModule with params", () => {
     getSpy.mockRestore();
   });
   test("should transform query object to query string", async () => {
-    const module = new BackendModule(
+    const module = new CoreModule(
       mockedAxios,
       mockedPath,
       undefined,
