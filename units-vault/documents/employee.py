@@ -1,8 +1,7 @@
-from mongoengine import Document, StringField, ReferenceField
-import cpfcnpj
+from mongoengine import Document, StringField, ReferenceField, ValidationError
+from pycpfcnpj import cpfcnpj
 from .store import Store
 from docs_constants import EMPLOYEE_ROLES
-from exceptions import ValidationError
 
 
 roles_available = [role for role in EMPLOYEE_ROLES.values()]
