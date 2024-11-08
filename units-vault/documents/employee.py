@@ -18,7 +18,7 @@ def _is_valid_cpf(value):
 class Employee(Document):
     name = StringField(required=True, max_length=60)
     document = StringField(required=True, validation=_is_valid_cpf)
-    unit = ReferenceField(Store, required=True)
+    store_unit = ReferenceField(Store, required=True)
     username = StringField(required=True, max_length=30)
     password = StringField(max_length=120, default=None)
     role = StringField(required=True, choices=roles_available)
