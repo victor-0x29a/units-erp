@@ -1,6 +1,14 @@
 {
     "compilerOptions": {
-        "esModuleInterop": true
+        "esModuleInterop": true,
+        "paths": {
+            "@module": [
+                "./src/modules/"
+            ],
+            "@constants": [
+                "./src/constants.ts"
+            ]
+        }
     },
     "include": [
         "src/*.ts",

@@ -5,9 +5,9 @@ class Builder {
 
   public createRoute =
     (method: string) =>
-    (path: string, options: RouteShorthandOptionsWithHandler) => {
-      return this.fastify[method](path, options);
-    };
+      (path: string, options: RouteShorthandOptionsWithHandler) => {
+        return this.fastify[method](path, options);
+      };
 }
 
 export { Builder };

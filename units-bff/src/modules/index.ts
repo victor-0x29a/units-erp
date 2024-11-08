@@ -1,1 +1,1 @@
-export { BackendModule } from "./backend.module.ts";
+export { CoreModule } from "./core";

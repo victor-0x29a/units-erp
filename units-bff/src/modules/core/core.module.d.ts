@@ -1,4 +1,4 @@
-export interface IBackendModuleResponse {
+export interface ICoreModuleResponse {
   statusCode: number;
   data?: object;
   headers: object;
