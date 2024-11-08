@@ -1,5 +1,6 @@
 import pytest
 from services.v1.employee_service import EmployeeService as EmployeeServiceV1
+from documents import Employee
 from bson import ObjectId
 from unittest.mock import MagicMock
 from services.v1.store_service import StoreService as StoreServiceV1
@@ -160,3 +161,34 @@ class TestCreateV1:
         expected_msg = 'The role is invalid, valid roles are: ADMIN, FINANCIAL, INVENTOR, OPERATOR'
 
         assert error.value.message == expected_msg
+
+
+class TestDeleteV1:
+    def test_should_delete(self, mocker):
+        magic_employee = MagicMock()
+
+        magic_employee.delete = MagicMock()
+
+        mocker.patch.object(EmployeeServiceV1, 'get_by_document', return_value=magic_employee)
+
+        mocker.patch.object(EmployeeServiceV1, 'delete')
+
+        EmployeeServiceV1.delete('123456')
+
+        assert True
+
+    def test_should_fail_when_employee_not_found(self, mocker):
+        magic_employee = MagicMock()
+
+        magic_employee.first.return_value = None
+
+        mocker.patch.object(
+            Employee,
+            'objects',
+            return_value=magic_employee
+        )
+
+        with pytest.raises(MissingDoc) as error:
+            EmployeeServiceV1().delete('123456')
+
+        assert error.value.message == 'Employee not found.'
