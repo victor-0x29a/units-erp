@@ -1,8 +1,8 @@
 'use client';
 
 import { useFormik } from 'formik';
-import { Input, Link, Stack } from '@chakra-ui/react';
-import { Field, Button, Prose } from '@/components';
+import { Input, Link, Stack, Text } from '@chakra-ui/react';
+import { Field, Button, Prose, Tooltip } from '@/components';
 import { LoginSchema, LoginInitialValues } from '@/schemas/auth/login';
 import Image from 'next/image';
 import styles from './page.module.scss';
@@ -31,6 +31,9 @@ export default function Home() {
                 </Prose>
             </div>
             <div className={styles.side}>
+                <div className='image-container'>
+                    <Image src="/logo.svg" alt='Units - ERP Logo' width={100} height={100}/>
+                </div>
                 <form onSubmit={formik.handleSubmit} className={styles.form}>
                     <Stack gap="5" maxW={'sm'}>
                         <Field
@@ -62,9 +65,14 @@ export default function Home() {
                             variant={'solid'}
                             colorPalette={'orange'}
                             width={'100%'}>
-                        Entrar
+                            Entrar
                         </Button>
                     </Stack>
+                    <Text fontSize={'small'} marginTop={'0.5'}>
+                        Precisa de suporte? <Tooltip content='Esqueceu sua senha ou está enfrentando algum problema?' openDelay={200} closeDelay={100}>
+                            <Link href='/help'>Clique aqui</Link>
+                        </Tooltip>
+                    </Text>
                 </form>
             </div>
         </main>
