@@ -1,8 +1,8 @@
 from mongoengine.errors import ValidationError
 from bson import ObjectId
+from security import HashManager
 from documents import Employee
 from .store_service import StoreService
-from use_cases import CreateHashV1
 from docs_constants import EMPLOYEE_ROLES
 from exceptions import MissingDoc, UniqueKey, InvalidParam
 
@@ -58,15 +58,27 @@ class EmployeeService:
 
         self.__check_can_fill_password(employee=employee)
 
-        create_hash = CreateHashV1()
+        hash_manager = HashManager()
 
-        hashed_password = create_hash.hash_passwd(content=password)
+        hashed_password = hash_manager.hash_passwd(content=password)
 
         employee.password = hashed_password
 
         employee.save()
 
         return hashed_password
+
+    def login(self, username: str, password: str):
+        employee = self.get_by_username(username=username)
+
+        hash_manager = HashManager()
+
+        hashed_password = hash_manager.hash_passwd(content=password)
+
+        if employee.password != hashed_password:
+            raise InvalidParam('The password is invalid.')
+
+        return employee
 
     def __check_can_fill_password(self, employee: Employee) -> None:
         has_password = employee.password is not None
@@ -81,9 +93,9 @@ class EmployeeService:
             self.__fill_password()
 
     def __fill_password(self):
-        create_hash = CreateHashV1()
+        hash_manager = HashManager()
 
-        self.payload['password'] = create_hash.hash_passwd(
+        self.payload['password'] = hash_manager.hash_passwd(
             content=self.payload['password']
         )
 
