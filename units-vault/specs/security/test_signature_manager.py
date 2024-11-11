@@ -49,10 +49,10 @@ class TestSignatureManager:
 
         generated_signature = signature_manager.sign(payload={
             'iat': int(
-                datetime.datetime.now(datetime.UTC).timestamp()
+                datetime.datetime.now(datetime.timezone.utc).timestamp()
             ) - datetime.timedelta(hours=3).total_seconds(),
             'exp': int(
-                datetime.datetime.now(datetime.UTC).timestamp()
+                datetime.datetime.now(datetime.timezone.utc).timestamp()
             ) - datetime.timedelta(hours=2).total_seconds()
         })
 
