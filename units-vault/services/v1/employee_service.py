@@ -32,6 +32,27 @@ class EmployeeService:
 
         return employee
 
+    def delete(self, employee_document: str) -> None:
+        employee = self.get_by_document(document=employee_document)
+
+        employee.delete()
+
+    def get_by_document(self, document: str, can_raises=True) -> Employee:
+        employee = Employee.objects(document=document).first()
+
+        if not employee and can_raises:
+            raise MissingDoc('Employee not found.')
+
+        return employee
+
+    def get_by_username(self, username: str, can_raises=True) -> Employee:
+        employee = Employee.objects(username=username).first()
+
+        if not employee and can_raises:
+            raise MissingDoc('Employee not found.')
+
+        return employee
+
     def __validate_creation_fields(self) -> None:
         has_password = self.payload.get('password', None)
 
@@ -67,24 +88,3 @@ class EmployeeService:
         store = StoreService().get({'unit': store_unit})
 
         return store.id
-
-    def delete(self, employee_document: str) -> None:
-        employee = self.get_by_document(document=employee_document)
-
-        employee.delete()
-
-    def get_by_document(self, document: str, can_raises=True) -> Employee:
-        employee = Employee.objects(document=document).first()
-
-        if not employee and can_raises:
-            raise MissingDoc('Employee not found.')
-
-        return employee
-
-    def get_by_username(self, username: str, can_raises=True) -> Employee:
-        employee = Employee.objects(username=username).first()
-
-        if not employee and can_raises:
-            raise MissingDoc('Employee not found.')
-
-        return employee
