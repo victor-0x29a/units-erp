@@ -60,9 +60,13 @@ class EmployeeService:
 
         create_hash = CreateHashV1()
 
-        employee.password = create_hash.hash_passwd(content=password)
+        hashed_password = create_hash.hash_passwd(content=password)
+
+        employee.password = hashed_password
 
         employee.save()
+
+        return hashed_password
 
     def __check_can_fill_password(self, employee: Employee) -> None:
         has_password = employee.password is not None
