@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 from services.v1.employee_service import EmployeeService as EmployeeServiceV1
-from ..dto import CreateEmployeeV1
+from ..dto import CreateEmployeeV1, FillPasswordV1
 
 
 router = APIRouter(prefix="/v1/employee")
@@ -31,3 +31,15 @@ def delete_employee(employee_doc: str):
     employee_service = EmployeeServiceV1()
 
     employee_service.delete(employee_document=employee_doc)
+
+
+@router.put("/{employee_doc}/password", status_code=204, tags=['employee'])
+def fill_password(employee_doc: str, payload: FillPasswordV1):
+    parsed_payload = payload.model_dump()
+
+    employee_service = EmployeeServiceV1()
+
+    employee_service.fill_password(
+        employee_document=employee_doc,
+        password=parsed_payload['password']
+    )
