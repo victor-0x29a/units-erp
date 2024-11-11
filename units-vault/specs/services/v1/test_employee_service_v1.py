@@ -248,6 +248,22 @@ class TestFillPasswordV1:
 
         assert hashed_password != password
 
+    def test_should_fail_when_has_already_filled_password(self, mocker):
+        magic_employee = MagicMock()
+
+        magic_employee.password = 'password'
+
+        mocker.patch.object(
+            EmployeeServiceV1,
+            'get_by_document',
+            return_value=magic_employee
+        )
+
+        with pytest.raises(InvalidParam) as error:
+            EmployeeServiceV1().fill_password('123456', 'password')
+
+        assert error.value.message == 'Failed on process.'
+
     def test_should_fail_when_unexistent_employee(self, mocker):
         mocker.patch.object(
             Employee,
