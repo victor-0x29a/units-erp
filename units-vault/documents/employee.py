@@ -19,5 +19,5 @@ class Employee(Document):
     document = StringField(required=True, validation=_is_valid_cpf, unique=True)
     store_unit = ReferenceField(Store, required=True)
     username = StringField(required=True, max_length=30, unique=True)
-    password = StringField(max_length=120, default=None)
+    password = StringField(max_length=72, default=None)
     role = StringField(required=True, choices=roles_available)
