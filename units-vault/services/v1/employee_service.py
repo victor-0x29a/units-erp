@@ -53,6 +53,23 @@ class EmployeeService:
 
         return employee
 
+    def fill_password(self, employee_document: str, password: str):
+        employee = self.get_by_document(document=employee_document)
+
+        self.__check_can_fill_password(employee=employee)
+
+        create_hash = CreateHashV1()
+
+        employee.password = create_hash.hash_passwd(content=password)
+
+        employee.save()
+
+    def __check_can_fill_password(self, employee: Employee) -> None:
+        has_password = employee.password is not None
+
+        if has_password:
+            raise InvalidParam('Failed on process.')
+
     def __validate_creation_fields(self) -> None:
         has_password = self.payload.get('password', None)
 
