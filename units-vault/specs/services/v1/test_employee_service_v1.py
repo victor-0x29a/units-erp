@@ -49,9 +49,39 @@ class TestCreateV1:
 
         mocker.patch.object(StoreServiceV1, 'get', return_value=magic_store)
 
+        mocker.patch.object(
+            Employee,
+            'save',
+            return_value=True
+        )
+
+        mocker.patch.object(
+            Employee,
+            'validate',
+            return_value=True
+        )
+
+        mocker.patch.object(
+            EmployeeServiceV1,
+            '_EmployeeService__validate_unique_fields',
+            return_value=True
+        )
+
+        mocker.patch.object(
+            EmployeeServiceV1,
+            '_EmployeeService__fetch_store_id',
+            return_value=magic_store.id
+        )
+
         employee = service.create(creation_data)
 
-        assert employee.id
+        assert employee.name == creation_data['name']
+        assert employee.document == creation_data['document']
+        assert employee.role == creation_data['role']
+        assert employee.username == creation_data['username']
+
+        assert employee.password
+        assert employee.password != creation_data['password']
 
     def test_should_fail_when_havent_store_unit(self, mocker):
         creation_data = {
