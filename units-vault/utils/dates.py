@@ -1,8 +1,8 @@
-from datetime import datetime, timezone
+from datetime import datetime, timezone, UTC
 
 
 def get_now():
-    return datetime.now().replace(tzinfo=timezone.utc)
+    return datetime.now(UTC).replace(tzinfo=timezone.utc)
 
 
 def from_str_to_date(date: str, format: str = "%d/%m/%Y"):
