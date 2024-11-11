@@ -6,3 +6,4 @@ python-barcode==0.15.1
 pycpfcnpj==1.8
 pillow==10.4.0
 setuptools==70.0.0
+bcrypt==4.2.0
