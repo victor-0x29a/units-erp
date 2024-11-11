@@ -3,7 +3,7 @@ from use_cases import CreateHashV1
 
 class TestCreateHashUseCaseV1:
     def test_should_create(self, mocker):
-        raw_content = b'hello there!'
+        raw_content = 'hello there!'
 
         create_hash = CreateHashV1()
 
@@ -13,9 +13,9 @@ class TestCreateHashUseCaseV1:
         assert raw_content != hashed
 
     def test_should_is_not_equal(self, mocker):
-        raw_content_1 = b'hello there!'
+        raw_content_1 = 'hello there!'
 
-        raw_content_2 = b'hello there'
+        raw_content_2 = 'hello there'
 
         create_hash = CreateHashV1()
 
@@ -26,9 +26,9 @@ class TestCreateHashUseCaseV1:
         assert hashed_content_1 != hashed_content_2
 
     def test_should_is_not_equal_by_salts(self, mocker):
-        raw_content_1 = b'hello there!'
+        raw_content_1 = 'hello there!'
 
-        raw_content_2 = b'hello there!'
+        raw_content_2 = 'hello there!'
 
         create_hash = CreateHashV1()
 
