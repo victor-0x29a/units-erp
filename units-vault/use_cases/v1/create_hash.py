@@ -10,9 +10,10 @@ class CreateHash:
 
     def hash_passwd(self, content: str):
         salts = bcrypt.gensalt()
+
         content_encoded = self.__encode(content=content)
 
-        return bcrypt.hashpw(content_encoded, salts)
+        return bcrypt.hashpw(content_encoded, salts).decode('utf-8')
 
     def is_valid_hash_comparison(self, content: str, hashed: str) -> bool:
         content_encoded = self.__encode(content=content)

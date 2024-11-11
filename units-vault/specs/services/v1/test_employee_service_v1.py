@@ -32,13 +32,15 @@ class TestCreateV1:
         assert employee.id
 
     def test_should_create_with_password(self, mocker):
+        password = 'strongpassword'
+
         creation_data = {
             "store_unit": 1,
             "name": "victor",
             "document": human_doc,
             "username": "victor-0x29a",
             "role": "ADMIN",
-            "password": "123456"
+            "password": password
         }
 
         service = EmployeeServiceV1()
@@ -81,7 +83,7 @@ class TestCreateV1:
         assert employee.username == creation_data['username']
 
         assert employee.password
-        assert employee.password != creation_data['password']
+        assert employee.password != password
 
     def test_should_fail_when_havent_store_unit(self, mocker):
         creation_data = {
