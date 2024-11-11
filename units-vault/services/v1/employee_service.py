@@ -2,17 +2,22 @@ from mongoengine.errors import ValidationError
 from bson import ObjectId
 from documents import Employee
 from .store_service import StoreService
+from use_cases import CreateHashV1
 from docs_constants import EMPLOYEE_ROLES
 from exceptions import MissingDoc, UniqueKey, InvalidParam
 
 
 class EmployeeService:
     def create(self, data: dict) -> Employee:
-        data['store_unit'] = self.__fetch_store_id(data)
+        self.payload = data
 
-        self.__validate_unique_fields(data=data)
+        data['store_unit'] = self.__fetch_store_id()
 
-        employee = Employee(**data)
+        self.__validate_unique_fields()
+
+        self.__validate_creation_fields()
+
+        employee = Employee(**self.payload)
 
         try:
             employee.validate()
@@ -27,9 +32,22 @@ class EmployeeService:
 
         return employee
 
-    def __validate_unique_fields(self, data: dict) -> None:
+    def __validate_creation_fields(self) -> None:
+        has_password = self.payload.get('password', None)
+
+        if has_password:
+            self.__fill_password()
+
+    def __fill_password(self):
+        create_hash = CreateHashV1()
+
+        self.payload['password'] = create_hash.hash_passwd(
+            content=self.payload['password']
+        )
+
+    def __validate_unique_fields(self) -> None:
         employee_by_document = self.get_by_document(
-            document=data.get('document'),
+            document=self.payload.get('document'),
             can_raises=False
         )
 
@@ -37,15 +55,16 @@ class EmployeeService:
             raise UniqueKey('The document has already been taken.')
 
         employee_by_username = self.get_by_username(
-            username=data.get('username'),
+            username=self.payload.get('username'),
             can_raises=False
         )
 
         if employee_by_username:
             raise UniqueKey('The username has already been taken.')
 
-    def __fetch_store_id(self, data: dict) -> ObjectId:
-        store = StoreService().get({'unit': data.get('store_unit', None)})
+    def __fetch_store_id(self) -> ObjectId:
+        store_unit = self.payload.get('store_unit', None)
+        store = StoreService().get({'unit': store_unit})
 
         return store.id
 

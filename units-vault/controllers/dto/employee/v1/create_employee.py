@@ -12,3 +12,4 @@ class CreateEmployee(BaseModel):
     username: str
     role: Literal[*roles_available]
     store: int
+    password: str = None
