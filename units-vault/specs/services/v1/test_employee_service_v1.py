@@ -224,3 +224,38 @@ class TestDeleteV1:
             EmployeeServiceV1().delete('123456')
 
         assert error.value.message == 'Employee not found.'
+
+
+class TestFillPasswordV1:
+    def test_should_fill_password(self, mocker):
+        magic_employee = MagicMock()
+
+        magic_employee.password = None
+
+        magic_employee.save.return_value = True
+
+        mocker.patch.object(
+            EmployeeServiceV1,
+            'get_by_document',
+            return_value=magic_employee
+        )
+
+        service = EmployeeServiceV1()
+
+        password = 'password'
+
+        hashed_password = service.fill_password('123456', password)
+
+        assert hashed_password != password
+
+    def test_should_fail_when_unexistent_employee(self, mocker):
+        mocker.patch.object(
+            Employee,
+            'objects',
+            side_effect=MissingDoc('Employee not found.')
+        )
+
+        with pytest.raises(MissingDoc) as error:
+            EmployeeServiceV1().fill_password('123456', 'password')
+
+        assert error.value.message == 'Employee not found.'
