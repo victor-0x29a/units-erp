@@ -1,12 +1,13 @@
 from fastapi import APIRouter
+from fastapi.responses import Response
 from services.v1.employee_service import EmployeeService as EmployeeServiceV1
-from ..dto import CreateEmployeeV1, FillPasswordV1
+from ..dto import CreateEmployeeV1, FillPasswordV1, LoginV1
 
 
 router = APIRouter(prefix="/v1/employee")
 
 
-@router.post("/", status_code=204, tags=['employee'])
+@router.post("/", status_code=204, tags=['employee'], )
 def create_employee(payload: CreateEmployeeV1):
     data = payload.model_dump()
 
@@ -43,3 +44,18 @@ def fill_password(employee_doc: str, payload: FillPasswordV1):
         employee_document=employee_doc,
         password=parsed_payload['password']
     )
+
+
+@router.post("/login", status_code=204, tags=['employee'])
+def login(payload: LoginV1):
+    parsed_payload = payload.model_dump()
+
+    employee_service = EmployeeServiceV1()
+
+    token = employee_service.login(
+        username=parsed_payload.get('username', None),
+        document=parsed_payload.get('document', None),
+        password=parsed_payload['password']
+    )
+
+    return Response(headers={"Authorization": token}, status_code=204)
