@@ -1,10 +1,8 @@
 import pytest
 from unittest.mock import MagicMock
-from mongoengine.errors import ValidationError
-from bson import ObjectId
 from fastapi.testclient import TestClient
 from main import app
-from documents import Employee, Store
+from documents import Employee
 from exceptions import MissingDoc
 from ...__mocks__.constants import human_doc
 from ...fixture import mongo_connection # noqa: F401, E261
