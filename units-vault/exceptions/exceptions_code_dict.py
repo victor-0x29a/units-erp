@@ -25,6 +25,12 @@ exceptions_code = {
     1070: {
         "http": 422
     },
+    1555: {
+        "http": 401
+    },
+    1556: {
+        "http": 403
+    },
     VALIDATION_ERROR_CODE: {
         "http": 422,
         "message": "Validation error"
