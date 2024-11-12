@@ -77,8 +77,15 @@ class EmployeeService:
         if document and not employee:
             employee = self.get_by_document(document=document)
 
-        if not employee or not password:
-            raise MissingDoc('Employee document or employee username, and password is required.')
+        if not employee:
+            raise MissingDoc('Employee document or username is required.')
+
+        signature_manager = SignatureManager(secret=JWT_SECRET)
+
+        if not employee.password:
+            return signature_manager.sign(
+                payload=self.__fetch_personal_info(employee)
+            )
 
         hash_manager = HashManager()
 
@@ -89,8 +96,6 @@ class EmployeeService:
 
         if not is_valid_passwd_comparison:
             raise InvalidParam('Failed on process.')
-
-        signature_manager = SignatureManager(secret=JWT_SECRET)
 
         return signature_manager.sign(
             payload=self.__fetch_personal_info(employee)
