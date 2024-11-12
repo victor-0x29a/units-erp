@@ -156,3 +156,44 @@ class TestLoginEmployeeIntegrationV1():
             client.post("/v1/employee/login", json=login_data)
 
         assert error.value.message == 'Store not found.'
+
+    def test_should_login_without_password(self, mocker):
+        login_data = {
+            "username": "test"
+        }
+
+        mocker.patch.object(
+            constants,
+            'JWT_SECRET',
+            'secret'
+        )
+
+        magic_employee = MagicMock()
+
+        magic_employee.password = None
+
+        magic_employee.document = '000005'
+
+        magic_employee.role = 'ADMIN'
+
+        magic_store = MagicMock()
+
+        magic_store.unit = 1
+
+        mocker.patch.object(
+            EmployeeServiceV1,
+            'get_by_username',
+            return_value=magic_employee
+        )
+
+        mocker.patch.object(
+            StoreServiceV1,
+            'get',
+            return_value=magic_store
+        )
+
+        response = client.post("/v1/employee/login", json=login_data)
+
+        assert response.status_code == 204
+        assert response.headers['authorization']
+        assert isinstance(response.headers['authorization'], str)
