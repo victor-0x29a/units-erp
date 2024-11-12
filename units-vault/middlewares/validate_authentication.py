@@ -5,10 +5,14 @@ from constants import JWT_SECRET
 from docs_constants import EMPLOYEE_ROLES
 
 
+EMPLOYEE_ROLES_LIST = list(EMPLOYEE_ROLES.values())
+
 signature_manager = SignatureManager(secret=JWT_SECRET)
 
 
-def create_auth_middleware(enabled_roles: list = []):
+def create_auth_middleware(
+    enabled_roles: list = EMPLOYEE_ROLES_LIST
+):
     def validate_authentication(request: Request, response: Response):
         token = request.headers.get("Authorization")
 
