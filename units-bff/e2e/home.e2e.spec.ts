@@ -1,7 +1,7 @@
-import { Server } from "../src/server";
+import { createServer } from '../src';
 
 test("should say welcome", async () => {
-  const server = new Server(false).start();
+  const server = createServer();
 
   const response = await server.inject({
     method: "GET",
@@ -15,7 +15,7 @@ test("should say welcome", async () => {
 });
 
 test("should say hello to me", async () => {
-  const server = new Server(false).start();
+  const server = createServer();
 
   const response = await server.inject({
     method: "POST",
@@ -32,7 +32,7 @@ test("should say hello to me", async () => {
 });
 
 test("should not say hello to me", async () => {
-  const server = new Server(false).start();
+  const server = createServer();
 
   const response = await server.inject({
     method: "POST",
