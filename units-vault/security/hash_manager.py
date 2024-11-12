@@ -3,7 +3,7 @@ import base64
 import hashlib
 
 
-class CreateHash:
+class HashManager:
     def __encode(self, content: str):
         encoded_content = content.encode('utf-8')
         return base64.b64encode(hashlib.sha256(encoded_content).digest())

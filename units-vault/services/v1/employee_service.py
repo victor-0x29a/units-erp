@@ -1,10 +1,11 @@
 from mongoengine.errors import ValidationError
 from bson import ObjectId
-from documents import Employee
+from security import HashManager, SignatureManager
+from documents import Employee, Store
 from .store_service import StoreService
-from use_cases import CreateHashV1
-from docs_constants import EMPLOYEE_ROLES
 from exceptions import MissingDoc, UniqueKey, InvalidParam
+from docs_constants import EMPLOYEE_ROLES
+from constants import JWT_SECRET
 
 
 class EmployeeService:
@@ -58,15 +59,48 @@ class EmployeeService:
 
         self.__check_can_fill_password(employee=employee)
 
-        create_hash = CreateHashV1()
+        hash_manager = HashManager()
 
-        hashed_password = create_hash.hash_passwd(content=password)
+        hashed_password = hash_manager.hash_passwd(content=password)
 
         employee.password = hashed_password
 
         employee.save()
 
         return hashed_password
+
+    def login(self, username: str, document: str, password: str):
+        employee = None
+
+        if username:
+            employee = self.get_by_username(username=username)
+        if document and not employee:
+            employee = self.get_by_document(document=document)
+
+        if not employee:
+            raise MissingDoc('Employee document or username is required.')
+
+        signature_manager = SignatureManager(secret=JWT_SECRET)
+
+        if not employee.password:
+            return signature_manager.sign(
+                payload=self.__fetch_personal_info(employee),
+                is_temporary=True
+            )
+
+        hash_manager = HashManager()
+
+        is_valid_passwd_comparison = hash_manager.is_valid_hash_comparison(
+            password,
+            employee.password
+        )
+
+        if not is_valid_passwd_comparison:
+            raise InvalidParam('Failed on process.')
+
+        return signature_manager.sign(
+            payload=self.__fetch_personal_info(employee)
+        )
 
     def __check_can_fill_password(self, employee: Employee) -> None:
         has_password = employee.password is not None
@@ -81,9 +115,9 @@ class EmployeeService:
             self.__fill_password()
 
     def __fill_password(self):
-        create_hash = CreateHashV1()
+        hash_manager = HashManager()
 
-        self.payload['password'] = create_hash.hash_passwd(
+        self.payload['password'] = hash_manager.hash_passwd(
             content=self.payload['password']
         )
 
@@ -104,8 +138,24 @@ class EmployeeService:
         if employee_by_username:
             raise UniqueKey('The username has already been taken.')
 
+    def __fetch_personal_info(self, employee: Employee) -> dict:
+        store_unit = self.__fetch_store(
+            {'unit': employee.store_unit.unit}
+        ).unit
+
+        return {
+            'employee_document': employee.document,
+            'employee_role': employee.role,
+            'store_unit': store_unit
+        }
+
+    def __fetch_store(self, filters: dict) -> Store:
+        store = StoreService().get(filters)
+
+        return store
+
     def __fetch_store_id(self) -> ObjectId:
         store_unit = self.payload.get('store_unit', None)
-        store = StoreService().get({'unit': store_unit})
+        store = self.__fetch_store({'unit': store_unit})
 
         return store.id
