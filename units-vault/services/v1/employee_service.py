@@ -84,7 +84,8 @@ class EmployeeService:
 
         if not employee.password:
             return signature_manager.sign(
-                payload=self.__fetch_personal_info(employee)
+                payload=self.__fetch_personal_info(employee),
+                is_temporary=True
             )
 
         hash_manager = HashManager()
