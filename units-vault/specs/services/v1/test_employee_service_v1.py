@@ -499,3 +499,63 @@ class TestLoginV1:
             )
 
         assert error.value.message == 'Store not found.'
+
+    def test_should_login_when_havent_password(self, mocker):
+        login_data = {
+            'username': 'victor-0x29a'
+        }
+
+        jwt_secret = 'jwt_secret'
+
+        mocker.patch.object(
+            constants,
+            'JWT_SECRET',
+            jwt_secret
+        )
+
+        magic_employee = MagicMock()
+
+        magic_employee.document = human_doc
+
+        magic_employee.role = 'ADMIN'
+
+        magic_store = MagicMock()
+
+        magic_store.unit = 1
+
+        magic_employee.password = None
+
+        mocker.patch.object(
+            EmployeeServiceV1,
+            'get_by_username',
+            return_value=magic_employee
+        )
+
+        mocker.patch.object(
+            EmployeeServiceV1,
+            '_EmployeeService__fetch_store',
+            return_value=magic_store
+        )
+
+        service = EmployeeServiceV1()
+
+        token = service.login(
+            username=login_data['username'],
+            password=None,
+            document=None
+        )
+
+        assert token
+        assert isinstance(token, str)
+
+    def test_should_fail_when_havent_username_and_document(self, mocker):
+        service = EmployeeServiceV1()
+
+        with pytest.raises(MissingDoc) as error:
+            service.login(
+                username=None,
+                password=None,
+                document=None
+            )
+
+        assert error.value.message == 'Employee document or username is required.'
