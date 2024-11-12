@@ -8,10 +8,11 @@ class SignatureManager:
     def __init__(self, secret):
         self.__secret = secret
 
-    def sign(self, payload: dict = {}):
+    def sign(self, payload: dict = {}, is_temporary=False):
         signature_payload = {
             'iat': int(get_now().timestamp()),
-            'exp': self.__gen_expiry_date(),
+            'exp': self.__gen_expiry_date(is_temporary=is_temporary, hours=2),
+            'is_temporary': is_temporary,
             **payload
         }
 
@@ -40,6 +41,13 @@ class SignatureManager:
 
         return False
 
-    def __gen_expiry_date(self, hours=2):
-        datetime = get_now() + timedelta(hours=hours)
+    def __gen_expiry_date(self, is_temporary=False, hours=2):
+        token_hour_duration = hours if not is_temporary else 0
+        token_minute_duration = 10 if is_temporary else 0
+
+        datetime = get_now() + timedelta(
+            hours=token_hour_duration,
+            minutes=token_minute_duration
+        )
+
         return int(datetime.timestamp())
