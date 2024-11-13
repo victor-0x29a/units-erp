@@ -1,4 +1,6 @@
-import { CAN_LOG, SERVER_PORT } from "./constants";
-import { Server } from "./server";
+import { createServer } from './fastify';
+import { SERVER_PORT } from './constants';
 
-new Server(CAN_LOG).start().listen({ port: SERVER_PORT });
+createServer().listen({
+  port: SERVER_PORT
+});

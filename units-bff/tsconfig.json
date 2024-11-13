@@ -1,18 +1,14 @@
 {
     "compilerOptions": {
-        "esModuleInterop": true,
-        "paths": {
-            "@module": [
-                "./src/modules/"
-            ],
-            "@constants": [
-                "./src/constants.ts"
-            ]
-        }
+        "esModuleInterop": true
     },
     "include": [
         "src/*.ts",
+        "src/**/*.ts",
+        "src/**/**/*.ts",
+        "src/**/**/**/*.ts",
+        "src/**/**/**/**/*.ts",
+        "src/**/**/**/**/**/*.ts",
         "src/**/*.*.spec.ts",
-        "src/controllers/Builder.ts"
     ],
 }
