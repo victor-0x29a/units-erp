@@ -1,6 +1,6 @@
 import { FastifyInstance, FastifyRequest } from "fastify";
 import { Builder } from "../Builder";
-import { ValidatorCompiler } from "../../ValidatorCompiler";
+import { ValidatorCompiler } from "../../utils";
 import { sayHelloSchema } from "./schemas";
 import { SayHelloDTO } from "./dto";
 
