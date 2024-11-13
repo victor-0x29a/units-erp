@@ -145,3 +145,46 @@ test("should reject when have an unexpected external error", async () => {
   expect(errorResponse.message).toBe("External error");
   expect(errorResponse.errors.length).toEqual(1);
 });
+
+test('should reject when document is invalid', async () => {
+  const { createServer } = await import("../../src/fastify");
+
+  server = createServer();
+
+  const response = await server.inject({
+    method: "POST",
+    url: "/employee/login",
+    payload: {
+      "document": "123456789",
+    }
+  });
+
+  const errorResponse = response.json();
+
+  expect(response.statusCode).toBe(400);
+  expect(errorResponse.code).toBe("FST_ERR_VALIDATION");
+  expect(errorResponse.message).toBe("Document must be a valid CPF");
+  expect(errorResponse.errors.length).toEqual(1);
+});
+
+test('should reject when have password and the length is less than 6 chars', async () => {
+  const { createServer } = await import("../../src/fastify");
+
+  server = createServer();
+
+  const response = await server.inject({
+    method: "POST",
+    url: "/employee/login",
+    payload: {
+      "username": "victor w.",
+      "password": "12345"
+    }
+  });
+
+  const errorResponse = response.json();
+
+  expect(response.statusCode).toBe(400);
+  expect(errorResponse.code).toBe("FST_ERR_VALIDATION");
+  expect(errorResponse.message).toBe("Password must have at least 6 characters");
+  expect(errorResponse.errors.length).toEqual(1);
+});
