@@ -13,7 +13,7 @@ class EmployeeService {
         if ([404, 401, 422].includes(error.statusCode)) {
           return Promise.reject(new InvalidCredentials());
         }
-        return Promise.reject(new ExternalError());
+        return Promise.reject(new ExternalError(error));
       });
   }
 }
