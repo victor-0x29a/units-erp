@@ -1,28 +1,28 @@
 import { FastifyInstance } from 'fastify';
-import { createServer } from '../../src/fastify';
-
-jest.mock('../../src/core', () => ({
-  privateDomains: {
-    employeeDomain: {
-      login: jest.fn().mockResolvedValue('Bearer token')
-    }
-  }
-}));
 
 let server: FastifyInstance;
-
-beforeEach(() => {
-  server = createServer();
-});
 
 afterEach(async () => {
   if (server) {
     await server.close();
   }
   jest.resetModules();
+  jest.resetAllMocks();
 });
 
 test("should authenticate an employe", async () => {
+  jest.doMock('../../src/core', () => ({
+    privateDomains: {
+      employeeDomain: {
+        login: jest.fn().mockResolvedValue('Bearer token')
+      }
+    }
+  }));
+
+  const { createServer } = await import("../../src/fastify");
+
+  server = createServer();
+
   const response = await server.inject({
     method: "POST",
     url: "/employee/login",
@@ -94,6 +94,10 @@ test("should not authenticate when the password is wrong", async () => {
 });
 
 test("should reject when havent field on login payload", async () => {
+  const { createServer } = await import("../../src/fastify");
+
+  server = createServer();
+
   const response = await server.inject({
     method: "POST",
     url: "/employee/login",
