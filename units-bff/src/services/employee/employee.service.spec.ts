@@ -131,7 +131,12 @@ describe("EmployeeService::Authentication all error cases", () => {
     });
 
     expect(anonymousFnLogin).rejects.toBeDefined();
-    expect(anonymousFnLogin).rejects.toEqual(new ExternalError());
+    expect(anonymousFnLogin).rejects.toEqual(new ExternalError({
+      "code": 500,
+      "message": "Internal error.",
+      "errors": [],
+      "statusCode": 500
+    }));
   });
 
 });
