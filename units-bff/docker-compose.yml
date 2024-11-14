@@ -2,9 +2,12 @@ services:
   mysql:
     image: mysql
     restart: always
-    hostname: ${MYSQL_HOSTNAME}
+    env_file: .env
     environment:
+      MYSQL_HOST: ${MYSQL_HOSTNAME}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_USER: ${MYSQL_USER}
     volumes:
       - ../docker-volumes/bff:/var/lib/mysql
+    ports:
+      - "${MYSQL_PORT}:${MYSQL_PORT}"
