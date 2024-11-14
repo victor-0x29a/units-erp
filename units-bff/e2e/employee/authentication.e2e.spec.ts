@@ -25,7 +25,7 @@ test("should authenticate an employe", async () => {
 
   const response = await server.inject({
     method: "POST",
-    url: "/employee/login",
+    url: "/v1/employee/login",
     payload: {
       "username": "victor-0x29a"
     }
@@ -55,7 +55,7 @@ test("should not authenticate an unexists employee", async () => {
 
   const response = await server.inject({
     method: "POST",
-    url: "/employee/login",
+    url: "/v1/employee/login",
     payload: {
       "username": "victor-0x29a"
     }
@@ -84,7 +84,7 @@ test("should not authenticate when the password is wrong", async () => {
 
   const response = await server.inject({
     method: "POST",
-    url: "/employee/login",
+    url: "/v1/employee/login",
     payload: {
       "username": "victor-0x29a"
     }
@@ -100,7 +100,7 @@ test("should reject when havent field on login payload", async () => {
 
   const response = await server.inject({
     method: "POST",
-    url: "/employee/login",
+    url: "/v1/employee/login",
     payload: {}
   });
 
@@ -132,7 +132,7 @@ test("should reject when have an unexpected external error", async () => {
 
   const response = await server.inject({
     method: "POST",
-    url: "/employee/login",
+    url: "/v1/employee/login",
     payload: {
       "username": "victor-0x29a"
     }
@@ -153,7 +153,7 @@ test('should reject when document is invalid', async () => {
 
   const response = await server.inject({
     method: "POST",
-    url: "/employee/login",
+    url: "/v1/employee/login",
     payload: {
       "document": "123456789",
     }
@@ -174,7 +174,7 @@ test('should reject when have password and the length is less than 6 chars', asy
 
   const response = await server.inject({
     method: "POST",
-    url: "/employee/login",
+    url: "/v1/employee/login",
     payload: {
       "username": "victor w.",
       "password": "12345"

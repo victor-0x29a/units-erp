@@ -8,11 +8,11 @@ class Home {
   constructor(private readonly fastify: FastifyInstance) {
     const ControllerConstructor = new Builder(fastify);
 
-    ControllerConstructor.createRoute("get")("/", {
+    ControllerConstructor.createRoute("get")("", {
       handler: this.get,
     });
 
-    ControllerConstructor.createRoute("post")("/", {
+    ControllerConstructor.createRoute("post")("", {
       schema: {
         body: sayHelloSchema,
       },

@@ -14,7 +14,7 @@ class Employee {
 
     const ControllerConstructor = new Builder(fastify);
 
-    ControllerConstructor.createRoute("post")("/employee/login", {
+    ControllerConstructor.createRoute("post")("/login", {
       schema: {
         body: employeeLoginSchema,
       },

@@ -8,8 +8,15 @@ export const createServer = (): FastifyInstance => {
     logger: CAN_LOG,
   }) as FastifyInstance;
 
-  controllers.forEach((Controller) => {
-    new Controller(fastify);
+  controllers.forEach((controllerOpts) => {
+    const Controller = controllerOpts[0];
+    const prefix = controllerOpts[1];
+    fastify.register((instance, opts, done) => {
+      new Controller(instance);
+      done();
+    }, {
+      prefix
+    });
   });
 
   fastify.setErrorHandler(errorHandler);
