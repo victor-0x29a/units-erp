@@ -1,4 +1,5 @@
 import type { FastifyError, FastifyReply, FastifyRequest } from "fastify";
+import { MountErrorResponse } from "../utils";
 
 export const errorHandler = (
   error: FastifyError & { errors: string[] },
@@ -9,22 +10,12 @@ export const errorHandler = (
 
   const haveMultipleErrors = errorsList.length > 1;
 
-  const errorTemplate = {
-    code: error.code,
-  };
-
   if (haveMultipleErrors) {
-    reply.status(400).send({
-      ...errorTemplate,
-      error: errorsList,
-    });
+    reply.status(422).send(MountErrorResponse("MULTIPLE_ERRORS", "MULTIPLE_ERRORS", errorsList));
     return;
   }
 
-  reply.status(error.statusCode || 500).send({
-    ...errorTemplate,
-    error: errorsList[0] || error.message,
-  });
+  reply.status(error.statusCode || 500).send(MountErrorResponse(error.code, error.message, error.errors));
 
   return;
 };

@@ -45,9 +45,10 @@ test("should not say hello to me", async () => {
     },
   });
 
-  expect(response.statusCode).toBe(400);
+  expect(response.statusCode).toBe(422);
   expect(response.json()).toEqual({
-    code: "FST_ERR_VALIDATION",
-    error: ["O nome é obrigatório", "Nome muito curto"],
+    code: "MULTIPLE_ERRORS",
+    message: "MULTIPLE_ERRORS",
+    errors: ["O nome é obrigatório", "Nome muito curto"],
   });
 });

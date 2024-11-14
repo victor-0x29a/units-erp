@@ -10,10 +10,10 @@ class EmployeeService {
     return employeeDomain.login(loginPayload)
       .then((employeeToken) => employeeToken)
       .catch((error: ErrorResponse) => {
-        if ([404, 401].includes(error.statusCode)) {
+        if ([404, 401, 422].includes(error.statusCode)) {
           return Promise.reject(new InvalidCredentials());
         }
-        return Promise.reject(new ExternalError());
+        return Promise.reject(new ExternalError(error));
       });
   }
 }

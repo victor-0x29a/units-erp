@@ -14,7 +14,7 @@ class Employee {
 
     const ControllerConstructor = new Builder(fastify);
 
-    ControllerConstructor.createRoute("post")("/employee/login", {
+    ControllerConstructor.createRoute("post")("/login", {
       schema: {
         body: employeeLoginSchema,
       },
@@ -34,7 +34,7 @@ class Employee {
           .send();
       })
       .catch((error: FastifyError) => {
-        return reply.status(error.statusCode || 500).send(MountErrorResponse(error.code, error.message, error.errors));
+        return reply.status(error.statusCode).send(MountErrorResponse(error.code, error.message, error.errors));
       });
   };
 }
