@@ -30,3 +30,5 @@ export const UNITS_VAULT_USER_AGENT: string =
 export const UNITS_VAULT_MAX_RETRIES = Number(
   process.env.UNITS_VAULT_MAX_RETRIES
 );
+
+export const JWT_SECRET: string = process.env.JWT_SECRET;
