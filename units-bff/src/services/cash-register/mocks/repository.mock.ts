@@ -12,10 +12,12 @@ export const mockedRepository = {
           clock_lunch_in: null,
           clock_lunch_out: null
         })
-      })
+      }),
+      findOne: jest.fn().mockResolvedValue(null)
     },
     fail: {
-      create: jest.fn().mockRejectedValue(new InternalError(null))
+      create: jest.fn().mockRejectedValue(new InternalError(null)),
+      findOne: jest.fn().mockResolvedValue(null)
     },
     failWhenAlreadyExistsBySameDayAndSameDocument: {
       findOne: jest.fn().mockResolvedValue({
