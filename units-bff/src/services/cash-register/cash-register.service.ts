@@ -13,7 +13,7 @@ class CashRegisterService {
       .create({ employee_document: employeeDocument, clock_in: getNow() })
       .catch((error: unknown) => Promise.reject(new InternalError(error)));
   }
-  public async toggleClock(clockRegisterId: number) {
+  public async toggleClock(clockRegisterId: number): Promise<Model<CashRegisterClockType, CashRegisterClockType>> {
     return this.cashRegisterClockModel
       .findByPk(clockRegisterId)
       .then((register: Model<CashRegisterClockType, CashRegisterClockType> | null) => {
