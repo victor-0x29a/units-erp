@@ -2,7 +2,7 @@ import { Model, ModelCtor } from "sequelize";
 import { CashRegisterService } from "./cash-register.service";
 import { mockedRepository } from "./mocks/repository.mock";
 import { CashRegisterClock } from "../../types/cash-register-clock";
-import { InternalError } from "../../exceptions";
+import { Conflict, InternalError } from "../../exceptions";
 
 
 describe('CashRegisterService::Clock::Create', () => {
@@ -27,6 +27,13 @@ describe('CashRegisterService::Clock::Create', () => {
     const anonymousFn = async (): Promise<Model<CashRegisterClock, CashRegisterClock>> => await service.createClockRegister('55265344055');
 
     expect(anonymousFn).rejects.toBeInstanceOf(InternalError);
+  });
+  test(('should not create when has already exist a register with the same document and the same day'), async () => {
+    const repository = mockedRepository.creationCases.failWhenAlreadyExistsBySameDayAndSameDocument as unknown as ModelCtor<Model<CashRegisterClock, CashRegisterClock>>;
+
+    const service = new CashRegisterService(repository);
+
+    await expect(service.createClockRegister('55265344055')).rejects.toBeInstanceOf(Conflict);
   });
 });
 

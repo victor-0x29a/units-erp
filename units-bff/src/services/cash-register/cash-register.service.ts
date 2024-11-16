@@ -3,12 +3,24 @@ import type { CashRegisterClock as CashRegisterClockType } from "../../types/cas
 import { InternalError, MissingDoc, RetroactiveAction } from "../../exceptions";
 import { Model } from "sequelize";
 import { getNow } from "../../utils";
+import { Conflict } from "../../exceptions";
 
 
 class CashRegisterService {
   constructor (private cashRegisterClockModel: typeof CashRegisterClock) {}
 
   public async createClockRegister(employeeDocument: string): Promise<Model<CashRegisterClockType, CashRegisterClockType>> {
+    const hasCashRegisterWithSameDocumentAtSameDay = await this.cashRegisterClockModel.findOne({
+      where: {
+        employee_document: employeeDocument,
+        clock_in: getNow()
+      }
+    });
+
+    if (hasCashRegisterWithSameDocumentAtSameDay) {
+      return Promise.reject(new Conflict(["You can't clock in twice by day."]));
+    }
+
     return this.cashRegisterClockModel
       .create({ employee_document: employeeDocument, clock_in: getNow() })
       .catch((error: unknown) => Promise.reject(new InternalError(error)));
