@@ -31,7 +31,7 @@ describe('CashRegisterService::Clock::Create', () => {
 });
 
 describe('CashRegisterService::Clock::Toggle', () => {
-  test('should toggle a clock register remaining one clock to close', async () => {
+  test('should toggle a clock register on clock out', async () => {
     const repository = mockedRepository.toggleCases.success.lastClockOut as unknown as ModelCtor<Model<CashRegisterClock, CashRegisterClock>>;
 
     const service = new CashRegisterService(repository);
@@ -48,7 +48,7 @@ describe('CashRegisterService::Clock::Toggle', () => {
   });
 
 
-  test('should toggle a clock register remaining two clock to close', async () => {
+  test('should toggle a clock register on lunch in', async () => {
     const repository = mockedRepository.toggleCases.success.clock_lunch_in as unknown as ModelCtor<Model<CashRegisterClock, CashRegisterClock>>;
 
     const service = new CashRegisterService(repository);
@@ -64,8 +64,8 @@ describe('CashRegisterService::Clock::Toggle', () => {
     expect(updateSpy).toHaveBeenCalledWith({ clock_lunch_in: expect.any(Date) });
   });
 
-  test('should toggle a clock register remaining three clock to close', async () => {
-    const repository = mockedRepository.toggleCases.success.clock_lunch_in as unknown as ModelCtor<Model<CashRegisterClock, CashRegisterClock>>;
+  test('should toggle a clock register on lunch out', async () => {
+    const repository = mockedRepository.toggleCases.success.clock_lunch_out as unknown as ModelCtor<Model<CashRegisterClock, CashRegisterClock>>;
 
     const service = new CashRegisterService(repository);
 
@@ -78,5 +78,20 @@ describe('CashRegisterService::Clock::Toggle', () => {
     expect(updateSpy).toHaveBeenCalled();
 
     expect(updateSpy).toHaveBeenCalledWith({ clock_lunch_out: expect.any(Date) });
+  });
+  test('should toggle a clock register on the first time', async () => {
+    const repository = mockedRepository.toggleCases.success.clock_in as unknown as ModelCtor<Model<CashRegisterClock, CashRegisterClock>>;
+
+    const service = new CashRegisterService(repository);
+
+    const model = await repository.findByPk(1);
+
+    const updateSpy = jest.spyOn(model, 'update');
+
+    await expect(service.toggleClock(1)).resolves.not.toThrow();
+
+    expect(updateSpy).toHaveBeenCalled();
+
+    expect(updateSpy).toHaveBeenCalledWith({ clock_in: expect.any(Date) });
   });
 });

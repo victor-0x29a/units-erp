@@ -23,9 +23,15 @@ class CashRegisterService {
 
         const registerData = register.toJSON();
 
+        const hasAlreadyClockIn = registerData.clock_in !== null;
         const hasAlreadyClockLunchIn = registerData.clock_lunch_in !== null;
         const hasAlreadyClockLunchOut = registerData.clock_lunch_out !== null;
         const hasAlreadyClockOut = registerData.clock_out !== null;
+
+        if (!hasAlreadyClockIn) {
+          return register.update({ clock_in: getNow() })
+            .catch((error: unknown) => Promise.reject(new InternalError(error)));
+        }
 
         if (hasAlreadyClockOut) {
           return Promise.reject(new RetroactiveAction(["You can't clock out twice by day."]));

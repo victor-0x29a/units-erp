@@ -58,6 +58,19 @@ export const mockedRepository = {
           }),
           update: jest.fn().mockResolvedValue(null)
         })
+      },
+      clock_in: {
+        findByPk: jest.fn().mockResolvedValue({
+          toJSON: jest.fn().mockReturnValue({
+            id: 1,
+            employee_document: '55265344055',
+            clock_in: null,
+            clock_lunch_in: null,
+            clock_out: null,
+            clock_lunch_out: null
+          }),
+          update: jest.fn().mockResolvedValue(null)
+        })
       }
     }
   }
