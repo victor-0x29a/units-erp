@@ -52,16 +52,15 @@ class StoreService:
         store = self.get({'unit': unit})
 
         update_fields = data_for_update.keys()
+        current_data = store._data
 
-        parsed_keys = [f'set__{field}' for field in update_fields]
-
-        update_payload = {}
-
-        for key in parsed_keys:
-            update_payload[key] = data_for_update[key.split('__')[1]]
+        for field in update_fields:
+            data = data_for_update[field]
+            if data:
+                current_data[field] = data
 
         try:
-            store.update(**update_payload)
+            store.update(**current_data)
         except NotUniqueError:
             raise UniqueKey("Already exist a store with the same unit.")
 
