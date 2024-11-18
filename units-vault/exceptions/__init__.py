@@ -7,3 +7,6 @@ from .missing_doc import MissingDoc
 from .internal_error import InternalError
 from .unique_key import UniqueKey
 from .missing_param import MissingParam
+from .invalid_param import InvalidParam
+from .missing_authorization import MissingAuthorization
+from .missing_permission import MissingPermission

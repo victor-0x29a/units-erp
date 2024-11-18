@@ -1,13 +1,16 @@
+@import './constants.scss';
+
 .container {
     display: flex;
     justify-content: space-between;
     width: 100vw;
     height: 100vh;
-    border: 1px solid red;
+    overflow: hidden;
 }
 
 .side {
     width: 50%;
+
     &:first-of-type {
         display: flex;
         place-content: center;
@@ -50,13 +53,61 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        place-content: flex-end;
+        place-content: center;
         background-color: white;
+    }
+
+    [class*='image-container'] {
+        display: flex;
+        align-items: center;
+        &::before {
+            content: 'Venha conhecer o melhor ERP do mercado para o seu varejo.';
+            width: 0rem;
+            height: 5rem;
+            color: black;
+            overflow: hidden;
+            transition: width 0.5s;
+        }
+    }
+
+    @media screen and (max-width: $desktopUp) {
+        &:first-of-type {
+            display: none;
+        }
+
+        &:last-of-type {
+            width: 100%;
+            flex-direction: row-reverse;
+            background-color: rgba(255, 166, 0, 0.05);
+            [class*='image-container'] {
+                width: 20rem;
+                &:hover {
+                    &::before {
+                        width: 15rem;
+                    }
+                }
+            }
+        }
+    }
+
+    @media screen and (max-width: $tabletUp) {
+        &:last-of-type {
+            flex-direction: column;
+            [class*='image-container'] {
+                width: auto;
+                &:hover {
+                    &::before {
+                        width: 0;
+                    }
+                }
+            }
+        }
+
     }
 }
 
 .form {
     max-width: 400px;
     width: 100%;
-    margin-bottom: 3rem;
+    margin-top: 2rem;
 }

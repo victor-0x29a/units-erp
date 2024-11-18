@@ -10,3 +10,10 @@ PRODUCT_DATA_TYPES = {
 DOCS_DTO = {
     'supplier_document': 'cnpj'
 }
+
+EMPLOYEE_ROLES = {
+    'admin': 'ADMIN',
+    'financial': 'FINANCIAL',
+    'inventor': 'INVENTOR',
+    'operator': 'OPERATOR',
+}

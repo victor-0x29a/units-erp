@@ -3,6 +3,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+JWT_ALGORITHM = 'HS512'
+JWT_SECRET = os.getenv("JWT_SECRET")
 MONGO_HOST = os.getenv("MONGODB_HOST")
 MONGO_USER = os.getenv("MONGO_INITDB_ROOT_USERNAME")
 MONGO_PASS = os.getenv("MONGO_INITDB_ROOT_PASSWORD")

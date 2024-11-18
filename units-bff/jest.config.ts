@@ -29,7 +29,7 @@ const config: Config = {
 
   // An array of regexp pattern strings used to skip coverage collection
   coveragePathIgnorePatterns: [
-    "/node_modules/", "constant"
+    "/node_modules/", "constant", "/src/core/"
   ],
 
   // Indicates which provider should be used to instrument code for coverage
@@ -90,7 +90,10 @@ const config: Config = {
   // ],
 
   // A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
-  // moduleNameMapper: {},
+  moduleNameMapper: {
+    '@constants': '<rootDir>/src/constants.ts',
+    '@module': '<rootDir>/src/modules/'
+  },
 
   // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
   // modulePathIgnorePatterns: [],

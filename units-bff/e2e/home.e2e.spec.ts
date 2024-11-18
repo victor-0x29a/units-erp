@@ -1,8 +1,19 @@
-import { Server } from "../src/server";
+import { FastifyInstance } from 'fastify';
+import { createServer } from '../src/fastify';
+
+let server: FastifyInstance;
+
+beforeEach(() => {
+  server = createServer();
+});
+
+afterEach(async () => {
+  if (server) {
+    await server.close();
+  }
+});
 
 test("should say welcome", async () => {
-  const server = new Server(false).start();
-
   const response = await server.inject({
     method: "GET",
     url: "/",
@@ -10,13 +21,9 @@ test("should say welcome", async () => {
 
   expect(response.statusCode).toBe(200);
   expect(response.payload).toBe("Welcome to Units-BFF!");
-
-  await server.close();
 });
 
 test("should say hello to me", async () => {
-  const server = new Server(false).start();
-
   const response = await server.inject({
     method: "POST",
     url: "/",
@@ -27,13 +34,9 @@ test("should say hello to me", async () => {
 
   expect(response.statusCode).toBe(200);
   expect(response.payload).toBe("Hello me!");
-
-  await server.close();
 });
 
 test("should not say hello to me", async () => {
-  const server = new Server(false).start();
-
   const response = await server.inject({
     method: "POST",
     url: "/",
@@ -42,11 +45,10 @@ test("should not say hello to me", async () => {
     },
   });
 
-  expect(response.statusCode).toBe(400);
+  expect(response.statusCode).toBe(422);
   expect(response.json()).toEqual({
-    code: "FST_ERR_VALIDATION",
-    error: ["O nome é obrigatório", "Nome muito curto"],
+    code: "MULTIPLE_ERRORS",
+    message: "MULTIPLE_ERRORS",
+    errors: ["O nome é obrigatório", "Nome muito curto"],
   });
-
-  await server.close();
 });
