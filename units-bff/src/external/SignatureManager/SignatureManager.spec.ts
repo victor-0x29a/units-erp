@@ -37,7 +37,7 @@ describe ('should test all .decode success cases', () => {
   test('should decode a valid token', () => {
     const token = signatureManager.sign({
       employeeDocument: '55265344055',
-      employeeRole: 'employee',
+      employeeRole: 'OPERATOR',
       isTemporary: false,
       storeUnit: 1
     });
@@ -62,7 +62,7 @@ describe ('should test all .sign success cases', () => {
   test('should sign a token', () => {
     const token = signatureManager.sign({
       employeeDocument: '55265344055',
-      employeeRole: 'employee',
+      employeeRole: 'OPERATOR',
       isTemporary: false,
       storeUnit: 1
     });
@@ -75,7 +75,7 @@ describe ('should test all .checkIsValid cases', () => {
   test('should check a valid token', () => {
     const token = signatureManager.sign({
       employeeDocument: '55265344055',
-      employeeRole: 'employee',
+      employeeRole: 'FINANCIAL',
       isTemporary: false,
       storeUnit: 1
     });
@@ -89,7 +89,7 @@ describe ('should test all .checkIsValid cases', () => {
   test('should check an invalid token', async () => {
     const token = signatureManager.sign({
       employeeDocument: '55265344055',
-      employeeRole: 'employee',
+      employeeRole: 'ADMIN',
       isTemporary: false,
       storeUnit: 1
     });

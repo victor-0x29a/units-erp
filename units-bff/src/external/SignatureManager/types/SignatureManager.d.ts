@@ -1,8 +1,10 @@
+import { Roles } from "../../../types/employee";
+
 export type SignPayload = {
     storeUnit: number;
     isTemporary: boolean;
     employeeDocument: string;
-    employeeRole: string;
+    employeeRole: Roles;
 }
 
 export type DecodedToken = {
@@ -10,7 +12,7 @@ export type DecodedToken = {
     exp: number;
     is_temporary: boolean;
     employee_document: string;
-    employee_role: string;
+    employee_role: Roles;
     store_unit: number;
 }
 
@@ -19,6 +21,6 @@ export type ParsedDecodedToken = {
     exp: number;
     isTemporary: boolean;
     employeeDocument: string;
-    employeeRole: string;
+    employeeRole: Roles;
     storeUnit: number;
 }
