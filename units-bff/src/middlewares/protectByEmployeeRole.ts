@@ -3,9 +3,10 @@ import { InvalidAuthorization, ExpiredAuthorization, InternalError, Insufficient
 import { Roles } from "../types/employee";
 import { SignatureManager } from "../external";
 
-export const protectByEmployeeRole = (requiredPermissions: Roles[]) => {
-  const signatureManager = new SignatureManager();
-
+export const protectByEmployeeRole = (
+  requiredPermissions: Roles[],
+  signatureManager: SignatureManager
+) => {
   return async (request: FastifyRequest, _reply: FastifyReply, done: DoneFuncWithErrOrRes) => {
     const { authorization: authorizationToken } = request.headers;
 

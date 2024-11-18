@@ -29,7 +29,7 @@ const genToken = (role: Roles) => signatureManager.sign({
 
 
 test('should fail when havent authorization token', async () => {
-  const middleware = protectByEmployeeRole(["ADMIN"]);
+  const middleware = protectByEmployeeRole(["ADMIN"], signatureManager);
 
   const request = requestsMock.withoutAuthorizationToken as unknown as FastifyRequest;
 
@@ -39,7 +39,7 @@ test('should fail when havent authorization token', async () => {
 });
 
 test('should pass when is valid and is an admin', async () => {
-  const middleware = protectByEmployeeRole(["ADMIN"]);
+  const middleware = protectByEmployeeRole(["ADMIN"], signatureManager);
 
   const request = { ...requestsMock.withAuthorizationTemplate } as unknown as FastifyRequest;
 
@@ -51,7 +51,7 @@ test('should pass when is valid and is an admin', async () => {
 });
 
 test('should fail when have insufficient permissions', async () => {
-  const middleware = protectByEmployeeRole(["INVENTOR"]);
+  const middleware = protectByEmployeeRole(["INVENTOR"], signatureManager);
 
   const request = { ...requestsMock.withAuthorizationTemplate } as unknown as FastifyRequest;
 
@@ -63,7 +63,7 @@ test('should fail when have insufficient permissions', async () => {
 });
 
 test('should pass when have sufficient permissions', async () => {
-  const middleware = protectByEmployeeRole(["OPERATOR"]);
+  const middleware = protectByEmployeeRole(["OPERATOR"], signatureManager);
 
   const request = { ...requestsMock.withAuthorizationTemplate } as unknown as FastifyRequest;
 
@@ -75,15 +75,13 @@ test('should pass when have sufficient permissions', async () => {
 });
 
 test('should throw the SignatureManager exception', async () => {
-  jest.doMock('../../external', () => ({
-    SignatureManager: jest.fn().mockImplementation(() => ({
-      checkIsValid: jest.fn().mockRejectedValue(new InternalError()),
-    })),
-  }));
+  const mockedSignatureManager = {
+    checkIsValid: jest.fn().mockRejectedValue(new InternalError()),
+  } as unknown as SignatureManager;
 
   const { protectByEmployeeRole: mockedProtectByEmployeeRole } =  await import("../protectByEmployeeRole");
 
-  const middleware = mockedProtectByEmployeeRole(["OPERATOR"]);
+  const middleware = mockedProtectByEmployeeRole(["OPERATOR"], mockedSignatureManager);
 
   const request = { ...requestsMock.withAuthorizationTemplate } as unknown as FastifyRequest;
 
