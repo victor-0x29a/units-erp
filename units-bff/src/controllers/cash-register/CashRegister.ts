@@ -1,28 +1,26 @@
-import { FastifyInstance, FastifyRequest, FastifyReply } from "fastify";
-import { EmployeeService } from "../../services";
-import { Builder } from "../Builder";
-import { MountErrorResponse, ValidatorCompiler } from "../../utils";
-// import { employeeLoginSchema } from "./schemas";
-// import type { EmployeeLoginPayloadRequest } from "../../interfaces/employee";
-import { createCashRegisterClockSchema } from "./schemas";
-import { FastifyError } from "../../exceptions/FastifyError";
+import { FastifyInstance/*, FastifyRequest, FastifyReply */ } from "fastify";
+// import { Builder } from "../Builder";
+// import { protectByEmployeeRole } from "../../middlewares";
+// import { ValidatorCompiler } from "../../utils";
+import { CashRegisterService } from "../../services/cash-register/cash-register.service";
+import { CashRegisterClock } from "../../entity";
 
 class CashRegister {
-  service: EmployeeService;
+  service: CashRegisterService;
 
   constructor(private readonly fastify: FastifyInstance) {
-    this.service = new EmployeeService();
+    this.service = new CashRegisterService(CashRegisterClock);
 
-    const ControllerConstructor = new Builder(fastify);
+    // const ControllerConstructor = new Builder(fastify);
 
-    ControllerConstructor.createRoute("post")("/", {
-      handler: this.createRegister,
-      validatorCompiler: ValidatorCompiler,
-    });
+    // ControllerConstructor.createRoute("post")("/", {
+    //   handler: this.createRegister,
+    //   validatorCompiler: ValidatorCompiler,
+    //   onRequest: [protectByEmployeeRole(["OPERATOR"])],
+    // });
   }
-
-  private createRegister = async (request: FastifyRequest, reply: FastifyReply) => {
-  };
+  // private createRegister = async (request: FastifyRequest, reply: FastifyReply) => {
+  // };
 }
 
 export { CashRegister };
