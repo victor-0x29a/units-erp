@@ -4,3 +4,6 @@ export * from "./MissingDoc";
 export * from "./RetroactiveAction";
 export * from "./InternalError";
 export * from "./Conflict";
+export * from "./ExpiredAuthorization";
+export * from "./InvalidAuthorization";
+export * from "./InsufficientPermissions";
