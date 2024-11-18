@@ -4,6 +4,7 @@ import { Builder } from "../Builder";
 import { MountErrorResponse, ValidatorCompiler } from "../../utils";
 // import { employeeLoginSchema } from "./schemas";
 // import type { EmployeeLoginPayloadRequest } from "../../interfaces/employee";
+import { createCashRegisterClockSchema } from "./schemas";
 import { FastifyError } from "../../exceptions/FastifyError";
 
 class CashRegister {
@@ -14,18 +15,14 @@ class CashRegister {
 
     const ControllerConstructor = new Builder(fastify);
 
-    ControllerConstructor.createRoute("post")("/login", {
-      schema: {
-        body: employeeLoginSchema,
-      },
-      handler: this.employeeLogin,
+    ControllerConstructor.createRoute("post")("/", {
+      handler: this.createRegister,
       validatorCompiler: ValidatorCompiler,
     });
   }
 
-  private clockManage = async (request: FastifyRequest, reply: FastifyReply) => {
-
+  private createRegister = async (request: FastifyRequest, reply: FastifyReply) => {
   };
 }
 
-export { Employee };
+export { CashRegister };
