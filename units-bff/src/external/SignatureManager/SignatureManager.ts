@@ -1,8 +1,9 @@
-import jwt from 'jsonwebtoken';
+import jwt, { TokenExpiredError, JsonWebTokenError } from 'jsonwebtoken';
 import moment from 'moment-timezone';
 import { getByTimestamp, getNow } from "../../utils";
 import { JWT_SECRET } from "../../constants";
 import type { DecodedToken, ParsedDecodedToken, SignPayload } from "./types/SignatureManager";
+import { ExpiredAuthorization, InvalidAuthorization, InternalError } from '../../exceptions';
 
 class SignatureManager {
   public sign(payload: SignPayload): string {
@@ -12,8 +13,7 @@ class SignatureManager {
       is_temporary: payload.isTemporary,
       store_unit: payload.storeUnit
     }, JWT_SECRET, {
-      expiresIn: '2h',
-
+      expiresIn: '2h'
     });
   }
   public decode(token: string): ParsedDecodedToken {
@@ -33,9 +33,16 @@ class SignatureManager {
   }
   public async checkIsValid(token: string): Promise<boolean> {
     return new Promise((resolve, reject) => {
-      return jwt.verify(token, JWT_SECRET, (error) => {
+      jwt.verify(token, JWT_SECRET, (error, _decoded) => {
         if (error) {
-          return reject(error);
+          if (error instanceof TokenExpiredError) {
+            reject(new ExpiredAuthorization(["Token expired"], error));
+          }
+          if (error instanceof JsonWebTokenError) {
+            return reject(new InvalidAuthorization(["Invalid token"], error));
+          }
+
+          return reject(new InternalError(error));
         }
 
         resolve(true);
