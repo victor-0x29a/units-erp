@@ -62,7 +62,18 @@ class CashRegisterService {
         return register.update({ clock_out: getNow() })
           .catch((error: unknown) => Promise.reject(new InternalError(error)));
       })
-      .catch((error: unknown) => Promise.reject(new InternalError(error)));
+      .catch((error: unknown) => {
+        if (error instanceof RetroactiveAction) {
+          return Promise.reject(error);
+        }
+        if (error instanceof MissingDoc) {
+          return Promise.reject(error);
+        }
+        if (error instanceof InternalError) {
+          return Promise.reject(error);
+        }
+        return Promise.reject(new InternalError(error));
+      });
   }
 }
 

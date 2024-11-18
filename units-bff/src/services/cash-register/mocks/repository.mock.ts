@@ -47,7 +47,7 @@ export const mockedRepository = {
           update: jest.fn().mockResolvedValue(null)
         })
       },
-      clock_lunch_in: {
+      clockLunchIn: {
         findByPk: jest.fn().mockResolvedValue({
           toJSON: jest.fn().mockReturnValue({
             id: 1,
@@ -60,7 +60,7 @@ export const mockedRepository = {
           update: jest.fn().mockResolvedValue(null)
         })
       },
-      clock_lunch_out: {
+      clockLunchOut: {
         findByPk: jest.fn().mockResolvedValue({
           toJSON: jest.fn().mockReturnValue({
             id: 1,
@@ -73,7 +73,7 @@ export const mockedRepository = {
           update: jest.fn().mockResolvedValue(null)
         })
       },
-      clock_in: {
+      clockIn: {
         findByPk: jest.fn().mockResolvedValue({
           toJSON: jest.fn().mockReturnValue({
             id: 1,
@@ -85,6 +85,39 @@ export const mockedRepository = {
           }),
           update: jest.fn().mockResolvedValue(null)
         })
+      }
+    },
+    fail: {
+      clockedOut: {
+        findByPk: jest.fn().mockResolvedValue({
+          toJSON: jest.fn().mockReturnValue({
+            id: 1,
+            employee_document: '55265344055',
+            clock_in: new Date(),
+            clock_out: new Date(),
+            clock_lunch_in: new Date(),
+            clock_lunch_out: new Date()
+          })
+        }),
+      },
+      notFound: {
+        findByPk: jest.fn().mockResolvedValue(null)
+      },
+      clockLunchInUpdateFail: {
+        findByPk: jest.fn().mockResolvedValue({
+          toJSON: jest.fn().mockReturnValue({
+            id: 1,
+            employee_document: '55265344055',
+            clock_in: new Date(),
+            clock_out: null,
+            clock_lunch_in: null,
+            clock_lunch_out: null
+          }),
+          update: jest.fn().mockRejectedValue(new Error())
+        })
+      },
+      ormInternalError: {
+        findByPk: jest.fn().mockRejectedValue(new Error('ORM ERROR'))
       }
     }
   }
