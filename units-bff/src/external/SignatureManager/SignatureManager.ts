@@ -1,13 +1,26 @@
 import jwt from 'jsonwebtoken';
-import { JWT_SECRET } from "../constants";
-import type { DecodedToken, ParsedDecodedToken } from "./types/SignatureManager";
+import moment from 'moment-timezone';
+import { getByTimestamp, getNow } from "../../utils";
+import { JWT_SECRET } from "../../constants";
+import type { DecodedToken, ParsedDecodedToken, SignPayload } from "./types/SignatureManager";
 
 class SignatureManager {
+  public sign(payload: SignPayload): string {
+    return jwt.sign({
+      employee_document: payload.employeeDocument,
+      employee_role: payload.employeeRole,
+      is_temporary: payload.isTemporary,
+      store_unit: payload.storeUnit
+    }, JWT_SECRET, {
+      expiresIn: '2h',
+
+    });
+  }
   public decode(token: string): ParsedDecodedToken {
     const decodedToken: DecodedToken = jwt.decode(token, {
       complete: true,
       json: true
-    }) as unknown as DecodedToken;
+    }).payload as unknown as DecodedToken;
 
     return {
       employeeDocument: decodedToken.employee_document,
@@ -28,6 +41,14 @@ class SignatureManager {
         resolve(true);
       });
     });
+  }
+  public checkIsExpired(exp: number, isGeneratedBySignatureManager = false): boolean {
+    const now = getNow();
+    if (isGeneratedBySignatureManager) {
+      return moment(exp * 1000).isBefore(now);
+    }
+    const expirationDatetime = getByTimestamp(exp);
+    return moment(expirationDatetime).isBefore(now);
   }
 }
 

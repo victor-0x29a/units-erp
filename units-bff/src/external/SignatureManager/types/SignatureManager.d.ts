@@ -1,3 +1,10 @@
+export type SignPayload = {
+    storeUnit: number;
+    isTemporary: boolean;
+    employeeDocument: string;
+    employeeRole: string;
+}
+
 export type DecodedToken = {
     iat: number;
     exp: number;
