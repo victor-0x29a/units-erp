@@ -10,7 +10,7 @@ afterEach(async () => {
     await server.close();
   }
   jest.resetModules();
-  jest.resetAllMocks();
+  jest.clearAllMocks();
 });
 
 const genToken = (role: Roles) => new SignatureManager().sign({
@@ -43,7 +43,6 @@ test("should clock in", async () => {
 
   expect(response.statusCode).toBe(204);
 });
-
 
 test("should clock lunch in", async () => {
   jest.doMock('../../src/entity', () => ({
@@ -149,9 +148,9 @@ test("should fails when not found", async () => {
 
   expect(response.statusCode).toBe(404);
   expect(response.json()).toEqual({
-    "code": 1001,
-    "message": "Not found",
-    "errors": ["Clock register not found."]
+    "code": 1003,
+    "message": "Missing doc",
+    "errors": ["Register not found."]
   });
 });
 
