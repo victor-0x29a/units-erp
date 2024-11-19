@@ -1,4 +1,4 @@
-import { DoneFuncWithErrOrRes, FastifyReply, FastifyRequest } from "fastify";
+import { FastifyReply, FastifyRequest } from "fastify";
 import { SignatureManager } from "../../external";
 import { protectByEmployeeRole } from "../protectByEmployeeRole";
 import { requestsMock } from "./mocks/requestsMock";
@@ -7,12 +7,10 @@ import { Roles } from "../../types/employee";
 
 const signatureManager = new SignatureManager();
 
-let done: DoneFuncWithErrOrRes;
 let reply: FastifyReply;
 
 beforeEach(() => {
   jest.resetModules();
-  done = jest.fn() as unknown as DoneFuncWithErrOrRes;
   reply = jest.fn() as unknown as FastifyReply;
 });
 
@@ -33,7 +31,7 @@ test('should fail when havent authorization token', async () => {
 
   const request = requestsMock.withoutAuthorizationToken as unknown as FastifyRequest;
 
-  await expect(middleware(request, reply, done))
+  await expect(middleware(request, reply))
     .rejects
     .toBeInstanceOf(InvalidAuthorization);
 });
@@ -45,9 +43,9 @@ test('should pass when is valid and is an admin', async () => {
 
   request.headers.authorization = genToken("ADMIN");
 
-  await middleware(request, reply, done);
+  await middleware(request, reply);
 
-  expect(done).toHaveBeenCalled();
+  expect(reply).not.toHaveBeenCalled();
 });
 
 test('should fail when have insufficient permissions', async () => {
@@ -57,9 +55,9 @@ test('should fail when have insufficient permissions', async () => {
 
   request.headers.authorization = genToken("OPERATOR");;
 
-  await expect(middleware(request, reply, done)).rejects.toBeInstanceOf(InsufficientPermissions);
+  await expect(middleware(request, reply)).rejects.toBeInstanceOf(InsufficientPermissions);
 
-  await expect(middleware(request, reply, done)).rejects.toHaveProperty('message', "Required permissions: INVENTOR");
+  await expect(middleware(request, reply)).rejects.toHaveProperty('message', "Required permissions: INVENTOR");
 });
 
 test('should pass when have sufficient permissions', async () => {
@@ -69,9 +67,9 @@ test('should pass when have sufficient permissions', async () => {
 
   request.headers.authorization = genToken("OPERATOR");
 
-  await middleware(request, reply, done);
+  await middleware(request, reply);
 
-  expect(done).toHaveBeenCalled();
+  expect(reply).not.toHaveBeenCalled();
 });
 
 test('should throw the SignatureManager exception', async () => {
@@ -88,6 +86,6 @@ test('should throw the SignatureManager exception', async () => {
   request.headers.authorization = genToken("OPERATOR");
 
   await expect(
-    middleware(request, reply, done)
+    middleware(request, reply)
   ).rejects.toBeInstanceOf(InternalError);
 });

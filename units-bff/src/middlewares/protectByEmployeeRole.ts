@@ -1,4 +1,4 @@
-import { FastifyRequest, FastifyReply, DoneFuncWithErrOrRes } from "fastify";
+import { FastifyRequest, FastifyReply } from "fastify";
 import { InvalidAuthorization, ExpiredAuthorization, InternalError, InsufficientPermissions } from "../exceptions";
 import { Roles } from "../types/employee";
 import { SignatureManager } from "../external";
@@ -7,7 +7,7 @@ export const protectByEmployeeRole = (
   requiredPermissions: Roles[],
   signatureManager: SignatureManager
 ) => {
-  return async (request: FastifyRequest, _reply: FastifyReply, done: DoneFuncWithErrOrRes) => {
+  return async (request: FastifyRequest, _reply: FastifyReply) => {
     const { authorization: authorizationToken } = request.headers;
 
     if (!authorizationToken) {
@@ -21,14 +21,14 @@ export const protectByEmployeeRole = (
         const isAdmin = decodedToken.employeeRole === "ADMIN";
 
         if (isAdmin) {
-          return done();
+          return;
         }
 
         if (!requiredPermissions.includes(decodedToken.employeeRole)) {
           throw new InsufficientPermissions(requiredPermissions);
         }
 
-        return done();
+        return;
       })
       .catch((error: InternalError | InvalidAuthorization | ExpiredAuthorization) => {
         throw error;
