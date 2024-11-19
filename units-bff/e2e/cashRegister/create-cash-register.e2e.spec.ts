@@ -11,6 +11,13 @@ afterEach(async () => {
   jest.resetAllMocks();
 });
 
+const authorizationToken = new SignatureManager().sign({
+  employeeDocument: "80067135021",
+  employeeRole: "ADMIN",
+  isTemporary: false,
+  storeUnit: 1
+});
+
 test("should create a cash register", async () => {
   jest.doMock('../../src/entity', () => ({
     CashRegisterClock: {
@@ -20,12 +27,6 @@ test("should create a cash register", async () => {
       })
     }
   }));
-  const authorizationToken = new SignatureManager().sign({
-    employeeDocument: "80067135021",
-    employeeRole: "ADMIN",
-    isTemporary: false,
-    storeUnit: 1
-  });
 
   const { createServer } = await import("../../src/fastify");
 
@@ -49,13 +50,6 @@ test('should fail when has already registered', async () => {
       findOne: jest.fn().mockResolvedValue({})
     }
   }));
-
-  const authorizationToken = new SignatureManager().sign({
-    employeeDocument: "80067135021",
-    employeeRole: "ADMIN",
-    isTemporary: false,
-    storeUnit: 1
-  });
 
   const { createServer } = await import("../../src/fastify");
 
@@ -85,13 +79,6 @@ test('should show an internal error when the creation fails', async () => {
     }
   }));
 
-  const authorizationToken = new SignatureManager().sign({
-    employeeDocument: "80067135021",
-    employeeRole: "ADMIN",
-    isTemporary: false,
-    storeUnit: 1
-  });
-
   const { createServer } = await import("../../src/fastify");
 
   server = createServer();
@@ -119,13 +106,6 @@ test('should show an internal error when the findOne fails', async () => {
     }
   }));
 
-  const authorizationToken = new SignatureManager().sign({
-    employeeDocument: "80067135021",
-    employeeRole: "ADMIN",
-    isTemporary: false,
-    storeUnit: 1
-  });
-
   const { createServer } = await import("../../src/fastify");
 
   server = createServer();
@@ -147,7 +127,7 @@ test('should show an internal error when the findOne fails', async () => {
 });
 
 test('should fails when the employee is not an operator', async () => {
-  const authorizationToken = new SignatureManager().sign({
+  const inventorAuthorizationToken = new SignatureManager().sign({
     employeeDocument: "80067135021",
     employeeRole: "INVENTOR",
     isTemporary: false,
@@ -162,7 +142,7 @@ test('should fails when the employee is not an operator', async () => {
     method: "POST",
     url: "/v1/cash-register",
     headers: {
-      authorization: authorizationToken
+      authorization: inventorAuthorizationToken
     }
   });
 
