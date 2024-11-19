@@ -1,5 +1,5 @@
 export * from './ValidatorCompiler';
-export * from './MountErrorResponse';
+export * from './mountErrorResponse';
 export * from './getNow';
 export * from './getByTimestamp';
 export * from './startOfDay';

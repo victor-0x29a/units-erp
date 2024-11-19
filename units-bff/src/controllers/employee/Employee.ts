@@ -1,7 +1,7 @@
 import { FastifyInstance, FastifyRequest, FastifyReply } from "fastify";
 import { EmployeeService } from "../../services";
 import { Builder } from "../Builder";
-import { MountErrorResponse, ValidatorCompiler } from "../../utils";
+import { mountErrorResponse, ValidatorCompiler } from "../../utils";
 import { employeeLoginSchema } from "./schemas";
 import type { EmployeeLoginPayloadRequest } from "../../interfaces/employee";
 import { FastifyError } from "../../exceptions/FastifyError";
@@ -34,7 +34,7 @@ class Employee {
           .send();
       })
       .catch((error: FastifyError) => {
-        return reply.status(error.statusCode).send(MountErrorResponse(error.code, error.message, error.errors));
+        return reply.status(error.statusCode).send(mountErrorResponse(error.code, error.message, error.errors));
       });
   };
 }

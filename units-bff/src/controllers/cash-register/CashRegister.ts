@@ -2,7 +2,7 @@ import { FastifyInstance, FastifyRequest, FastifyReply } from "fastify";
 import { Builder } from "../Builder";
 import { SignatureManager } from "../../external";
 import { protectByEmployeeRole } from "../../middlewares";
-import { MountErrorResponse, ValidatorCompiler } from "../../utils";
+import { mountErrorResponse, ValidatorCompiler } from "../../utils";
 import { CashRegisterService } from "../../services/cash-register/cash-register.service";
 import { CashRegisterClock } from "../../entity";
 import { hitClockSchema } from "./schemas";
@@ -54,7 +54,7 @@ class CashRegister {
         return reply
           .status(error.statusCode)
           .send(
-            MountErrorResponse(error.code, error.message, error.errors)
+            mountErrorResponse(error.code, error.message, error.errors)
           );
       });
   };
@@ -70,7 +70,7 @@ class CashRegister {
         return reply
           .status(error.statusCode)
           .send(
-            MountErrorResponse(error.code, error.message, error.errors)
+            mountErrorResponse(error.code, error.message, error.errors)
           );
       });
   };
