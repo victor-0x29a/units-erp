@@ -5,7 +5,7 @@ import tseslint from "typescript-eslint";
 export default [
   {
     rules: {
-      "no-unused-vars": "error",
+      "@typescript-eslint/no-unused-vars": ["error", { "varsIgnorePattern": "^_", "argsIgnorePattern": "^_" }],
       "semi": ["error", "always"],
       "indent": [1, 2],
     },

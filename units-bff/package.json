@@ -13,6 +13,8 @@
   "description": "",
   "devDependencies": {
     "@eslint/js": "^9.7.0",
+    "@types/jest": "^29.5.12",
+    "@types/jsonwebtoken": "^9.0.7",
     "@types/node": "^20.14.12",
     "cross-env": "^7.0.3",
     "eslint": "9.x",
@@ -23,12 +25,13 @@
     "typescript-eslint": "^7.17.0"
   },
   "dependencies": {
-    "@types/jest": "^29.5.12",
     "axios": "^1.7.2",
     "axios-retry": "^4.4.2",
     "dotenv": "^16.4.5",
     "fastify": "^4.28.1",
     "jest": "^29.7.0",
+    "jsonwebtoken": "^9.0.2",
+    "moment-timezone": "^0.5.46",
     "multiform-validator": "^2.2.9",
     "mysql2": "^3.11.4",
     "sequelize": "^6.37.5",
