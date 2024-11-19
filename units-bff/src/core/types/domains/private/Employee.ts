@@ -3,3 +3,7 @@ export interface EmployeeLoginPayloadRequest {
     document?: string;
     password?: string;
 }
+
+export interface EmployeeFillPwdPayloadRequest {
+    password: string;
+}
