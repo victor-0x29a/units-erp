@@ -32,7 +32,14 @@ class CashRegister {
 
     return this.service
       .createClockRegister(employeeDocument)
-      .then(() => reply.status(204).send())
+      .then((model) => {
+        const modelData = model.toJSON();
+        return reply
+          .status(201)
+          .send({
+            cashRegisterId: modelData.id,
+          });
+      })
       .catch((error: FastifyError) => {
         return reply
           .status(error.statusCode)
