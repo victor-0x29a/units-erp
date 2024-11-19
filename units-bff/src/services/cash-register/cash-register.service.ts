@@ -27,7 +27,7 @@ class CashRegisterService {
     }
 
     return this.cashRegisterClockModel
-      .create({ employee_document: employeeDocument, clock_in: getNow() })
+      .create({ employee_document: employeeDocument })
       .catch((error: unknown) => Promise.reject(new InternalError(error)));
   }
   public async toggleClock(clockRegisterId: number): Promise<Model<CashRegisterClockType, CashRegisterClockType>> {
