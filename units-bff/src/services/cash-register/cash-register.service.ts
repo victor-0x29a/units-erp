@@ -1,8 +1,9 @@
+import { Op } from "sequelize";
 import { CashRegisterClock } from "../../entity";
 import type { CashRegisterClock as CashRegisterClockType } from "../../types/cash-register-clock";
 import { InternalError, MissingDoc, RetroactiveAction } from "../../exceptions";
 import { Model } from "sequelize";
-import { getNow } from "../../utils";
+import { getNow, startOfDay, endOfDay } from "../../utils";
 import { Conflict } from "../../exceptions";
 
 
@@ -10,11 +11,15 @@ class CashRegisterService {
   constructor (private cashRegisterClockModel: typeof CashRegisterClock) {}
 
   public async createClockRegister(employeeDocument: string): Promise<Model<CashRegisterClockType, CashRegisterClockType>> {
+    const now = getNow();
+
     const hasCashRegisterWithSameDocumentAtSameDay = await this.cashRegisterClockModel.findOne({
       where: {
         employee_document: employeeDocument,
-        clock_in: getNow()
-      }
+        clock_in: {
+          [Op.between]: [startOfDay(now), endOfDay(now)],
+        },
+      },
     });
 
     if (hasCashRegisterWithSameDocumentAtSameDay) {
