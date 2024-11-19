@@ -150,6 +150,7 @@ test('should fails when the employee is not an operator', async () => {
   expect(response.json()).toEqual({
     code: 1009,
     message: "Required permissions: OPERATOR",
-    errors: ["Insufficient permissions"]
+    errors: ["Insufficient permissions"],
+    extraData: ["OPERATOR"]
   });
 });

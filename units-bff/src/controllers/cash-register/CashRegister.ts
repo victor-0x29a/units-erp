@@ -53,9 +53,7 @@ class CashRegister {
       .catch((error: FastifyError) => {
         return reply
           .status(error.statusCode)
-          .send(
-            mountErrorResponse(error.code, error.message, error.errors)
-          );
+          .send(mountErrorResponse(error));
       });
   };
   private hitClock = async (request: FastifyRequest, reply: FastifyReply) => {
@@ -69,9 +67,7 @@ class CashRegister {
       .catch((error: FastifyError) => {
         return reply
           .status(error.statusCode)
-          .send(
-            mountErrorResponse(error.code, error.message, error.errors)
-          );
+          .send(mountErrorResponse(error));
       });
   };
 }

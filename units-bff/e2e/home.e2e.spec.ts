@@ -47,8 +47,8 @@ test("should not say hello to me", async () => {
 
   expect(response.statusCode).toBe(422);
   expect(response.json()).toEqual({
-    code: "MULTIPLE_ERRORS",
-    message: "MULTIPLE_ERRORS",
+    code: 0,
+    message: "Have multiple errors",
     errors: ["O nome é obrigatório", "Nome muito curto"],
   });
 });

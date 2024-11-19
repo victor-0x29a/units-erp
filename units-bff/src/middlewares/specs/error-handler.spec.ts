@@ -1,6 +1,7 @@
 import { FastifyError, FastifyReply, FastifyRequest } from "fastify";
 import { errorHandler } from "../error-handler";
 import { mountErrorResponse } from "../../utils";
+import { FastifyError as CustomFastifyError } from "../../exceptions/FastifyError";
 
 test('should test when have multiple errors', () => {
   const reply = {
@@ -20,5 +21,7 @@ test('should test when have multiple errors', () => {
   errorHandler(error, request, reply);
 
   expect(reply.status).toHaveBeenCalledWith(422);
-  expect(reply.status(200).send).toHaveBeenCalledWith(mountErrorResponse("MULTIPLE_ERRORS", "MULTIPLE_ERRORS", ["a", "b"]));
+  expect(reply.status(200).send).toHaveBeenCalledWith(
+    mountErrorResponse(new CustomFastifyError(0, ["a", "b"], 422, "Have multiple errors", ["a", "b"]))
+  );
 });
