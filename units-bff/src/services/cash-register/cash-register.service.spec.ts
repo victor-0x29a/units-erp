@@ -28,6 +28,15 @@ describe('CashRegisterService::Clock::Create', () => {
 
     expect(anonymousFn).rejects.toBeInstanceOf(InternalError);
   });
+  test('should broke when try to find a register', async () => {
+    const repository = mockedRepository.creationCases.whenFindOneFails as unknown as ModelCtor<Model<CashRegisterClock, CashRegisterClock>>;
+
+    const service = new CashRegisterService(repository);
+
+    const anonymousFn = async (): Promise<Model<CashRegisterClock, CashRegisterClock>> => await service.createClockRegister('55265344055');
+
+    expect(anonymousFn).rejects.toBeInstanceOf(InternalError);
+  });
   test(('should not create when has already exist a register with the same document and the same day'), async () => {
     const repository = mockedRepository.creationCases.failWhenAlreadyExistsBySameDayAndSameDocument as unknown as ModelCtor<Model<CashRegisterClock, CashRegisterClock>>;
 

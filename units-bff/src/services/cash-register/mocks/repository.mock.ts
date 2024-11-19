@@ -19,6 +19,9 @@ export const mockedRepository = {
       create: jest.fn().mockRejectedValue(new InternalError(null)),
       findOne: jest.fn().mockResolvedValue(null)
     },
+    whenFindOneFails: {
+      findOne: jest.fn().mockRejectedValue(new Error("ORM ERROR"))
+    },
     failWhenAlreadyExistsBySameDayAndSameDocument: {
       findOne: jest.fn().mockResolvedValue({
         toJSON: jest.fn().mockReturnValue({

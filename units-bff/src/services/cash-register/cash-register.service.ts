@@ -20,7 +20,7 @@ class CashRegisterService {
           [Op.between]: [startOfDay(now), endOfDay(now)],
         },
       },
-    });
+    }).catch((error: unknown) => Promise.reject(new InternalError(error)));
 
     if (hasCashRegisterWithSameDocumentAtSameDay) {
       return Promise.reject(new Conflict(["You can't clock in twice by day."]));
