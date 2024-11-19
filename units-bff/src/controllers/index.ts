@@ -1,6 +1,6 @@
 import { Home } from "./home";
 import { Employee } from "./employee";
-import { CashRegister } from "./cash-register/CashRegister";
+import { CashRegister } from "./cash-register";
 
 const controllers = [
   [Home, "/"],

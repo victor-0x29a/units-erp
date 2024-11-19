@@ -1,10 +1,11 @@
 import { FastifyInstance, FastifyRequest, FastifyReply } from "fastify";
 import { Builder } from "../Builder";
+import { SignatureManager } from "../../external";
 import { protectByEmployeeRole } from "../../middlewares";
 import { MountErrorResponse, ValidatorCompiler } from "../../utils";
 import { CashRegisterService } from "../../services/cash-register/cash-register.service";
 import { CashRegisterClock } from "../../entity";
-import { SignatureManager } from "../../external";
+import { hitClockSchema } from "./schemas";
 import { FastifyError } from "../../exceptions/FastifyError";
 
 class CashRegister {
@@ -21,6 +22,15 @@ class CashRegister {
       handler: this.createRegister,
       validatorCompiler: ValidatorCompiler,
       onRequest: [protectByEmployeeRole(["OPERATOR"], this.signatureManager)],
+    });
+
+    ControllerConstructor.createRoute("post")("/hit-clock/:clockRegisterId", {
+      handler: this.hitClock,
+      validatorCompiler: ValidatorCompiler,
+      onRequest: [protectByEmployeeRole(["OPERATOR"], this.signatureManager)],
+      schema: {
+        params: hitClockSchema,
+      },
     });
   }
   private createRegister = async (request: FastifyRequest, reply: FastifyReply) => {
@@ -40,6 +50,22 @@ class CashRegister {
             cashRegisterId: modelData.id,
           });
       })
+      .catch((error: FastifyError) => {
+        return reply
+          .status(error.statusCode)
+          .send(
+            MountErrorResponse(error.code, error.message, error.errors)
+          );
+      });
+  };
+  private hitClock = async (request: FastifyRequest, reply: FastifyReply) => {
+    const { clockRegisterId } = request.params as {
+      clockRegisterId: string;
+    };
+
+    return this.service
+      .toggleClock(Number(clockRegisterId))
+      .then(() => reply.status(204).send())
       .catch((error: FastifyError) => {
         return reply
           .status(error.statusCode)
