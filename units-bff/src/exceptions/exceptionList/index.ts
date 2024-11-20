@@ -7,3 +7,4 @@ export * from "./Conflict";
 export * from "./ExpiredAuthorization";
 export * from "./InvalidAuthorization";
 export * from "./InsufficientPermissions";
+export * from "./Unprocessable";

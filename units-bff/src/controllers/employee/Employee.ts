@@ -2,16 +2,16 @@ import { FastifyInstance, FastifyRequest, FastifyReply } from "fastify";
 import { EmployeeService } from "../../services";
 import { Builder } from "../Builder";
 import { mountErrorResponse, ValidatorCompiler } from "../../utils";
-import { employeeLoginSchema } from "./schemas";
+import { employeeFillPasswordSchema, employeeLoginSchema } from "./schemas";
 import type { EmployeeLoginPayloadRequest } from "../../interfaces/employee";
 import { FastifyError } from "../../exceptions/FastifyError";
+import { SignatureManager } from "../../external";
 
 class Employee {
   service: EmployeeService;
 
   constructor(private readonly fastify: FastifyInstance) {
-    this.service = new EmployeeService();
-
+    this.service = new EmployeeService(new SignatureManager());
     const ControllerConstructor = new Builder(fastify);
 
     ControllerConstructor.createRoute("post")("/login", {
@@ -19,6 +19,14 @@ class Employee {
         body: employeeLoginSchema,
       },
       handler: this.employeeLogin,
+      validatorCompiler: ValidatorCompiler,
+    });
+
+    ControllerConstructor.createRoute("put")("/fill-password", {
+      schema: {
+        body: employeeFillPasswordSchema,
+      },
+      handler: this.fillEmployeePassword,
       validatorCompiler: ValidatorCompiler,
     });
   }
@@ -36,6 +44,14 @@ class Employee {
       .catch((error: FastifyError) => {
         return reply.status(error.statusCode).send(mountErrorResponse(error));
       });
+  };
+  private fillEmployeePassword = async (request: FastifyRequest, reply: FastifyReply) => {
+    const { authorization } = request.headers;
+    const fillPwdPayload = request.body as EmployeeLoginPayloadRequest;
+
+    return this.service.fillPassword(authorization, fillPwdPayload)
+      .then(() => reply.status(204).send())
+      .catch((error: FastifyError) => reply.status(error.statusCode).send(mountErrorResponse(error)));
   };
 }
 

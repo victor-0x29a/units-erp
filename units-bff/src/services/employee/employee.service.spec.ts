@@ -1,4 +1,7 @@
-import { ExternalError, InvalidCredentials } from "../../exceptions";
+import { SignatureManager } from "../../external";
+import { ExternalError, InvalidCredentials, Unprocessable } from "../../exceptions";
+
+const signatureManager = new SignatureManager();
 
 beforeEach(() => {
   jest.resetAllMocks();
@@ -17,7 +20,7 @@ describe("EmployeeService::Authentication all success cases", () => {
 
     const { EmployeeService } = await import("./employee.service");
 
-    const employeeService = new EmployeeService();
+    const employeeService = new EmployeeService(signatureManager);
 
     const token = await employeeService.login({
       username: "victor-0x29a",
@@ -39,7 +42,7 @@ describe("EmployeeService::Authentication all success cases", () => {
 
     const { EmployeeService } = await import("./employee.service");
 
-    const employeeService = new EmployeeService();
+    const employeeService = new EmployeeService(signatureManager);
 
     const token = await employeeService.login({
       username: "victor-0x29a",
@@ -68,7 +71,7 @@ describe("EmployeeService::Authentication all error cases", () => {
 
     const { EmployeeService } = await import("./employee.service");
 
-    const employeeService = new EmployeeService();
+    const employeeService = new EmployeeService(signatureManager);
 
     const anonymousFnLogin = async () => await employeeService.login({
       username: "victor-0x29a",
@@ -95,7 +98,7 @@ describe("EmployeeService::Authentication all error cases", () => {
 
     const { EmployeeService } = await import("./employee.service");
 
-    const employeeService = new EmployeeService();
+    const employeeService = new EmployeeService(signatureManager);
 
     const anonymousFnLogin = async () => await employeeService.login({
       username: "victor-0x29a",
@@ -122,7 +125,7 @@ describe("EmployeeService::Authentication all error cases", () => {
 
     const { EmployeeService } = await import("./employee.service");
 
-    const employeeService = new EmployeeService();
+    const employeeService = new EmployeeService(signatureManager);
 
     const anonymousFnLogin = async () => await employeeService.login({
       username: "victor-0x29a",
@@ -139,4 +142,89 @@ describe("EmployeeService::Authentication all error cases", () => {
     }));
   });
 
+});
+
+describe("EmployeeService::Fill password all cases", () => {
+  test("should fill the password", async () => {
+    jest.doMock('../../core', () => ({
+      privateDomains: {
+        employeeDomain: {
+          fillPassword: jest.fn().mockResolvedValue(undefined)
+        }
+      }
+    }));
+
+    const { EmployeeService } = await import("./employee.service");
+
+    const token = signatureManager.sign({
+      employeeDocument: "12345678901",
+      employeeRole: "OPERATOR",
+      isTemporary: true,
+      storeUnit: 1
+    });
+
+    const employeeService = new EmployeeService(signatureManager);
+
+    await expect(employeeService.fillPassword(token, {
+      password: 'foo'
+    })).resolves.toBeUndefined();
+  });
+  test('should reject when the token is temporary', async () => {
+    jest.doMock('../../core', () => ({
+      privateDomains: {
+        employeeDomain: {
+          fillPassword: jest.fn().mockResolvedValue(undefined)
+        }
+      }
+    }));
+
+    const { EmployeeService } = await import("./employee.service");
+
+    const token = signatureManager.sign({
+      employeeDocument: "12345678901",
+      employeeRole: "OPERATOR",
+      isTemporary: false,
+      storeUnit: 1
+    });
+
+    const employeeService = new EmployeeService(signatureManager);
+
+    await expect(employeeService.fillPassword(token, {
+      password: 'foo'
+    })).rejects.toEqual(new Unprocessable(["You can't change your password."]));
+  });
+  test('should reject when the external service broke', async () => {
+    jest.doMock('../../core', () => ({
+      privateDomains: {
+        employeeDomain: {
+          fillPassword: jest.fn().mockRejectedValue({
+            "code": 500,
+            "message": "Internal error.",
+            "errors": [],
+            "statusCode": 500
+          })
+        }
+      }
+    }));
+
+    const { EmployeeService } = await import("./employee.service");
+
+    const token = signatureManager.sign({
+      employeeDocument: "12345678901",
+      employeeRole: "OPERATOR",
+      isTemporary: true,
+      storeUnit: 1
+    });
+
+    const employeeService = new EmployeeService(signatureManager);
+
+    await expect(employeeService.fillPassword(token, {
+      password: 'foo'
+    })).rejects.toEqual(new ExternalError({
+      "code": 500,
+      "message": "Internal error.",
+      "errors": [],
+      "statusCode": 500
+    }));
+  });
 });
