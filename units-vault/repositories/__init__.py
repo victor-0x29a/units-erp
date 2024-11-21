@@ -1,1 +1,2 @@
 from .store_repository import StoreRepository
+from .employee_repository import EmployeeRepository
