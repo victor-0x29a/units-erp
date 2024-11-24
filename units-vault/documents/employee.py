@@ -7,7 +7,7 @@ from docs_constants import EMPLOYEE_ROLES
 roles_available = [role for role in EMPLOYEE_ROLES.values()]
 
 
-def _is_valid_cpf(value):
+def is_valid_cpf(value):
     is_valid_cnpj = cpfcnpj.validate(value)
 
     if value and not is_valid_cnpj:
@@ -16,7 +16,7 @@ def _is_valid_cpf(value):
 
 class Employee(Document):
     name = StringField(required=True, max_length=60)
-    document = StringField(required=True, validation=_is_valid_cpf, unique=True)
+    document = StringField(required=True, validation=is_valid_cpf, unique=True)
     store_unit = ReferenceField(Store, required=True)
     username = StringField(required=True, max_length=30, unique=True)
     password = StringField(max_length=72, default=None)

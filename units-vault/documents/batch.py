@@ -3,7 +3,7 @@ from mongoengine import Document, StringField, DateTimeField, DateField, Validat
 from pycpfcnpj import cpfcnpj
 
 
-def _is_valid_cnpj(value):
+def is_valid_cnpj(value):
     is_valid_cnpj = cpfcnpj.validate(value)
 
     if value and not is_valid_cnpj:
@@ -11,7 +11,7 @@ def _is_valid_cnpj(value):
 
 
 class Batch(Document):
-    supplier_document = StringField(required=True, validation=_is_valid_cnpj)
+    supplier_document = StringField(required=True, validation=is_valid_cnpj)
     reference = StringField(required=True, unique=True)
     inserction_datetime = DateTimeField(required=True)
     expiry_date = DateField(required=True)
