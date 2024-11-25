@@ -1,4 +1,5 @@
 import pytest
+from documents import Store
 from repositories import StoreRepository
 from exceptions import UniqueKey, MissingParam, MissingDoc
 from ..fixture import mongo_connection # noqa: F401, E261
@@ -6,7 +7,7 @@ from ..fixture import mongo_connection # noqa: F401, E261
 
 class TestCreate:
     def test_should_create_store(self, mocker):
-        store_repository = StoreRepository()
+        store_repository = StoreRepository(store_document=Store)
 
         data = {
             "unit": 1,
@@ -19,7 +20,7 @@ class TestCreate:
         assert result.unit == data['unit']
 
     def test_should_raise_unique_key_exception(self, mocker):
-        store_repository = StoreRepository()
+        store_repository = StoreRepository(store_document=Store)
 
         data = {
             "unit": 1,
@@ -36,7 +37,7 @@ class TestCreate:
 
 class TestGet:
     def test_should_get_store(self, mocker):
-        store_repository = StoreRepository()
+        store_repository = StoreRepository(store_document=Store)
 
         data = {
             "unit": 1,
@@ -51,7 +52,7 @@ class TestGet:
         assert get_result.unit == data['unit']
 
     def test_should_fail_when_havent_filter(self, mocker):
-        store_repository = StoreRepository()
+        store_repository = StoreRepository(store_document=Store)
 
         with pytest.raises(MissingParam) as error:
             store_repository.get()
@@ -59,7 +60,7 @@ class TestGet:
         assert error.value.message == 'Filter is required.'
 
     def test_should_fail_when_not_found(self, mocker):
-        store_repository = StoreRepository()
+        store_repository = StoreRepository(store_document=Store)
 
         with pytest.raises(MissingDoc) as error:
             store_repository.get({'unit': 1})
@@ -74,7 +75,7 @@ class TestUpdate:
             "name": "Store 1"
         }
 
-        store_repository = StoreRepository()
+        store_repository = StoreRepository(store_document=Store)
 
         store_repository.create(store_creation_data)
 
@@ -97,7 +98,7 @@ class TestUpdate:
             "name": "Store 1"
         }
 
-        store_repository = StoreRepository()
+        store_repository = StoreRepository(store_document=Store)
 
         store_repository.create(store_creation_data)
 

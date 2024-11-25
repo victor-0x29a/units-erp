@@ -1,4 +1,5 @@
 import pytest
+from documents import Store
 from repositories import EmployeeRepository, StoreRepository
 from exceptions import InvalidParam, UniqueKey, MissingDoc, MissingParam
 from ..fixture import mongo_connection # noqa: F401, E261
@@ -7,7 +8,7 @@ from ..__mocks__.constants import human_doc, human_doc_2
 
 class TestCreate:
     def test_should_create_an_employee(self, mocker):
-        store_repository = StoreRepository()
+        store_repository = StoreRepository(store_document=Store)
 
         employee_repository = EmployeeRepository()
 
@@ -32,7 +33,7 @@ class TestCreate:
         assert employee.name == employee_creation_data['name']
 
     def test_should_create_an_employee_with_pwd(self, mocker):
-        store_repository = StoreRepository()
+        store_repository = StoreRepository(store_document=Store)
 
         employee_repository = EmployeeRepository()
 
@@ -61,7 +62,7 @@ class TestCreate:
         assert employee.password != employee_creation_data['password']
 
     def test_should_fail_create_with_an_invalid_role(self, mocker):
-        store_repository = StoreRepository()
+        store_repository = StoreRepository(store_document=Store)
 
         employee_repository = EmployeeRepository()
 
@@ -88,7 +89,7 @@ class TestCreate:
         assert error.value.message == "The role is invalid, valid roles are: ADMIN, FINANCIAL, INVENTOR, OPERATOR" # noqa
 
     def test_should_fail_when_already_exists_by_document(self, mocker):
-        store_repository = StoreRepository()
+        store_repository = StoreRepository(store_document=Store)
 
         employee_repository = EmployeeRepository()
 
@@ -118,7 +119,7 @@ class TestCreate:
         assert error.value.message == "The document has already been taken."
 
     def test_should_fail_when_already_exists_by_username(self, mocker):
-        store_repository = StoreRepository()
+        store_repository = StoreRepository(store_document=Store)
 
         employee_repository = EmployeeRepository()
 
@@ -150,7 +151,7 @@ class TestCreate:
 
 class TestGet:
     def test_should_get_an_employee(self, mocker):
-        store_repository = StoreRepository()
+        store_repository = StoreRepository(store_document=Store)
         employee_repository = EmployeeRepository()
 
         store_creation_data = {
@@ -205,7 +206,7 @@ class TestGet:
 
 class TestFillPassword:
     def test_should_fill_password(self, mocker):
-        store_repository = StoreRepository()
+        store_repository = StoreRepository(store_document=Store)
         employee_repository = EmployeeRepository()
 
         store_creation_data = {
@@ -236,7 +237,7 @@ class TestFillPassword:
         assert isinstance(employee.password, str)
 
     def test_should_fail_when_already_have_password(self, mocker):
-        store_repository = StoreRepository()
+        store_repository = StoreRepository(store_document=Store)
         employee_repository = EmployeeRepository()
 
         store_creation_data = {
@@ -274,7 +275,7 @@ class TestFillPassword:
 
 class TestDelete:
     def test_should_delete_an_employee(self, mocker):
-        store_repository = StoreRepository()
+        store_repository = StoreRepository(store_document=Store)
         employee_repository = EmployeeRepository()
 
         store_creation_data = {

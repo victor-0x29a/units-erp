@@ -4,8 +4,11 @@ from exceptions import UniqueKey, MissingParam, MissingDoc
 
 
 class StoreRepository:
+    def __init__(self, store_document: Store):
+        self.Store = store_document
+
     def create(self, data) -> Store:
-        store = Store(**data)
+        store = self.Store(**data)
 
         try:
             store.save()
@@ -20,7 +23,7 @@ class StoreRepository:
         if not filter:
             raise MissingParam("Filter is required.")
 
-        store = Store.objects(**filter).first()
+        store = self.Store.objects(**filter).first()
 
         if not store:
             raise MissingDoc("Store not found.")
