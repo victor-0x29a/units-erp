@@ -1,5 +1,5 @@
 import pytest
-from documents import Store
+from documents import Store, Employee
 from repositories import EmployeeRepository, StoreRepository
 from exceptions import InvalidParam, UniqueKey, MissingDoc, MissingParam
 from ..fixture import mongo_connection # noqa: F401, E261
@@ -10,7 +10,7 @@ class TestCreate:
     def test_should_create_an_employee(self, mocker):
         store_repository = StoreRepository(store_document=Store)
 
-        employee_repository = EmployeeRepository()
+        employee_repository = EmployeeRepository(employee_document=Employee)
 
         store_creation_data = {
             "unit": 1,
@@ -35,7 +35,7 @@ class TestCreate:
     def test_should_create_an_employee_with_pwd(self, mocker):
         store_repository = StoreRepository(store_document=Store)
 
-        employee_repository = EmployeeRepository()
+        employee_repository = EmployeeRepository(employee_document=Employee)
 
         store_creation_data = {
             "unit": 1,
@@ -64,7 +64,7 @@ class TestCreate:
     def test_should_fail_create_with_an_invalid_role(self, mocker):
         store_repository = StoreRepository(store_document=Store)
 
-        employee_repository = EmployeeRepository()
+        employee_repository = EmployeeRepository(employee_document=Employee)
 
         store_creation_data = {
             "unit": 1,
@@ -91,7 +91,7 @@ class TestCreate:
     def test_should_fail_when_already_exists_by_document(self, mocker):
         store_repository = StoreRepository(store_document=Store)
 
-        employee_repository = EmployeeRepository()
+        employee_repository = EmployeeRepository(employee_document=Employee)
 
         store_creation_data = {
             "unit": 1,
@@ -121,7 +121,7 @@ class TestCreate:
     def test_should_fail_when_already_exists_by_username(self, mocker):
         store_repository = StoreRepository(store_document=Store)
 
-        employee_repository = EmployeeRepository()
+        employee_repository = EmployeeRepository(employee_document=Employee)
 
         store_creation_data = {
             "unit": 1,
@@ -152,7 +152,7 @@ class TestCreate:
 class TestGet:
     def test_should_get_an_employee(self, mocker):
         store_repository = StoreRepository(store_document=Store)
-        employee_repository = EmployeeRepository()
+        employee_repository = EmployeeRepository(employee_document=Employee)
 
         store_creation_data = {
             "unit": 1,
@@ -179,14 +179,14 @@ class TestGet:
         assert employee.role == data['role']
 
     def test_should_not_fail_when_unexists_and_cant_raises(self, mocker):
-        employee_repository = EmployeeRepository()
+        employee_repository = EmployeeRepository(employee_document=Employee)
 
         employee = employee_repository.get({'document': human_doc}, can_raises=False)
 
         assert not employee
 
     def test_should_fail_when_unexists_and_can_raises(self, mocker):
-        employee_repository = EmployeeRepository()
+        employee_repository = EmployeeRepository(employee_document=Employee)
 
         with pytest.raises(MissingDoc) as error:
             employee_repository.get({'document': human_doc})
@@ -195,7 +195,7 @@ class TestGet:
         assert error.value.message == "Employee not found."
 
     def test_should_fail_when_havent_filters(self, mocker):
-        employee_repository = EmployeeRepository()
+        employee_repository = EmployeeRepository(employee_document=Employee)
 
         with pytest.raises(MissingParam) as error:
             employee_repository.get({})
@@ -207,7 +207,7 @@ class TestGet:
 class TestFillPassword:
     def test_should_fill_password(self, mocker):
         store_repository = StoreRepository(store_document=Store)
-        employee_repository = EmployeeRepository()
+        employee_repository = EmployeeRepository(employee_document=Employee)
 
         store_creation_data = {
             "unit": 1,
@@ -238,7 +238,7 @@ class TestFillPassword:
 
     def test_should_fail_when_already_have_password(self, mocker):
         store_repository = StoreRepository(store_document=Store)
-        employee_repository = EmployeeRepository()
+        employee_repository = EmployeeRepository(employee_document=Employee)
 
         store_creation_data = {
             "unit": 1,
@@ -265,7 +265,7 @@ class TestFillPassword:
         assert error.value.message == "Failed on process."
 
     def test_should_fail_when_havent_employee(self, mocker):
-        employee_repository = EmployeeRepository()
+        employee_repository = EmployeeRepository(employee_document=Employee)
         with pytest.raises(MissingParam) as error:
             employee_repository.fill_password(employee=None, password="password")
 
@@ -276,7 +276,7 @@ class TestFillPassword:
 class TestDelete:
     def test_should_delete_an_employee(self, mocker):
         store_repository = StoreRepository(store_document=Store)
-        employee_repository = EmployeeRepository()
+        employee_repository = EmployeeRepository(employee_document=Employee)
 
         store_creation_data = {
             "unit": 1,
@@ -304,7 +304,7 @@ class TestDelete:
         assert not employee
 
     def test_should_fail_when_havent_employee(self, mocker):
-        employee_repository = EmployeeRepository()
+        employee_repository = EmployeeRepository(employee_document=Employee)
         with pytest.raises(MissingParam) as error:
             employee_repository.delete(employee=None)
 

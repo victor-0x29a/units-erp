@@ -7,11 +7,14 @@ from copy import deepcopy
 
 
 class EmployeeRepository:
+    def __init__(self, employee_document: Employee):
+        self.Employee = employee_document
+
     def get(self, filter=None, can_raises=True) -> Employee:
         if not filter:
             raise MissingParam("Filter is required.")
 
-        employee = Employee.objects(**filter).first()
+        employee = self.Employee.objects(**filter).first()
 
         if not employee and can_raises:
             raise MissingDoc("Employee not found.")
@@ -28,7 +31,7 @@ class EmployeeRepository:
                 password=creation_data['password']
             )
 
-        employee = Employee(**creation_data)
+        employee = self.Employee(**creation_data)
 
         try:
             employee.validate()
@@ -54,7 +57,7 @@ class EmployeeRepository:
 
         employee.save()
 
-        return Employee
+        return employee
 
     def delete(self, employee: Employee) -> None:
         if not employee:
