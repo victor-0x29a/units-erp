@@ -3,10 +3,11 @@ from security import HashManager
 from mongoengine.errors import ValidationError
 from exceptions import MissingDoc, MissingParam, InvalidParam, UniqueKey
 from docs_constants import EMPLOYEE_ROLES
+from copy import deepcopy
 
 
 class EmployeeRepository:
-    def get(self, filter=None, can_raises=True):
+    def get(self, filter=None, can_raises=True) -> Employee:
         if not filter:
             raise MissingParam("Filter is required.")
 
@@ -18,7 +19,7 @@ class EmployeeRepository:
         return employee
 
     def create(self, data: dict) -> Employee:
-        creation_data = data
+        creation_data = deepcopy(data)
 
         self.__validate_unique_fields(data=creation_data)
 
@@ -43,6 +44,9 @@ class EmployeeRepository:
         return employee
 
     def fill_password(self, employee: Employee, password: str) -> Employee:
+        if not employee:
+            raise MissingParam('Employee is required.')
+
         if employee.password:
             raise InvalidParam('Failed on process.')
 
@@ -53,6 +57,9 @@ class EmployeeRepository:
         return Employee
 
     def delete(self, employee: Employee) -> None:
+        if not employee:
+            raise MissingParam('Employee is required.')
+
         employee.delete()
 
     def __validate_unique_fields(self, data: dict):
