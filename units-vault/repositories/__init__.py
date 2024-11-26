@@ -1,2 +1,3 @@
 from .store_repository import StoreRepository
 from .employee_repository import EmployeeRepository
+from .batch_repository import BatchRepository
