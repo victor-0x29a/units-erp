@@ -1,7 +1,6 @@
 import pytest
 from datetime import timedelta
 from documents import Store, Batch
-from use_cases import CreateBatchV1
 from utils.dates import get_now
 from repositories import StoreRepository, BatchRepository
 from exceptions import MissingParam, MissingDoc, UniqueKey
