@@ -6,6 +6,7 @@ from utils.dates import get_now
 from repositories import StoreRepository, BatchRepository
 from exceptions import MissingParam, MissingDoc, UniqueKey
 from ..fixture import mongo_connection # noqa: F401, E261
+from ..__mocks__.constants import company_doc
 
 
 class TestCreate:
@@ -21,7 +22,7 @@ class TestCreate:
         batch = batch_repository.create(data={
             "expiry_date": get_now() + timedelta(days=1),
             "inserction_datetime": get_now(),
-            "supplier_document": "10.076.086/0001-90",
+            "supplier_document": company_doc,
             "reference": "REFERER001",
             "store": store.pk
         })
@@ -41,7 +42,7 @@ class TestCreate:
         batch_repository.create(data={
             "expiry_date": get_now() + timedelta(days=1),
             "inserction_datetime": get_now(),
-            "supplier_document": "10.076.086/0001-90",
+            "supplier_document": company_doc,
             "reference": "REFERER001",
             "store": store.pk
         })
@@ -50,7 +51,7 @@ class TestCreate:
             batch_repository.create(data={
                 "expiry_date": get_now() + timedelta(days=1),
                 "inserction_datetime": get_now(),
-                "supplier_document": "10.076.086/0001-90",
+                "supplier_document": company_doc,
                 "reference": "REFERER001",
                 "store": store.pk
             })
@@ -62,19 +63,20 @@ class TestGet:
     def test_should_get(self, mocker):
         batch_repository = BatchRepository(batch_document=Batch)
         store_repository = StoreRepository(store_document=Store)
+        batch_repository = BatchRepository(batch_document=Batch)
 
-        store_repository.create(data={
+        store = store_repository.create(data={
             "unit": 1,
             "name": "Store 1"
         })
 
-        batch = CreateBatchV1(data={
+        batch = batch_repository.create(data={
             "expiry_date": get_now() + timedelta(days=1),
             "inserction_datetime": get_now(),
-            "supplier_document": "10.076.086/0001-90",
+            "supplier_document": company_doc,
             "reference": "REFERER001",
-            "store_unit": 1
-        }).start()
+            "store": store.pk
+        })
 
         assert batch
 
@@ -115,19 +117,20 @@ class TestDelete:
     def test_should_delete(self, mocker):
         batch_repository = BatchRepository(batch_document=Batch)
         store_repository = StoreRepository(store_document=Store)
+        batch_repository = BatchRepository(batch_document=Batch)
 
-        store_repository.create(data={
+        store = store_repository.create(data={
             "unit": 1,
             "name": "Store 1"
         })
 
-        batch = CreateBatchV1(data={
+        batch = batch_repository.create(data={
             "expiry_date": get_now() + timedelta(days=1),
             "inserction_datetime": get_now(),
-            "supplier_document": "10.076.086/0001-90",
+            "supplier_document": company_doc,
             "reference": "REFERER001",
-            "store_unit": 1
-        }).start()
+            "store": store.pk
+        })
 
         assert batch
 

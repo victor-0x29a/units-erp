@@ -3,10 +3,13 @@ import pytest
 from bson import ObjectId, uuid
 from datetime import timedelta
 from fastapi.testclient import TestClient
+from repositories import StoreRepository
 from documents import Product, Batch, Store
 from unittest.mock import MagicMock
 from utils.dates import get_now, from_date_to_str
 from exceptions import HasWithSameBatch, GreaterThanPrice, MissingDoc, UniqueKey
+from ...fixture import mongo_connection # noqa: F401, E261
+from ...__mocks__.constants import company_doc
 
 client = TestClient(app)
 
@@ -99,24 +102,15 @@ class TestCreateProductIntegrationV1():
         assert exception.value.code == 1003
 
     def test_should_reject_when_already_exists_by_bar_code(self, mocker):
-        magic_property = MagicMock()
+        store_repository = StoreRepository(store_document=Store)
 
-        magic_property.id = ObjectId()
-
-        magic_first = MagicMock()
-
-        magic_first.first.return_value = magic_property
-
-        mocker.patch.object(
-            Store,
-            'objects',
-            return_value=magic_first
-        )
-
-        mocker.patch.object(Store, 'objects', return_value=magic_first)
+        store_repository.create(data={
+            "unit": 1,
+            "name": "Store 1"
+        })
 
         batch_data = {
-            "cnpj": "59968706000194",
+            "cnpj": company_doc,
             "ref": uuid.uuid4().hex,
             "expiry_date": from_date_to_str(get_now() + timedelta(days=2)),
             "store_unit": 1

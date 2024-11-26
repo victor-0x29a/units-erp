@@ -3,6 +3,7 @@ import pytest
 from fastapi.testclient import TestClient
 from documents import Store
 from exceptions import UniqueKey
+from ...fixture import mongo_connection # noqa: F401, E261
 
 client = TestClient(app)
 
