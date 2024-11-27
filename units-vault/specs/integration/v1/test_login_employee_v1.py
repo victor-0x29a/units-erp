@@ -1,12 +1,12 @@
-import pytest
+from main import app
 from fastapi.testclient import TestClient
+import pytest
 from repositories import EmployeeRepository, StoreRepository
 from documents import Employee, Store
-from main import app
+from exceptions import MissingDoc
+import constants
 from ...__mocks__.constants import human_doc
 from ...fixture import mongo_connection # noqa: F401, E261
-import constants
-from exceptions import MissingDoc
 
 client = TestClient(app)
 
