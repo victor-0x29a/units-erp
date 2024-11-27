@@ -7,7 +7,7 @@ from repositories import StoreRepository
 from documents import Product, Batch, Store
 from unittest.mock import MagicMock
 from utils.dates import get_now, from_date_to_str
-from exceptions import HasWithSameBatch, GreaterThanPrice, MissingDoc, UniqueKey
+from exceptions import HasWithSameBatch, GreaterThanPrice, MissingDoc, AlreadyExists
 from ...fixture import mongo_connection # noqa: F401, E261
 from ...__mocks__.constants import company_doc
 
@@ -85,13 +85,11 @@ class TestCreateProductIntegrationV1():
         assert exception.value.message == "The discount is greater than the price of the product."
 
     def test_should_reject_when_batch_unexists(self, mocker):
-        mocker.patch.object(Batch.objects, 'get', side_effect=MissingDoc('Batch not found.'))
-
         with pytest.raises(MissingDoc) as exception:
             client.post("/v1/product", json={
                 "name": "Foo",
                 "price": 3.45,
-                "discount_value": 4.0,
+                "discount_value": 3.20,
                 "base_stock": 310,
                 "batch": str(ObjectId()),
                 "type": "construction",
@@ -137,7 +135,7 @@ class TestCreateProductIntegrationV1():
 
         data['batch'] = batch_data['ref']
 
-        with pytest.raises(UniqueKey) as error:
+        with pytest.raises(AlreadyExists) as error:
             client.post("/v1/product", json=data)
 
-        assert error.value.message == 'Product with same bar code already exists.'
+        assert error.value.message == 'Product already exists by bar code.'
