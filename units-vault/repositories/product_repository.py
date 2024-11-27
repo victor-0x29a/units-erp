@@ -49,7 +49,7 @@ class ProductRepository:
         self,
         batch_pk: ObjectIdField,
         bar_code: str
-    ) -> bool:
+    ) -> None:
         product_by_batch = self.Product.objects(batch=batch_pk)
 
         if product_by_batch:

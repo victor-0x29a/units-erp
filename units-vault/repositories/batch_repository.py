@@ -27,7 +27,7 @@ class BatchRepository:
 
         batch.delete()
 
-    def get(self, filters=None, can_raises=True):
+    def get(self, filters=None, can_raises=True) -> Batch:
         if not filters:
             raise MissingParam("Filter is required.")
 
