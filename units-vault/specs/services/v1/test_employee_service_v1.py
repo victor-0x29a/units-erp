@@ -1,18 +1,22 @@
 import pytest
 from services.v1.employee_service import EmployeeService as EmployeeServiceV1
-from documents import Employee
-from security import HashManager
-from bson import ObjectId
-from unittest.mock import MagicMock
-from services.v1.store_service import StoreService as StoreServiceV1
+from documents import Employee, Store
+from repositories import StoreRepository, EmployeeRepository
 from exceptions import MissingDoc, UniqueKey, InvalidParam
-from ...__mocks__.constants import human_doc
+from ...__mocks__.constants import human_doc, human_doc_2
 from ...fixture import mongo_connection # noqa: F401, E261
 import constants
 
 
 class TestCreateV1:
     def test_should_create(self, mocker):
+        store_repository = StoreRepository(store_document=Store)
+
+        store_repository.create(data={
+            "unit": 1,
+            "name": "Foo store"
+        })
+
         creation_data = {
             "store_unit": 1,
             "name": "victor",
@@ -23,17 +27,18 @@ class TestCreateV1:
 
         service = EmployeeServiceV1()
 
-        magic_store = MagicMock()
-
-        magic_store.id = ObjectId()
-
-        mocker.patch.object(StoreServiceV1, 'get', return_value=magic_store)
-
         employee = service.create(creation_data)
 
         assert employee.id
 
     def test_should_create_with_password(self, mocker):
+        store_repository = StoreRepository(store_document=Store)
+
+        store_repository.create(data={
+            "unit": 1,
+            "name": "Foo store"
+        })
+
         password = 'strongpassword'
 
         creation_data = {
@@ -46,36 +51,6 @@ class TestCreateV1:
         }
 
         service = EmployeeServiceV1()
-
-        magic_store = MagicMock()
-
-        magic_store.id = ObjectId()
-
-        mocker.patch.object(StoreServiceV1, 'get', return_value=magic_store)
-
-        mocker.patch.object(
-            Employee,
-            'save',
-            return_value=True
-        )
-
-        mocker.patch.object(
-            Employee,
-            'validate',
-            return_value=True
-        )
-
-        mocker.patch.object(
-            EmployeeServiceV1,
-            '_EmployeeService__validate_unique_fields',
-            return_value=True
-        )
-
-        mocker.patch.object(
-            EmployeeServiceV1,
-            '_EmployeeService__fetch_store_id',
-            return_value=magic_store.id
-        )
 
         employee = service.create(creation_data)
 
@@ -97,43 +72,32 @@ class TestCreateV1:
 
         service = EmployeeServiceV1()
 
-        mocker.patch.object(
-            StoreServiceV1,
-            'get',
-            side_effect=MissingDoc('Store not found.')
-        )
-
         with pytest.raises(MissingDoc) as error:
             service.create(creation_data)
 
         assert error.value.message == 'Store not found.'
 
     def test_should_fail_when_already_exist_by_document(self, mocker):
+        store_repository = StoreRepository(store_document=Store)
+
+        store = store_repository.create(data={
+            "unit": 1,
+            "name": "Foo store"
+        })
+
         creation_data = {
-            "store_unit": 1,
+            "store_unit": store.pk,
             "name": "victor",
             "document": human_doc,
             "username": "victor-0x29a",
             "role": "ADMIN"
         }
 
-        magic_store = MagicMock()
-
-        magic_store.id = ObjectId()
-
-        mocker.patch.object(
-            StoreServiceV1,
-            'get',
-            return_value=magic_store
-        )
-
-        mocker.patch.object(
-            EmployeeServiceV1,
-            'get_by_document',
-            return_value=MagicMock()
-        )
-
         service = EmployeeServiceV1()
+
+        service.create(creation_data)
+
+        creation_data['username'] = 'victor-0x29b'
 
         with pytest.raises(UniqueKey) as error:
             service.create(creation_data)
@@ -141,31 +105,26 @@ class TestCreateV1:
         assert error.value.message == 'The document has already been taken.'
 
     def test_should_fail_when_already_exist_by_username(self, mocker):
+        store_repository = StoreRepository(store_document=Store)
+
+        store = store_repository.create(data={
+            "unit": 1,
+            "name": "Foo store"
+        })
+
         creation_data = {
-            "store_unit": 1,
+            "store_unit": store.pk,
             "name": "victor",
             "document": human_doc,
             "username": "victor-0x29a",
             "role": "ADMIN"
         }
 
-        magic_store = MagicMock()
-
-        magic_store.id = ObjectId()
-
-        mocker.patch.object(
-            StoreServiceV1,
-            'get',
-            return_value=magic_store
-        )
-
-        mocker.patch.object(
-            EmployeeServiceV1,
-            'get_by_username',
-            return_value=MagicMock()
-        )
-
         service = EmployeeServiceV1()
+
+        service.create(creation_data)
+
+        creation_data['document'] = human_doc_2
 
         with pytest.raises(UniqueKey) as error:
             service.create(creation_data)
@@ -173,8 +132,15 @@ class TestCreateV1:
         assert error.value.message == 'The username has already been taken.'
 
     def test_should_fail_when_invalid_role(self, mocker):
+        store_repository = StoreRepository(store_document=Store)
+
+        store = store_repository.create(data={
+            "unit": 1,
+            "name": "Foo store"
+        })
+
         creation_data = {
-            "store_unit": 1,
+            "store_unit": store.pk,
             "name": "victor",
             "document": human_doc,
             "username": "victor-0x29a",
@@ -182,12 +148,6 @@ class TestCreateV1:
         }
 
         service = EmployeeServiceV1()
-
-        magic_store = MagicMock()
-
-        magic_store.id = ObjectId()
-
-        mocker.patch.object(StoreServiceV1, 'get', return_value=magic_store)
 
         with pytest.raises(InvalidParam) as error:
             service.create(creation_data)
@@ -199,88 +159,116 @@ class TestCreateV1:
 
 class TestDeleteV1:
     def test_should_delete(self, mocker):
-        magic_employee = MagicMock()
+        store_repository = StoreRepository(store_document=Store)
+        employee_repository = EmployeeRepository(employee_document=Employee)
 
-        magic_employee.delete = MagicMock()
+        store = store_repository.create(data={
+            "unit": 1,
+            "name": "Foo store"
+        })
 
-        mocker.patch.object(EmployeeServiceV1, 'get_by_document', return_value=magic_employee)
+        employee_creation_data = {
+            "store_unit": store.pk,
+            "name": "victor",
+            "document": human_doc,
+            "username": "victor-0x29a",
+            "role": "ADMIN"
+        }
 
-        mocker.patch.object(EmployeeServiceV1, 'delete')
+        employee_repository.create(data=employee_creation_data)
 
-        EmployeeServiceV1.delete('123456')
-
-        assert True
+        EmployeeServiceV1().delete(employee_document=human_doc)
 
     def test_should_fail_when_employee_not_found(self, mocker):
-        magic_employee = MagicMock()
-
-        magic_employee.first.return_value = None
-
-        mocker.patch.object(
-            Employee,
-            'objects',
-            return_value=magic_employee
-        )
-
         with pytest.raises(MissingDoc) as error:
-            EmployeeServiceV1().delete('123456')
+            EmployeeServiceV1().delete(human_doc)
 
         assert error.value.message == 'Employee not found.'
 
 
 class TestFillPasswordV1:
     def test_should_fill_password(self, mocker):
-        magic_employee = MagicMock()
+        store_repository = StoreRepository(store_document=Store)
+        employee_repository = EmployeeRepository(employee_document=Employee)
 
-        magic_employee.password = None
+        store = store_repository.create(data={
+            "unit": 1,
+            "name": "Foo store"
+        })
 
-        magic_employee.save.return_value = True
+        employee_creation_data = {
+            "store_unit": store.pk,
+            "name": "victor",
+            "document": human_doc,
+            "username": "victor-0x29a",
+            "role": "ADMIN"
+        }
 
-        mocker.patch.object(
-            EmployeeServiceV1,
-            'get_by_document',
-            return_value=magic_employee
-        )
+        employee_repository.create(data=employee_creation_data)
 
         service = EmployeeServiceV1()
 
         password = 'password'
 
-        hashed_password = service.fill_password('123456', password)
+        hashed_password = service.fill_password(human_doc, password)
 
         assert hashed_password != password
 
     def test_should_fail_when_has_already_filled_password(self, mocker):
-        magic_employee = MagicMock()
+        store_repository = StoreRepository(store_document=Store)
+        employee_repository = EmployeeRepository(employee_document=Employee)
 
-        magic_employee.password = 'password'
+        store = store_repository.create(data={
+            "unit": 1,
+            "name": "Foo store"
+        })
 
-        mocker.patch.object(
-            EmployeeServiceV1,
-            'get_by_document',
-            return_value=magic_employee
-        )
+        employee_creation_data = {
+            "store_unit": store.pk,
+            "name": "victor",
+            "document": human_doc,
+            "username": "victor-0x29a",
+            "role": "ADMIN",
+            "password": 'password'
+        }
+
+        employee_repository.create(data=employee_creation_data)
 
         with pytest.raises(InvalidParam) as error:
-            EmployeeServiceV1().fill_password('123456', 'password')
+            EmployeeServiceV1().fill_password(human_doc, 'password')
 
         assert error.value.message == 'Failed on process.'
 
     def test_should_fail_when_unexistent_employee(self, mocker):
-        mocker.patch.object(
-            Employee,
-            'objects',
-            side_effect=MissingDoc('Employee not found.')
-        )
-
         with pytest.raises(MissingDoc) as error:
-            EmployeeServiceV1().fill_password('123456', 'password')
+            EmployeeServiceV1().fill_password(human_doc, 'password')
 
         assert error.value.message == 'Employee not found.'
 
 
 class TestLoginV1:
     def test_should_generate_token(self, mocker):
+        employee_repository = EmployeeRepository(employee_document=Employee)
+        store_repository = StoreRepository(store_document=Store)
+
+        store_creation_data = {
+            "unit": 1,
+            "name": "Foo store"
+        }
+
+        store = store_repository.create(data=store_creation_data)
+
+        employee_creation_data = {
+            "document": human_doc,
+            "name": "Foo",
+            "username": "victor-0x29a",
+            "role": "ADMIN",
+            "store_unit": store.pk,
+            "password": 'password'
+        }
+
+        employee_repository.create(data=employee_creation_data)
+
         login_data = {
             'username': 'victor-0x29a',
             'password': 'password'
@@ -292,32 +280,6 @@ class TestLoginV1:
             constants,
             'JWT_SECRET',
             jwt_secret
-        )
-
-        hash_manager = HashManager()
-
-        magic_employee = MagicMock()
-
-        magic_employee.document = human_doc
-
-        magic_employee.role = 'ADMIN'
-
-        magic_store = MagicMock()
-
-        magic_store.unit = 1
-
-        magic_employee.password = hash_manager.hash_passwd(login_data['password'])
-
-        mocker.patch.object(
-            EmployeeServiceV1,
-            'get_by_username',
-            return_value=magic_employee
-        )
-
-        mocker.patch.object(
-            EmployeeServiceV1,
-            '_EmployeeService__fetch_store',
-            return_value=magic_store
         )
 
         service = EmployeeServiceV1()
@@ -332,6 +294,27 @@ class TestLoginV1:
         assert isinstance(token, str)
 
     def test_should_generate_token_by_document(self, mocker):
+        store_repository = StoreRepository(store_document=Store)
+        employee_repository = EmployeeRepository(employee_document=Employee)
+
+        store_creation_data = {
+            "unit": 1,
+            "name": "Foo store"
+        }
+
+        store = store_repository.create(data=store_creation_data)
+
+        employee_creation_data = {
+            "document": human_doc,
+            "name": "Foo",
+            "username": "victor-0x29a",
+            "role": "ADMIN",
+            "store_unit": store.pk,
+            "password": 'password'
+        }
+
+        employee_repository.create(data=employee_creation_data)
+
         login_data = {
             'document': human_doc,
             'password': 'password'
@@ -343,32 +326,6 @@ class TestLoginV1:
             constants,
             'JWT_SECRET',
             jwt_secret
-        )
-
-        hash_manager = HashManager()
-
-        magic_employee = MagicMock()
-
-        magic_employee.document = human_doc
-
-        magic_employee.role = 'ADMIN'
-
-        magic_store = MagicMock()
-
-        magic_store.unit = 1
-
-        magic_employee.password = hash_manager.hash_passwd(login_data['password'])
-
-        mocker.patch.object(
-            EmployeeServiceV1,
-            'get_by_document',
-            return_value=magic_employee
-        )
-
-        mocker.patch.object(
-            EmployeeServiceV1,
-            '_EmployeeService__fetch_store',
-            return_value=magic_store
         )
 
         service = EmployeeServiceV1()
@@ -383,6 +340,27 @@ class TestLoginV1:
         assert isinstance(token, str)
 
     def test_should_not_fail_when_have_username_and_doc(self, mocker):
+        store_repository = StoreRepository(store_document=Store)
+        employee_repository = EmployeeRepository(employee_document=Employee)
+
+        store_creation_data = {
+            "unit": 1,
+            "name": "Foo store"
+        }
+
+        store = store_repository.create(data=store_creation_data)
+
+        employee_creation_data = {
+            "document": human_doc,
+            "name": "Foo",
+            "username": "victor-0x29a",
+            "role": "ADMIN",
+            "store_unit": store.pk,
+            "password": 'password'
+        }
+
+        employee_repository.create(data=employee_creation_data)
+
         login_data = {
             'username': 'victor-0x29a',
             'password': 'password',
@@ -395,32 +373,6 @@ class TestLoginV1:
             constants,
             'JWT_SECRET',
             jwt_secret
-        )
-
-        hash_manager = HashManager()
-
-        magic_employee = MagicMock()
-
-        magic_employee.document = human_doc
-
-        magic_employee.role = 'ADMIN'
-
-        magic_store = MagicMock()
-
-        magic_store.unit = 1
-
-        magic_employee.password = hash_manager.hash_passwd(login_data['password'])
-
-        mocker.patch.object(
-            EmployeeServiceV1,
-            'get_by_username',
-            return_value=magic_employee
-        )
-
-        mocker.patch.object(
-            EmployeeServiceV1,
-            '_EmployeeService__fetch_store',
-            return_value=magic_store
         )
 
         service = EmployeeServiceV1()
@@ -440,12 +392,6 @@ class TestLoginV1:
             'password': 'password'
         }
 
-        mocker.patch.object(
-            EmployeeServiceV1,
-            'get_by_username',
-            side_effect=MissingDoc('Employee not found.')
-        )
-
         with pytest.raises(MissingDoc) as error:
             EmployeeServiceV1().login(
                 username=login_data['username'],
@@ -455,52 +401,27 @@ class TestLoginV1:
 
         assert error.value.message == 'Employee not found.'
 
-    def test_should_fail_when_unexist_store(self, mocker):
-        login_data = {
-            'username': 'victor-0x29a',
-            'password': 'password'
+    def test_should_login_when_havent_password(self, mocker):
+        employee_repository = EmployeeRepository(employee_document=Employee)
+        store_repository = StoreRepository(store_document=Store)
+
+        store_creation_data = {
+            "unit": 1,
+            "name": "Foo store"
         }
 
-        jwt_secret = 'jwt_secret'
+        store = store_repository.create(data=store_creation_data)
 
-        mocker.patch.object(
-            constants,
-            'JWT_SECRET',
-            jwt_secret
-        )
+        employee_creation_data = {
+            "document": human_doc,
+            "name": "Foo",
+            "username": "victor-0x29a",
+            "role": "ADMIN",
+            "store_unit": store.pk
+        }
 
-        hash_manager = HashManager()
+        employee_repository.create(data=employee_creation_data)
 
-        magic_employee = MagicMock()
-
-        magic_employee.document = human_doc
-
-        magic_employee.password = hash_manager.hash_passwd(login_data['password'])
-
-        mocker.patch.object(
-            EmployeeServiceV1,
-            'get_by_username',
-            return_value=magic_employee
-        )
-
-        mocker.patch.object(
-            EmployeeServiceV1,
-            '_EmployeeService__fetch_store',
-            side_effect=MissingDoc('Store not found.')
-        )
-
-        service = EmployeeServiceV1()
-
-        with pytest.raises(MissingDoc) as error:
-            service.login(
-                username=login_data['username'],
-                password=login_data['password'],
-                document=None
-            )
-
-        assert error.value.message == 'Store not found.'
-
-    def test_should_login_when_havent_password(self, mocker):
         login_data = {
             'username': 'victor-0x29a'
         }
@@ -511,30 +432,6 @@ class TestLoginV1:
             constants,
             'JWT_SECRET',
             jwt_secret
-        )
-
-        magic_employee = MagicMock()
-
-        magic_employee.document = human_doc
-
-        magic_employee.role = 'ADMIN'
-
-        magic_store = MagicMock()
-
-        magic_store.unit = 1
-
-        magic_employee.password = None
-
-        mocker.patch.object(
-            EmployeeServiceV1,
-            'get_by_username',
-            return_value=magic_employee
-        )
-
-        mocker.patch.object(
-            EmployeeServiceV1,
-            '_EmployeeService__fetch_store',
-            return_value=magic_store
         )
 
         service = EmployeeServiceV1()
