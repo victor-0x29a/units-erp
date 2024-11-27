@@ -1,11 +1,11 @@
 import pytest
-from ...__mocks__.test_client import create_test_client
 from main import app
 from documents import Employee, Store
 from repositories import StoreRepository, EmployeeRepository
 from exceptions import MissingDoc
 from ...__mocks__.constants import human_doc
 from ...fixture import mongo_connection # noqa: F401, E261
+from ...__mocks__.test_client import create_test_client
 
 client = create_test_client(app)
 
