@@ -10,16 +10,19 @@ class EmployeeRepository:
     def __init__(self, employee_document: Employee):
         self.Employee = employee_document
 
-    def get(self, filter=None, can_raises=True) -> Employee:
+    def get(self, filter=None, can_raises=True, is_only_one=True) -> Employee | list[Employee]:
         if not filter:
             raise MissingParam("Filter is required.")
 
-        employee = self.Employee.objects(**filter).first()
+        if is_only_one:
+            employee = self.Employee.objects(**filter).first()
+        else:
+            employee = self.Employee.objects(**filter)
 
-        if not employee and can_raises:
+        if not employee and can_raises and is_only_one:
             raise MissingDoc("Employee not found.")
 
-        return employee
+        return employee if is_only_one else list(employee)
 
     def create(self, data: dict) -> Employee:
         creation_data = deepcopy(data)
