@@ -1,4 +1,5 @@
-from documents import Store
+from repositories import StoreRepository, BatchRepository, ProductRepository, EmployeeRepository
+from documents import Store, Batch, Product, Employee
 from mongoengine.errors import NotUniqueError
 from exceptions import InternalError, UniqueKey, MissingParam, MissingDoc
 
@@ -6,6 +7,10 @@ from exceptions import InternalError, UniqueKey, MissingParam, MissingDoc
 class StoreService:
     def __init__(self):
         self.__instance = None
+        self.repository = StoreRepository(store_document=Store)
+        self.batch_repository = BatchRepository(batch_document=Batch)
+        self.product_repository = ProductRepository(product_document=Product)
+        self.employee_repository = EmployeeRepository(employee_document=Employee)
 
     def create(self):
         self.__validate_creation()
@@ -29,11 +34,34 @@ class StoreService:
             raise InternalError('Store instance are not initialized.')
 
     def delete(self, unit: int):
-        try:
-            store = Store.objects.get(unit=unit)
-            return store.delete()
-        except Store.DoesNotExist:
-            raise MissingDoc('Store not found.')
+        store = self.repository.get(filter={'unit': unit})
+
+        batches = self.batch_repository.get(
+            filters={'store': store.pk},
+            can_raises=False,
+            is_only_one=False
+        )
+
+        employees = self.employee_repository.get(
+            filter={'store_unit': store.pk},
+            can_raises=False,
+            is_only_one=False
+        )
+
+        for batch in batches:
+            product = self.product_repository.get(
+                filters={'batch': batch.pk},
+                can_raises=False
+            )
+
+            self.product_repository.delete(product=product)
+
+            self.batch_repository.delete(batch=batch)
+
+        for employee in employees:
+            self.employee_repository.delete(employee=employee)
+
+        store.delete()
 
     def get(self, filter={}):
         has_filter = bool(len(filter.keys()))
