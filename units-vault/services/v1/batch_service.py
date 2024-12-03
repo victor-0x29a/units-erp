@@ -1,10 +1,11 @@
-from documents import Batch, Store
-from repositories import BatchRepository, StoreRepository
+from documents import Batch, Store, Product
+from repositories import BatchRepository, StoreRepository, ProductRepository
 
 
 class BatchService:
     def __init__(self):
         self.store_repository = StoreRepository(store_document=Store)
+        self.product_repository = ProductRepository(product_document=Product)
         self.repository = BatchRepository(batch_document=Batch)
 
     def create(self, data={}):
@@ -19,3 +20,18 @@ class BatchService:
             "reference": data.get('reference'),
             "store": store.pk
         })
+
+    def delete(self, reference: str):
+        batch = self.repository.get(filters={
+            'reference': reference
+        })
+
+        product = self.product_repository.get(
+            filters={'batch': batch.pk},
+            can_raises=False
+        )
+
+        if product:
+            self.product_repository.delete(product)
+
+        self.repository.delete(batch)
