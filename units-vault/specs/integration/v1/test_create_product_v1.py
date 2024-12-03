@@ -2,15 +2,15 @@ from main import app
 import pytest
 from bson import ObjectId, uuid
 from datetime import timedelta
-from fastapi.testclient import TestClient
 from repositories import StoreRepository, BatchRepository
 from documents import Batch, Store
 from utils.dates import get_now, from_date_to_str
 from exceptions import HasWithSameBatch, GreaterThanPrice, MissingDoc, AlreadyExists
 from ...fixture import mongo_connection # noqa: F401, E261
 from ...__mocks__.constants import company_doc
+from ...__mocks__.test_client import create_test_client
 
-client = TestClient(app)
+client = create_test_client(app)
 
 
 class TestCreateProductIntegrationV1():
