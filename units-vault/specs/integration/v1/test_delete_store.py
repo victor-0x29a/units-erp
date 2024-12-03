@@ -1,10 +1,10 @@
 from main import app
 import pytest
-from fastapi.testclient import TestClient
 from exceptions import MissingDoc
 from ...fixture import mongo_connection # noqa: F401, E261
+from ...__mocks__.test_client import create_test_client
 
-client = TestClient(app)
+client = create_test_client(app)
 
 
 class TestDeleteStoreIntegrationV1():
