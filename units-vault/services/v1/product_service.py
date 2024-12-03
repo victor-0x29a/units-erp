@@ -8,7 +8,7 @@ class ProductService:
         self.batch_repository = BatchRepository(batch_document=Batch)
 
     def create(self, data={}):
-        batch = self.batch_repository.get(filters={'reference': data['batch']})
+        batch = self.batch_repository.get(filter={'reference': data['batch']})
 
         data['batch'] = batch.pk
 

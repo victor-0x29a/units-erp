@@ -171,13 +171,13 @@ class TestDeleteV1:
         assert error
         assert error.value.message == 'Store not found.'
 
-        batches = batch_repository.get(filters={'store': store.pk}, is_only_one=False)
+        batches = batch_repository.get(filter={'store': store.pk}, is_only_one=False)
 
         assert not bool(batches)
 
         for product_data in products_data:
             with pytest.raises(MissingDoc) as error:
-                product_repository.get(filters={'bar_code': product_data['bar_code']})
+                product_repository.get(filter={'bar_code': product_data['bar_code']})
 
             assert error
             assert error.value.message == 'Product not found.'

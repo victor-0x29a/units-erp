@@ -205,7 +205,7 @@ class TestGet:
             'item_type': 'foo type'
         })
 
-        product = product_repository.get(filters={'name': 'foo name'}, can_raises=False)
+        product = product_repository.get(filter={'name': 'foo name'}, can_raises=False)
 
         assert product
         assert product.price == 10.0
@@ -214,7 +214,7 @@ class TestGet:
         product_repository = ProductRepository(product_document=Product)
 
         with pytest.raises(MissingDoc) as error:
-            product_repository.get(filters={
+            product_repository.get(filter={
                 'name': 'foo'
             })
 
@@ -223,7 +223,7 @@ class TestGet:
     def test_should_not_fails_when_unexists_and_cant_raises(self, mocker):
         product_repository = ProductRepository(product_document=Product)
 
-        product = product_repository.get(filters={
+        product = product_repository.get(filter={
             'name': 'foo'
         }, can_raises=False)
 
@@ -233,7 +233,7 @@ class TestGet:
         product_repository = ProductRepository(product_document=Product)
 
         with pytest.raises(MissingParam) as error:
-            product_repository.get(filters=None)
+            product_repository.get(filter=None)
 
         assert error.value.message == 'Filter is required.'
 
@@ -271,7 +271,7 @@ class TestDelete:
 
         product_repository.delete(product=product)
 
-        product = product_repository.get(filters={'bar_code': '1234567891012'}, can_raises=False)
+        product = product_repository.get(filter={'bar_code': '1234567891012'}, can_raises=False)
 
         assert not product
 

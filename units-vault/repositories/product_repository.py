@@ -13,11 +13,11 @@ class ProductRepository:
 
         product.delete()
 
-    def get(self, filters=None, can_raises=True) -> Product:
-        if not filters:
+    def get(self, filter=None, can_raises=True) -> Product:
+        if not filter:
             raise MissingParam("Filter is required.")
 
-        product = self.Product.objects(**filters).first()
+        product = self.Product.objects(**filter).first()
 
         if not product and can_raises:
             raise MissingDoc("Product not found.")

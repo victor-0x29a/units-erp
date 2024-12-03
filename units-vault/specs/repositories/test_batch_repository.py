@@ -79,7 +79,7 @@ class TestGet:
 
         assert batch
 
-        batch = batch_repository.get(filters={'reference': 'REFERER001'}, can_raises=False)
+        batch = batch_repository.get(filter={'reference': 'REFERER001'}, can_raises=False)
 
         assert batch
         assert batch.reference == 'REFERER001'
@@ -88,7 +88,7 @@ class TestGet:
         batch_repository = BatchRepository(batch_document=Batch)
 
         with pytest.raises(MissingDoc) as error:
-            batch_repository.get(filters={
+            batch_repository.get(filter={
                 'reference': 'REFERER001'
             })
 
@@ -97,7 +97,7 @@ class TestGet:
     def test_should_not_fails_when_unexists_batch_and_cant_raises(self, mocker):
         batch_repository = BatchRepository(batch_document=Batch)
 
-        batch = batch_repository.get(filters={
+        batch = batch_repository.get(filter={
             'reference': 'REFERER001'
         }, can_raises=False)
 
@@ -107,7 +107,7 @@ class TestGet:
         batch_repository = BatchRepository(batch_document=Batch)
 
         with pytest.raises(MissingParam) as error:
-            batch_repository.get(filters=None)
+            batch_repository.get(filter=None)
 
         assert error.value.message == 'Filter is required.'
 
@@ -135,7 +135,7 @@ class TestDelete:
 
         batch_repository.delete(batch=batch)
 
-        batch = batch_repository.get(filters={'reference': 'REFERER001'}, can_raises=False)
+        batch = batch_repository.get(filter={'reference': 'REFERER001'}, can_raises=False)
 
         assert not batch
 

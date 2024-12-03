@@ -27,11 +27,11 @@ class BatchRepository:
 
         batch.delete()
 
-    def get(self, filters=None, can_raises=True, is_only_one=True) -> Batch | list[Batch]:
-        if not filters:
+    def get(self, filter=None, can_raises=True, is_only_one=True) -> Batch | list[Batch]:
+        if not filter:
             raise MissingParam("Filter is required.")
 
-        batch = self.Batch.objects(**filters).first() if is_only_one else self.Batch.objects(**filters)
+        batch = self.Batch.objects(**filter).first() if is_only_one else self.Batch.objects(**filter)
 
         if not batch and can_raises and is_only_one:
             raise MissingDoc("Batch not found.")

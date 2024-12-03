@@ -95,11 +95,11 @@ class TestDeleteBatch:
         service.delete(reference="REFERER001")
 
         with pytest.raises(MissingDoc) as error:
-            batch_repository.get(filters={'reference': 'REFERER001'})
+            batch_repository.get(filter={'reference': 'REFERER001'})
 
         assert error.value.message == "Batch not found."
 
         with pytest.raises(MissingDoc) as error:
-            product_repository.get(filters={'batch': batch.pk})
+            product_repository.get(filter={'batch': batch.pk})
 
         assert error.value.message == "Product not found."
