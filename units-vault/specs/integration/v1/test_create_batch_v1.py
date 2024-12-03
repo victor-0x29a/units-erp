@@ -1,6 +1,5 @@
 import pytest
 from datetime import datetime, timedelta
-from fastapi.testclient import TestClient
 from main import app
 from repositories import StoreRepository, BatchRepository
 from documents import Batch, Store
@@ -8,8 +7,9 @@ from exceptions import LessThanCurrentDate, UniqueKey, MissingDoc
 from utils.dates import get_now, from_date_to_str
 from ...fixture import mongo_connection # noqa: F401, E261
 from ...__mocks__.constants import company_doc
+from ...__mocks__.test_client import create_test_client
 
-client = TestClient(app)
+client = create_test_client(app)
 
 
 class TestCreateBatchIntegrationV1():
