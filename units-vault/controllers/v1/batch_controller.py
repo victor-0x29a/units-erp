@@ -7,6 +7,8 @@ from ..dto import CreateBatchV1
 
 router = APIRouter(prefix='/v1/batch')
 
+service = BatchService()
+
 
 @router.post(
     '/',
@@ -32,6 +34,21 @@ def create_batch(payload: CreateBatchV1):
         "store_unit": data.get("store_unit")
     }
 
-    service = BatchService()
-
     service.create(create_payload)
+
+
+@router.delete(
+    '/{reference}',
+    status_code=204,
+    tags=['batch'],
+    dependencies=[
+        Depends(
+            create_auth_middleware(
+                enabled_roles=[
+                    EMPLOYEE_ROLES['inventor'],
+                    EMPLOYEE_ROLES['financial']
+                ]
+            ))
+    ])
+def delete(reference: str):
+    service.delete(reference=reference)
