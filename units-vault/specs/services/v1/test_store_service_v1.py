@@ -1,7 +1,12 @@
 import pytest
+from datetime import timedelta
+from documents import Batch, Product, Employee, Store
+from repositories import BatchRepository, ProductRepository, EmployeeRepository, StoreRepository
 from services.v1.store_service import StoreService as StoreServiceV1
 from exceptions import InternalError, UniqueKey, MissingParam, MissingDoc
 from ...fixture import mongo_connection # noqa: F401, E261
+from utils.dates import get_now
+from ...__mocks__.constants import company_doc, human_doc, human_doc_2
 
 
 class TestCreateV1:
@@ -72,6 +77,117 @@ class TestDeleteV1:
             service.delete(unit=1)
 
         assert error.value.message == 'Store not found.'
+
+    def test_should_delete_all_childrens(self, mocker):
+        batch_repository = BatchRepository(Batch)
+        product_repository = ProductRepository(Product)
+        employee_repository = EmployeeRepository(Employee)
+        store_repository = StoreRepository(Store)
+
+        store_data = {
+            'name': '0x store',
+            'unit': 1
+        }
+
+        service = StoreServiceV1()
+
+        store = store_repository.create(data=store_data)
+
+        batches_data = [
+            {
+                "expiry_date": get_now() + timedelta(days=1),
+                "inserction_datetime": get_now(),
+                "supplier_document": company_doc,
+                "reference": "REFERER001",
+                "store": store.pk
+            },
+            {
+                "expiry_date": get_now() + timedelta(days=1),
+                "inserction_datetime": get_now(),
+                "supplier_document": company_doc,
+                "reference": "REFERER002",
+                "store": store.pk
+            }
+        ]
+
+        employees_data = [
+            {
+                "document": human_doc,
+                "name": "Foo",
+                "username": "foo",
+                "role": "ADMIN",
+                "store_unit": store.pk
+            },
+            {
+                "document": human_doc_2,
+                "name": "Bar",
+                "username": "bar",
+                "role": "ADMIN",
+                "store_unit": store.pk
+            }
+        ]
+
+        products_data = [
+            {
+                'batch': None,
+                'price': 10,
+                'discount_value': 1,
+                'bar_code': '1234567891012',
+                'name': 'foo name',
+                'stock': 5,
+                'item_type': 'foo type'
+            },
+            {
+                'batch': None,
+                'price': 10,
+                'discount_value': 1,
+                'bar_code': '1334567891012',
+                'name': 'foo name',
+                'stock': 5,
+                'item_type': 'foo type'
+            }
+        ]
+
+        for i, batch_data in enumerate(batches_data):
+            batch = batch_repository.create(data=batch_data)
+
+            products_data[i]['batch'] = batch.pk
+
+            assert batch
+
+        for employee_data in employees_data:
+            employee = employee_repository.create(data=employee_data)
+            assert employee
+
+        for product_data in products_data:
+            product = product_repository.create(data=product_data)
+            assert product
+
+        service.delete(unit=1)
+
+        with pytest.raises(MissingDoc) as error:
+            store_repository.get(filter={'unit': 1})
+
+        assert error
+        assert error.value.message == 'Store not found.'
+
+        batches = batch_repository.get(filters={'store': store.pk}, is_only_one=False)
+
+        assert not bool(batches)
+
+        for product_data in products_data:
+            with pytest.raises(MissingDoc) as error:
+                product_repository.get(filters={'bar_code': product_data['bar_code']})
+
+            assert error
+            assert error.value.message == 'Product not found.'
+
+        for employee_data in employees_data:
+            with pytest.raises(MissingDoc) as error:
+                employee_repository.get(filter={'document': employee_data['document']})
+
+            assert error
+            assert error.value.message == 'Employee not found.'
 
 
 class TestGetV1:
