@@ -37,7 +37,7 @@ class StoreService:
         store = self.repository.get(filter={'unit': unit})
 
         batches = self.batch_repository.get(
-            filters={'store': store.pk},
+            filter={'store': store.pk},
             can_raises=False,
             is_only_one=False
         )
@@ -50,7 +50,7 @@ class StoreService:
 
         for batch in batches:
             product = self.product_repository.get(
-                filters={'batch': batch.pk},
+                filter={'batch': batch.pk},
                 can_raises=False
             )
 

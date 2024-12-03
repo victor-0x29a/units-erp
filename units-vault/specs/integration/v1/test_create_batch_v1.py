@@ -33,7 +33,7 @@ class TestCreateBatchIntegrationV1():
 
         assert response.status_code == 204
 
-        created_batch = batch_repository.get(filters={"reference": "something"})
+        created_batch = batch_repository.get(filter={"reference": "something"})
 
         assert created_batch
 
