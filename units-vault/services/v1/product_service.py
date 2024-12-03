@@ -13,3 +13,8 @@ class ProductService:
         data['batch'] = batch.pk
 
         self.repository.create(data=data)
+
+    def delete(self, bar_code: str):
+        product = self.repository.get(filter={'bar_code': bar_code})
+
+        self.repository.delete(product=product)
