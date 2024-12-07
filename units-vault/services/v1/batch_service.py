@@ -35,3 +35,8 @@ class BatchService:
             self.product_repository.delete(product)
 
         self.repository.delete(batch)
+
+    def get(self, reference: str) -> Batch:
+        return self.repository.get(filter={
+            'reference': reference
+        })
