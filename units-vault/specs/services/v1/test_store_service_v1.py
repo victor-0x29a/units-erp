@@ -25,6 +25,21 @@ class TestCreateV1:
         for keys in data.keys():
             assert getattr(res, keys) == data[keys]
 
+    def test_should_create_a_store_with_unit_zero(self, mocker):
+        data = {
+            'name': '0x store',
+            'unit': 0
+        }
+
+        service = StoreServiceV1()
+
+        service.instance(data=data)
+
+        res = service.create()
+
+        for keys in data.keys():
+            assert getattr(res, keys) == data[keys]
+
     def test_should_fail_when_havent_instance(self, mocker):
         service = StoreServiceV1()
 
@@ -189,6 +204,26 @@ class TestDeleteV1:
             assert error
             assert error.value.message == 'Employee not found.'
 
+    def test_should_delete_when_unit_store_is_zero(self, mocker):
+        store_repository = StoreRepository(Store)
+
+        store_data = {
+            'name': '0x store',
+            'unit': 0
+        }
+
+        service = StoreServiceV1()
+
+        store_repository.create(data=store_data)
+
+        service.delete(unit=0)
+
+        with pytest.raises(MissingDoc) as error:
+            store_repository.get(filter={'unit': 0})
+
+        assert error
+        assert error.value.message == 'Store not found.'
+
 
 class TestGetV1:
     def test_should_get(self, mocker):
@@ -205,6 +240,29 @@ class TestGetV1:
 
         filter_data = {
             'unit': 65
+        }
+
+        store = service.get(filter=filter_data)
+
+        assert store.name == creation_data['name']
+        assert store.unit == creation_data['unit']
+        assert not bool(store.latitude)
+        assert not bool(store.longitude)
+
+    def test_should_get_a_store_with_unit_zero(self, mocker):
+        creation_data = {
+            'name': 'Store 0',
+            'unit': 0
+        }
+
+        service = StoreServiceV1()
+
+        service.instance(data=creation_data)
+
+        service.create()
+
+        filter_data = {
+            'unit': 0
         }
 
         store = service.get(filter=filter_data)
