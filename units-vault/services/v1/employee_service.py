@@ -16,11 +16,10 @@ class EmployeeService:
 
         store_unit = self.payload.get('store_unit', None)
 
-        if not store_unit:
+        if not isinstance(store_unit, int):
             raise MissingDoc('Store not found.')
 
-        if isinstance(store_unit, int):
-            data['store_unit'] = self.__fetch_store_id()
+        data['store_unit'] = self.__fetch_store_id()
 
         employee = self.repository.create(data=self.payload)
 
