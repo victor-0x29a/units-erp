@@ -103,3 +103,34 @@ class TestDeleteBatch:
             product_repository.get(filter={'batch': batch.pk})
 
         assert error.value.message == "Product not found."
+
+
+class TestGetBatch:
+    def test_should_get(self, mocker):
+        store_repository = StoreRepository(store_document=Store)
+        batch_repository = BatchRepository(batch_document=Batch)
+
+        store = store_repository.create(data={
+            "unit": 1,
+            "name": "Store 1"
+        })
+
+        batch = batch_repository.create(data={
+            "expiry_date": get_now() + timedelta(days=1),
+            "inserction_datetime": get_now(),
+            "supplier_document": company_doc,
+            "reference": "REFERER001",
+            "store": store.pk
+        })
+
+        service = BatchService()
+
+        assert service.get(reference="REFERER001").pk == batch.pk
+
+    def test_should_fail_when_unexists_batch(self, mocker):
+        service = BatchService()
+
+        with pytest.raises(MissingDoc) as error:
+            service.get(reference="REFERER001")
+
+        assert error.value.message == "Batch not found."
