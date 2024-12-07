@@ -80,13 +80,13 @@ class TestCreateV1:
     def test_should_fail_when_already_exist_by_document(self, mocker):
         store_repository = StoreRepository(store_document=Store)
 
-        store = store_repository.create(data={
+        store_repository.create(data={
             "unit": 1,
             "name": "Foo store"
         })
 
-        creation_data = {
-            "store_unit": store.pk,
+        employee_creation_data = {
+            "store_unit": 1,
             "name": "victor",
             "document": human_doc,
             "username": "victor-0x29a",
@@ -95,25 +95,26 @@ class TestCreateV1:
 
         service = EmployeeServiceV1()
 
-        service.create(creation_data)
+        service.create(employee_creation_data)
 
-        creation_data['username'] = 'victor-0x29b'
+        employee_creation_data['username'] = 'victor-0x29b'
 
         with pytest.raises(UniqueKey) as error:
-            service.create(creation_data)
+            employee_creation_data["store_unit"] = 1
+            service.create(employee_creation_data)
 
         assert error.value.message == 'The document has already been taken.'
 
     def test_should_fail_when_already_exist_by_username(self, mocker):
         store_repository = StoreRepository(store_document=Store)
 
-        store = store_repository.create(data={
+        store_repository.create(data={
             "unit": 1,
             "name": "Foo store"
         })
 
         creation_data = {
-            "store_unit": store.pk,
+            "store_unit": 1,
             "name": "victor",
             "document": human_doc,
             "username": "victor-0x29a",
@@ -127,6 +128,7 @@ class TestCreateV1:
         creation_data['document'] = human_doc_2
 
         with pytest.raises(UniqueKey) as error:
+            creation_data["store_unit"] = 1
             service.create(creation_data)
 
         assert error.value.message == 'The username has already been taken.'
@@ -134,13 +136,13 @@ class TestCreateV1:
     def test_should_fail_when_invalid_role(self, mocker):
         store_repository = StoreRepository(store_document=Store)
 
-        store = store_repository.create(data={
+        store_repository.create(data={
             "unit": 1,
             "name": "Foo store"
         })
 
         creation_data = {
-            "store_unit": store.pk,
+            "store_unit": 1,
             "name": "victor",
             "document": human_doc,
             "username": "victor-0x29a",
